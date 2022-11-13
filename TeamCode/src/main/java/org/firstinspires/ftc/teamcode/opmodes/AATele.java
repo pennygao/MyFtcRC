@@ -38,7 +38,7 @@ public class AATele extends LinearOpMode {
             boolean normieMode = gamepad1.b;
             float leftTrigger = gamepad2.left_trigger;
             float rightTrigger = gamepad2.right_trigger;
-            robot.outtake.goToLevel(1);
+            //robot.outtake.goToLevel(0);
             telemetry.addData("slide level init: ", robot.outtake.getLevel());
 //            telemetry.addData("dumpServo Position:",robot.outtake.getDumpPosition());
             telemetry.update();
