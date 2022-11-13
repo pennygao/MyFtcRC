@@ -1,23 +1,48 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.commands.DriveForTime;
+import org.firstinspires.ftc.teamcode.commands.autoIntake;
+import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
 @Autonomous
-public class AutoFreight extends LinearOpMode {
+public class AAAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this);
+
+        // Update following parameters
+        double intakePower = 0.6;
+        double outtakePower = 0;
+
+        // general variable
         double driveTime;
-        //robot.dumper.setServoPosition(0.8);
+
+        //Servo init code here
+        robot.outtake.setRollerPower(0.5);
 
 
         waitForStart();
 
+        // hold preload
+        driveTime = 2.5;
+        autoIntake spinIn = new autoIntake(robot, intakePower, driveTime);
+        robot.runCommands(spinIn);
+
+        // Raise lift
+        autoLift liftUp = new autoLift(robot, 2);
+        robot.runCommands(liftUp);
+
+        // drop cone
+        autoIntake spinOut = new autoIntake(robot, outtakePower, driveTime);
+        robot.runCommand(spinOut);
+
+        // retract lift
+        autoLift liftDown = new autoLift(robot, 0);
+        robot.runCommands(liftDown);
+        /*
        // go forwards slightly
         Pose2d drivePower = new Pose2d(-0.2,0,0);
         driveTime = 0.52;
@@ -57,6 +82,8 @@ public class AutoFreight extends LinearOpMode {
         robot.runCommand(goSideways3);
 
 
+
+         */
 
 
 

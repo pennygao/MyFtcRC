@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.hardware.CachingDcMotorEx;
 import org.firstinspires.ftc.teamcode.hardware.CachingServo;
@@ -121,7 +122,9 @@ public class Robot {
         return servo;
     }
 
-
+    public VoltageSensor getVoltageSensor() {
+        return hardwareMap.voltageSensor.iterator().next();
+    }
     /*
     public DistanceSensor getDistanceSensor(String deviceName) {
         DistanceSensor sensor = hardwareMap.get(DistanceSensor.class, deviceName);
