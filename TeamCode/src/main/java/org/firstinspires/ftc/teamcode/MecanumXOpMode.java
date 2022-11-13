@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name="MecanumX OpMode", group="Linear Opmode")
 
@@ -14,6 +15,8 @@ public class MecanumXOpMode extends LinearOpMode {
     private SmartGamepad smartGamepad1 = null;
     private SmartGamepad smartGamepad2 = null;
 
+//    private DcMotor slideMotor = null;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -22,6 +25,7 @@ public class MecanumXOpMode extends LinearOpMode {
         smartGamepad2 = new SmartGamepad(gamepad2);
 
         drivetrain = new MecanumX();
+//        slideMotor = hardwareMap.get(DcMotor .class, "slideMotor");
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -65,7 +69,29 @@ public class MecanumXOpMode extends LinearOpMode {
                 auto_correct = true;
             }
 
+            if (smartGamepad1.y) {
+                y_move = 1.0;
+                r_move = 1.0;
+                dryRun = false;
+                auto_correct = true;
+            }
+            if (smartGamepad1.x) {
+                y_move = -1.0;
+                r_move = -1.0;
+                dryRun = false;
+                auto_correct = true;
+            }
+
+//            if (smartGamepad1.y) {
+//                slideMotor.setPower(0.6);
+//            } else if (smartGamepad1.x) {
+//                slideMotor.setPower(-0.6);
+//            } else {
+//                slideMotor.setPower(0.0);
+//            }
+
             drivetrain.setMovement(x_move, y_move, r_move, dryRun, auto_correct);
+
         }
     }
 }

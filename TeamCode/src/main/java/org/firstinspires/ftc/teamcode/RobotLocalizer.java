@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -90,9 +91,12 @@ public class RobotLocalizer implements PeriodicUpdateCallback {
     public void initialize() {
 
         DcMotor encoder = Utilities.getSharedUtility().hardwareMap.get(DcMotor.class, "left_front_drive");
+//        DcMotor encoder = Utilities.getSharedUtility().hardwareMap.get(DcMotor.class, "DriveLF");
         axialWheel = new OdometryWheel(encoder, TICK_PER_REVOLUTION, AXIAL_WHEEL_RADIUS_FACTOR * ODOMETRY_WHEEL_RADIUS);
         encoder = Utilities.getSharedUtility().hardwareMap.get(DcMotor.class, "left_back_drive");
+//        encoder = Utilities.getSharedUtility().hardwareMap.get(DcMotor.class, "DriveRR");
         lateralWheel = new OdometryWheel(encoder, TICK_PER_REVOLUTION, LATERAL_WHEEL_RADIUS_FACTOR * ODOMETRY_WHEEL_RADIUS);
+
 
         x = 0.0;
         y = 0.0;
@@ -150,6 +154,8 @@ public class RobotLocalizer implements PeriodicUpdateCallback {
             y += displacementLateral * Math.sin(angleInRadians) + displacementAxial * Math.cos(angleInRadians);
             Log.v("odometry", String.format("x/y adjusted: %4.2f, %4.2f", x, y));
         }
+
+        drawLocation();
     }
 
     private float calculateAngleDelta(Orientation current) {
@@ -172,5 +178,23 @@ public class RobotLocalizer implements PeriodicUpdateCallback {
         double adjustment = LATERAL_WHEEL_DISTANCE_PER_DEGREE * angleChanged;
         Log.v("calibrate", String.format("robot angle changed: %4.2f, adjustment: %4.2f", angleChanged, adjustment));
         return adjustment;
+    }
+
+    private void drawLocation() {
+
+        double xOnField = x/25.4+36;
+        double yOnField = y/25.4-72+8;
+
+        double angleInRadians = Math.toRadians(angle);
+        double x1OnField = xOnField - 8 * Math.sin(angleInRadians);
+        double y1OnField = yOnField + 8 * Math.cos(angleInRadians);
+
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.fieldOverlay()
+                .setStroke("blue")
+                .strokeCircle(xOnField, yOnField, 8)
+                .setStroke("black")
+                .strokeLine(xOnField, yOnField, x1OnField, y1OnField);
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 }

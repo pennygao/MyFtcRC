@@ -56,6 +56,11 @@ public class MecanumX {
         rightFrontDrive = utilities.hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = utilities.hardwareMap.get(DcMotor.class, "right_back_drive");
 
+//        leftFrontDrive = utilities.hardwareMap.get(DcMotor.class, "DriveLF");
+//        leftBackDrive = utilities.hardwareMap.get(DcMotor.class, "DriveLR");
+//        rightFrontDrive = utilities.hardwareMap.get(DcMotor.class, "DriveRF");
+//        rightBackDrive = utilities.hardwareMap.get(DcMotor.class, "DriveRR");
+
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
