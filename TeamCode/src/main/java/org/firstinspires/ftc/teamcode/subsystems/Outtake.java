@@ -13,7 +13,7 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 
 public class Outtake implements Subsystem {
     //Hardware: 1 motor, 1 encoder
-    private DcMotorEx slideMotor;
+    public DcMotorEx slideMotor;
     private double slidePower= 0.5;
     public static final double  TICKS_PER_REV = 537.7 ;
     public static final double PULLEY_DIAMETER = 38 /25.4;
@@ -21,12 +21,12 @@ public class Outtake implements Subsystem {
     public static double SLIDE_LENGTH = 15.0;
     private static final double INCHES_PER_LEVEL = 15.5;
     public int targetPosition = 0;
-    private Telemetry telemetry;
+    public Telemetry telemetry;
     private Servo obamaroller;
     private double rollerPower = 0.5;
     Servo.Direction rollerDirection = Servo.Direction.FORWARD;
 
-    private double[] level_ht ={5.0, 15.0, 29.0, 40.0}; // in inches
+    private double[] level_ht ={5.0, 15.0, 29.0, 40.0, 32.0}; // in inches
 
     public class RollerCommand implements Command {
         NanoClock clock;
@@ -61,7 +61,7 @@ public class Outtake implements Subsystem {
         }
     }
 
-    public RollerCommand spinDuck(double power, double seconds) {
+    public RollerCommand rollerIntake(double power, double seconds) {
         return new RollerCommand(power, seconds);
     }
 
@@ -104,17 +104,23 @@ public class Outtake implements Subsystem {
     }
 
     public void goUp1Inch () {
+        int current = slideMotor.getCurrentPosition();
+        targetPosition = current + inchToTicks(1);
+        /*
         if (level < 3 && !slideMotor.isBusy()) {
             targetPosition = inchToTicks(level_ht[level] + 1);
             telemetry.addData("Slide level", level);
-        }
+        } */
     }
 
     public void goDown1Inch () {
+        int current = slideMotor.getCurrentPosition();
+        targetPosition = current - inchToTicks(1);
+        /*
         if (level < 3 && !slideMotor.isBusy()) {
             targetPosition = inchToTicks(level_ht[level] - 1);
             telemetry.addData("Slide leve", level);
-        }
+        }*/
     }
 
     public void goDown() {
@@ -125,20 +131,24 @@ public class Outtake implements Subsystem {
     }
 
     public void goalldown() {
-        if (level > 0 && !slideMotor.isBusy()) { // slide_state.LEVEL_0) {
+        if (level >=0  && !slideMotor.isBusy()) { // slide_state.LEVEL_0) {
             level = 0;
             targetPosition = 0;//inchToTicks(INCHES_PER_LEVEL * level);
         }
     }
 
     public void goToLevel (int level) {
-        if (level < 3 && !slideMotor.isBusy()) {
+        if (level <= 3 && !slideMotor.isBusy()) {
 
             this.level = level;
             targetPosition = inchToTicks(level_ht[level]);
             telemetry.addData("Slide leve", level);
         }
     }
+    public void goToHt (double inches) {
+        targetPosition = inchToTicks(inches);
+    }
+
     public boolean slideMotorBusy() {
         return slideMotor.isBusy();
     }
@@ -150,6 +160,7 @@ public class Outtake implements Subsystem {
         }
          */
         obamaroller.setPosition(rollerPower);
+
         if (slidePower != 0) {
             slideMotor.setPower(slidePower);
             slideMotor.setTargetPosition(targetPosition);

@@ -1,17 +1,31 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.commands.autoIntake;
 import org.firstinspires.ftc.teamcode.commands.autoLift;
+import org.firstinspires.ftc.teamcode.commands.autoLiftInch;
+import org.firstinspires.ftc.teamcode.commands.autoLiftDown;
+import org.firstinspires.ftc.teamcode.robot.Command;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 
 @Autonomous
 public class AAAuto extends LinearOpMode {
+    public static double HI_POLE_X = 26.5;
+    public static double HI_POLE_SIDE = 13;
+    public static double HI_POLE_FWD = 6;
+    public static double HI_POLE_HEADING = Math.toRadians(40); // degree
+    public static double POLE_HT = 32.0;
+
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this);
+        Drivetrain drivetrain = new Drivetrain(robot);
+        robot.registerSubsystem((Subsystem) drivetrain);
 
         // Update following parameters
         double intakePower = 0.6;
@@ -20,87 +34,58 @@ public class AAAuto extends LinearOpMode {
         // general variable
         double driveTime;
 
+        // Commands
+
+
+
         //Servo init code here
         robot.outtake.setRollerPower(0.5);
-
-
         waitForStart();
+        if (isStopRequested()) return;
 
         // hold preload
-        driveTime = 2.5;
-        autoIntake spinIn = new autoIntake(robot, intakePower, driveTime);
-        robot.runCommands(spinIn);
+        robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.8));
+
+        // Move to high pole
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .forward(HI_POLE_X) // move forward
+                        .strafeRight(HI_POLE_SIDE)
+                        .build()
+        ));
 
         // Raise lift
-        autoLift liftUp = new autoLift(robot, 2);
+        autoLift liftUp = new autoLift(robot, 3, POLE_HT);
         robot.runCommands(liftUp);
 
-        // drop cone
-        autoIntake spinOut = new autoIntake(robot, outtakePower, driveTime);
-        robot.runCommand(spinOut);
+        // Forward a little
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .forward(HI_POLE_FWD) // move forward
+                        .build()
+        ));
+
+        // Release cone
+        robot.runCommand(robot.outtake.rollerIntake(outtakePower, 0.5));
+
+        // Back a little
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .back(HI_POLE_FWD) // move forward
+                        .build()
+        ));
 
         // retract lift
-        autoLift liftDown = new autoLift(robot, 0);
+        autoLift liftDown = new autoLift(robot, 0, 0);
         robot.runCommands(liftDown);
-        /*
-       // go forwards slightly
-        Pose2d drivePower = new Pose2d(-0.2,0,0);
-        driveTime = 0.52;
-        DriveForTime driveCommand = new DriveForTime(robot.mecanumDrive, drivePower, driveTime);
-        robot.runCommand(driveCommand);
 
-        //strafe
-        Pose2d sideways = new Pose2d(0,0.4,0);
-        driveTime = 2.5;
-        DriveForTime goSideways = new DriveForTime(robot.mecanumDrive, sideways, driveTime);
-        robot.runCommand(goSideways);
+        // park
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .strafeLeft(12) // move side ways
+                        .build()
+        ));
 
-        //strafe0
-        Pose2d sideways0 = new Pose2d(0,0.1,0);
-        driveTime = 0.5;
-        DriveForTime goSideways0 = new DriveForTime(robot.mecanumDrive, sideways0, driveTime);
-        robot.runCommand(goSideways0);
-
-
-
-        //sickstrafes2
-        Pose2d sideways2 = new Pose2d(0,-0.5,0);
-        driveTime = 0.75;
-        DriveForTime goSideways2 = new DriveForTime(robot.mecanumDrive, sideways2, driveTime);
-        robot.runCommand(goSideways2);
-
-        //waitaminute
-        Pose2d nopower = new Pose2d(0,0,0);
-        driveTime = 2;
-        DriveForTime drivenoCommand = new DriveForTime(robot.mecanumDrive, nopower, driveTime);
-        robot.runCommand(drivenoCommand);
-
-        //sickstrafes3
-        Pose2d sideways3 = new Pose2d(0,-0.5,0);
-        driveTime = 1.5;
-        DriveForTime goSideways3 = new DriveForTime(robot.mecanumDrive, sideways3, driveTime);
-        robot.runCommand(goSideways3);
-
-
-
-         */
-
-
-
-        // turn 90 towards warehouse
-        /*double turnAngle = Math.toRadians(87);
-        Turn  turnCommand = new Turn(robot.mecanumDrive, turnAngle);
-        robot.runCommand(turnCommand);
-
-        // back to carousal
-        Pose2d carousel = new Pose2d(-0.25,0,0);
-        driveTime = 1.65;
-        DriveForTime backToCarousel = new DriveForTime(robot.mecanumDrive, carousel, driveTime);
-        robot.runCommand(backToCarousel);
-        */
-
-
-//obama
     }
 }
 

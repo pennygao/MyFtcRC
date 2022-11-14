@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
@@ -18,12 +19,18 @@ public class AATele extends LinearOpMode {
         int slidecountdown = 0;
         boolean isApressed = false;
         boolean isXpressed = false;
+        boolean isYpressed = false;
         boolean inTransfer = false;
+
+        boolean slideMotor_useEncoder = true;
 
 
 
 //RESETS
 //        robot.outtake.setServoPosition(0.6);
+        if (!slideMotor_useEncoder) {
+            robot.outtake.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
         waitForStart();
 
         while (!isStopRequested()) {
@@ -61,55 +68,57 @@ public class AATele extends LinearOpMode {
 
 
 //RAISE SLIDE
-            if(buttonA) {
-                if (!isApressed) {
-                    robot.outtake.goUp();
-                    isApressed = true;
-                    telemetry.addData("going up. level: ", robot.outtake.targetPosition);
+            if (slideMotor_useEncoder) { // use encoder
+                if (buttonA) {
+                    if (!isApressed) {
+                        robot.outtake.goUp();
+                        isApressed = true;
+                        telemetry.addData("going up. level: ", robot.outtake.targetPosition);
+                    }
+                } else {
+                    isApressed = false;
                 }
-            } else {
-                isApressed = false;
-            }
 
-            if(buttonB) {
-                robot.outtake.goalldown();
-                telemetry.addData("going down to: ", robot.outtake.targetPosition);
-            }
+                if (buttonB) {
+                    robot.outtake.goalldown();
+                    ///telemetry.addData("going down to: ", robot.outtake.targetPosition);
+                }
 
-            if(buttonX) {
-                if (!isXpressed) {
+                if (buttonX) {
                     robot.outtake.goUp1Inch();
-                    isXpressed = true;
-                    telemetry.addData("going up. level: ", robot.outtake.targetPosition);
                 }
+                if (buttonY) {
+                    robot.outtake.goDown1Inch();
+                }
+
             } else {
-                isXpressed = false;
+
+                if (gamepad2.dpad_up) {
+                    robot.outtake.slideMotor.setPower(0.5);
+                } else if (gamepad2.dpad_down) {
+                    robot.outtake.slideMotor.setPower(-0.5);
+                } else {
+                    robot.outtake.slideMotor.setPower(0.0);
+                }
             }
 
-            if(buttonY) {
-                robot.outtake.goDown1Inch();
-                telemetry.addData("going down to: ", robot.outtake.targetPosition);
-            }
+
 
             // Roller intake
             /*
-            if (leftBumper) {
-                robot.outtake.setRollerPower(1.0);
-            }
-
-            // Roller outtake
-            if (rightBumper) {
-                robot.outtake.setRollerPower(0);
-            }
-
-             */
             if (leftTrigger!= 0.0 || rightTrigger != 0.0) {
                 double rollerPower = 0.5 + leftTrigger * 0.5 - rightTrigger * 0.5;
                 robot.outtake.setRollerPower(rollerPower);
                 telemetry.addData("Roller power: ", rollerPower);
             }
+            */
+
             if (leftBumper) {
                 robot.outtake.setRollerPower(0.5);
+            } else if (leftTrigger != 0) {
+                robot.outtake.setRollerPower(0.5 + leftTrigger * 0.5);
+            } else if (rightTrigger != 0.0) {
+                robot.outtake.setRollerPower(0.5 - rightTrigger * 0.5);
             }
 
 
