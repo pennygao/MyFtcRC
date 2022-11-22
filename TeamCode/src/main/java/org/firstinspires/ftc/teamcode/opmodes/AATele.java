@@ -13,24 +13,17 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 public class AATele extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        CrabRobot robot = new CrabRobot(this);
+        CrabRobot robot = new CrabRobot(this, false);
 
-        int slidecountup = 0;
-        int slidecountdown = 0;
-        boolean isApressed = false;
-        boolean isXpressed = false;
-        boolean isYpressed = false;
-        boolean inTransfer = false;
 
-        boolean slideMotor_useEncoder = true;
+
+
 
 
 
 //RESETS
 //        robot.outtake.setServoPosition(0.6);
-        if (!slideMotor_useEncoder) {
-            robot.outtake.slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+
         waitForStart();
 
         while (!isStopRequested()) {
@@ -41,12 +34,12 @@ public class AATele extends LinearOpMode {
             boolean buttonY = gamepad2.y;
             boolean leftBumper = gamepad2.left_bumper;
             boolean rightBumper = gamepad2.right_bumper;
-            boolean slowMode = gamepad1.a;
-            boolean normieMode = gamepad1.b;
+            boolean slowMode = gamepad1.left_bumper;
+            boolean normieMode = gamepad1.right_bumper;
             float leftTrigger = gamepad2.left_trigger;
             float rightTrigger = gamepad2.right_trigger;
-            //robot.outtake.goToLevel(0);
-            telemetry.addData("slide level init: ", robot.outtake.getLevel());
+            telemetry.addData("mode:", robot.outtake.slideMotor.getMode());
+            telemetry.addData("slide motor power: ", robot.outtake.slideMotor.getPower());
 //            telemetry.addData("dumpServo Position:",robot.outtake.getDumpPosition());
             telemetry.update();
 
@@ -58,7 +51,7 @@ public class AATele extends LinearOpMode {
             robot.mecanumDrive.setDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
 
             if (slowMode) {
-                robot.mecanumDrive.setPowerFactor(0.2);
+                robot.mecanumDrive.setPowerFactor(0.4);
             }
             if (normieMode) {
                 robot.mecanumDrive.setPowerFactor(0.8);
@@ -68,7 +61,7 @@ public class AATele extends LinearOpMode {
 
 
 //RAISE SLIDE
-            if (slideMotor_useEncoder) { // use encoder
+            /*
                 if (buttonA) {
                     if (!isApressed) {
                         robot.outtake.goUp();
@@ -90,17 +83,26 @@ public class AATele extends LinearOpMode {
                 if (buttonY) {
                     robot.outtake.goDown1Inch();
                 }
+          */
 
+
+            if (gamepad2.dpad_up) {
+                robot.outtake.slideMotor.setPower(1.0);
+                telemetry.addLine("dpad up pressed");
+            } else if (gamepad2.dpad_down) {
+                robot.outtake.slideMotor.setPower(-0.7);
+                telemetry.addLine("dpad down pressed");
+            }else if (gamepad2.dpad_left) {
+                    robot.outtake.slideMotor.setPower(0.7);
+                    telemetry.addLine("dpad left pressed");
+            } else if (gamepad2.dpad_right ) {
+                    robot.outtake.slideMotor.setPower (-0.4);
+                    telemetry.addLine("dpad right pressed");
             } else {
-
-                if (gamepad2.dpad_up) {
-                    robot.outtake.slideMotor.setPower(0.5);
-                } else if (gamepad2.dpad_down) {
-                    robot.outtake.slideMotor.setPower(-0.5);
-                } else {
-                    robot.outtake.slideMotor.setPower(0.0);
-                }
+                robot.outtake.slideMotor.setPower(0.0);
             }
+            telemetry.update();
+
 
 
 

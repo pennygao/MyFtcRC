@@ -12,15 +12,16 @@ import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Autonomous
 public class AutoRight extends LinearOpMode {
-    public static double HI_POLE_X = 26.5;
+    public static double HI_POLE_X = 52.5;
+    //public static double HI_POLE_X = 50.5;
     public static double HI_POLE_SIDE = -13.5;
-    public static double HI_POLE_FWD = 6;
+    public static double HI_POLE_FWD = 5.5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
-    public static double POLE_HT = 33.0;
+    public static double POLE_HT = 27;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        CrabRobot robot = new CrabRobot(this);
+        CrabRobot robot = new CrabRobot(this,true);
         Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
         objectDetector od = new objectDetector(robot, telemetry);
@@ -28,11 +29,11 @@ public class AutoRight extends LinearOpMode {
 
         // Update following parameters
         double intakePower = 0.6;
-        double outtakePower = 0;
+        double outtakePower = 0.1;
 
         // general variable
         double driveTime;
-        int elementPos = 3;
+        int elementPos = 4;
 
         // Commands
 
@@ -43,8 +44,7 @@ public class AutoRight extends LinearOpMode {
         od.init();
         waitForStart();
         if (isStopRequested()) return;
-
-        //elementPos = od.ssIndex(20);
+        elementPos = od.ssIndex(100);
 
 
         // hold preload
@@ -62,6 +62,8 @@ public class AutoRight extends LinearOpMode {
         autoLift liftUp = new autoLift(robot, 3, POLE_HT);
         robot.runCommands(liftUp);
 
+
+
         // Forward a little
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
@@ -71,6 +73,7 @@ public class AutoRight extends LinearOpMode {
 
         // Release cone
         robot.runCommand(robot.outtake.rollerIntake(outtakePower, 0.5));
+        // TODO: adjust power
 
         // Back a little
         robot.runCommand(drivetrain.followTrajectorySequence(
@@ -83,32 +86,42 @@ public class AutoRight extends LinearOpMode {
         autoLift liftDown = new autoLift(robot, 0, 0);
         robot.runCommands(liftDown);
 
+        //go back
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .strafeRight(HI_POLE_SIDE)
+                        .back(26)
+                        .build()
+        ));
+
         // park
-        if  (elementPos >1) {
-            int toRight;
-            if (elementPos == 2)
-                toRight = 13;
-            else
-                toRight = 39;
+        if  (elementPos == 1) {
+            int toLeft;
+            toLeft = 14;
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeRight(toRight) // move side ways
-                            .build()
-            ));
-        } else if (elementPos == 1) {
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeLeft(13) // move side ways
-                            .build()
-            ));
-        } else {
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeRight(39) // move side ways
-                            .back(26)
+                            .strafeLeft(toLeft) // move side ways
                             .build()
             ));
         }
+        if (elementPos == 2) {
+                int toRight;
+                toRight = 14;
+                robot.runCommand(drivetrain.followTrajectorySequence(
+                        drivetrain.trajectorySequenceBuilder(new Pose2d())
+                                .strafeRight(toRight) // move side ways
+                                .build()
+                ));
+            }
+        if (elementPos == 3 || elementPos == 4) {
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(new Pose2d())
+                            .strafeRight(41) // move side ways
+                            .build()
+            ));
+        }
+
+
 
     }
 }
