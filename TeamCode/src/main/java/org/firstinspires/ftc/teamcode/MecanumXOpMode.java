@@ -6,15 +6,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
 @TeleOp(name="MecanumX OpMode", group="Linear Opmode")
 
 public class MecanumXOpMode extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private MecanumX drivetrain = null;
+//    private RobotVision vision = null;
     private SmartGamepad smartGamepad1 = null;
     private SmartGamepad smartGamepad2 = null;
-
 //    private DcMotor slideMotor = null;
 
     @Override
@@ -25,6 +30,7 @@ public class MecanumXOpMode extends LinearOpMode {
         smartGamepad2 = new SmartGamepad(gamepad2);
 
         drivetrain = new MecanumX();
+//        vision = new RobotVision();
 //        slideMotor = hardwareMap.get(DcMotor .class, "slideMotor");
 
         // Wait for the game to start (driver presses PLAY)
@@ -37,6 +43,8 @@ public class MecanumXOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             Utilities.getSharedUtility().updateAll();
+
+//            vision.stopDetection();
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double y_move = -smartGamepad1.left_stick_y;  // Note: push32ing stick forward gives negative value
@@ -92,6 +100,8 @@ public class MecanumXOpMode extends LinearOpMode {
 
             drivetrain.setMovement(x_move, y_move, r_move, dryRun, auto_correct);
 
+//            telemetry.addData("Image Analysis:", vision.getConeOrientation());
+            telemetry.update();
         }
     }
 }

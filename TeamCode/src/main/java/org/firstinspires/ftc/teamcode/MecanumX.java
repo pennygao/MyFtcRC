@@ -80,8 +80,8 @@ public class MecanumX {
         this.dryRun = dryRun;
 
         // For testing purpose, ensure robot does not move/rotate too fast
-        x_move = x_move * 0.3;
-        y_move = y_move * 0.3;
+        x_move = x_move * 0.5;
+        y_move = y_move * 0.5;
         double yaw = 0.2 * r_move;
 
         float currentOrientation = localizer.getAngle();
