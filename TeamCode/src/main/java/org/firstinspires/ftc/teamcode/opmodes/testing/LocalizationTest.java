@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        CrabRobot robot = new CrabRobot(this);
+        CrabRobot robot = new CrabRobot(this,false);
         Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
 

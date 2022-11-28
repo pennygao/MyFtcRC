@@ -15,8 +15,8 @@ public class Outtake implements Subsystem {
     //Hardware: 1 motor, 1 encoder
     public DcMotorEx slideMotor;
     private double slidePower = 0.0;
-    public static final double TICKS_PER_REV = 537.7;
-    public static final double PULLEY_DIAMETER = 38 / 25.4;
+    public static final double TICKS_PER_REV = 537.7*(11.0/15.0);
+    public static final double PULLEY_DIAMETER = 38.0 / 25.4;
     public int level = 0;
     public static double SLIDE_LENGTH = 15.0;
     private static final double INCHES_PER_LEVEL = 15.5;
@@ -27,7 +27,7 @@ public class Outtake implements Subsystem {
     boolean autoMode = false;
     Servo.Direction rollerDirection = Servo.Direction.FORWARD;
 
-    private double[] level_ht = {5.0, 15.0, 29.0, 40.0, 32.0}; // in inches
+    private double[] level_ht = {5.0, 18.0, 29.0, 39.0, 32.0}; // in inches
 
     public class RollerCommand implements Command {
         NanoClock clock;
@@ -78,7 +78,7 @@ public class Outtake implements Subsystem {
         if (autoMode == true) {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.setPower(1.0);
             telemetry.addLine("slideMotor in auto mode");
         }
         else{
@@ -91,6 +91,19 @@ public class Outtake implements Subsystem {
 
     }
 
+    public void setSlideMotorMode (boolean encoderMode) {
+        if (encoderMode == true) {
+            slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            this.setPower(0.7);
+            telemetry.addLine("slideMotor in auto mode");
+        }
+        else{
+            slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            telemetry.addLine("slideMotor not in auto mode");
+        }
+    }
 
     public void setPower(double power) {
         slidePower = power;
@@ -116,7 +129,7 @@ public class Outtake implements Subsystem {
 
     public void goUp1Inch() {
         int current = slideMotor.getCurrentPosition();
-        targetPosition = current + inchToTicks(1);
+        targetPosition = current + inchToTicks(1.5);
         /*
         if (level < 3 && !slideMotor.isBusy()) {
             targetPosition = inchToTicks(level_ht[level] + 1);
@@ -126,7 +139,7 @@ public class Outtake implements Subsystem {
 
     public void goDown1Inch() {
         int current = slideMotor.getCurrentPosition();
-        targetPosition = current - inchToTicks(1);
+        targetPosition = current - inchToTicks(1.5);
         /*
         if (level < 3 && !slideMotor.isBusy()) {
             targetPosition = inchToTicks(level_ht[level] - 1);
@@ -141,11 +154,9 @@ public class Outtake implements Subsystem {
         }
     }
 
-    public void goalldown() {
-        if (level >= 0 && !slideMotor.isBusy()) { // slide_state.LEVEL_0) {
+    public void goalldown() { // slide_state.LEVEL_0) {
             level = 0;
-            targetPosition = 0;//inchToTicks(INCHES_PER_LEVEL * level);
-        }
+            targetPosition = inchToTicks(0);
     }
 
     public void goToLevel(int level) {
@@ -159,11 +170,13 @@ public class Outtake implements Subsystem {
 
     public void goToHt(double inches) {
         targetPosition = inchToTicks(inches);
+        telemetry.addData("inches:",inches);
     }
 
     public boolean slideMotorBusy() {
         return slideMotor.isBusy();
     }
+
 
     @Override
     public void update(TelemetryPacket packet) {
@@ -172,13 +185,16 @@ public class Outtake implements Subsystem {
         }
          */
         obamaroller.setPosition(rollerPower);
-
+        telemetry.addData("automode:",autoMode);
+        telemetry.addData("slidePower:", slidePower);
+        telemetry.addData("target pos:", targetPosition);
+        telemetry.update();
         if (slidePower != 0) {
             slideMotor.setPower(slidePower);
 
             if (this.autoMode) {
                 slideMotor.setTargetPosition(targetPosition);
-
+                slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
         }
         // debug only,  remove it on release

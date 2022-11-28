@@ -17,7 +17,7 @@ public class AutoRight extends LinearOpMode {
     public static double HI_POLE_SIDE = -13.5;
     public static double HI_POLE_FWD = 5.5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
-    public static double POLE_HT = 27;
+    public static double POLE_HT = 43.69;
 
     @Override
     public void runOpMode() throws InterruptedException {

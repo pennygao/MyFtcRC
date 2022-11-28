@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 public class AATele extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        CrabRobot robot = new CrabRobot(this, false);
+        CrabRobot robot = new CrabRobot(this, true);
 
 
 
@@ -87,20 +87,34 @@ public class AATele extends LinearOpMode {
 
 
             if (gamepad2.dpad_up) {
-                robot.outtake.slideMotor.setPower(1.0);
+                //robot.outtake.setSlideMotorMode(false);
+                //robot.outtake.slideMotor.setPower(1.0);
+                robot.outtake.goUp1Inch();
                 telemetry.addLine("dpad up pressed");
             } else if (gamepad2.dpad_down) {
-                robot.outtake.slideMotor.setPower(-0.7);
+                //robot.outtake.setSlideMotorMode(false);
+                robot.outtake.goDown1Inch();
+                //robot.outtake.slideMotor.setPower(-0.7);
                 telemetry.addLine("dpad down pressed");
-            }else if (gamepad2.dpad_left) {
-                    robot.outtake.slideMotor.setPower(0.7);
-                    telemetry.addLine("dpad left pressed");
-            } else if (gamepad2.dpad_right ) {
-                    robot.outtake.slideMotor.setPower (-0.4);
-                    telemetry.addLine("dpad right pressed");
-            } else {
-                robot.outtake.slideMotor.setPower(0.0);
+            } else if (buttonA) {
+                //robot.outtake.setSlideMotorMode(true);
+                robot.outtake.goToHt(18.69);
+                telemetry.addLine("going up to level 1");
+            } else if (buttonX) {
+                //robot.outtake.setSlideMotorMode(true);
+                robot.outtake.goToHt(31.5);
+                telemetry.addLine("going up to level 2");
+            } else if (buttonY) {
+                //robot.outtake.setSlideMotorMode(true);
+                robot.outtake.goToHt(45.19);
+                telemetry.addLine("going up to level 3");
+            } else if (buttonB) {
+                //robot.outtake.setSlideMotorMode(true);
+                robot.outtake.goalldown();
+                telemetry.addLine("going all the way down");
             }
+
+
             telemetry.update();
 
 
@@ -156,5 +170,6 @@ public class AATele extends LinearOpMode {
         }
     }
 }
+
 
 

@@ -50,7 +50,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        CrabRobot robot = new CrabRobot(this);
+        CrabRobot robot = new CrabRobot(this,true);
         Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
 
