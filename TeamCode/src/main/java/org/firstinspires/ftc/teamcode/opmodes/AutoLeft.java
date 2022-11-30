@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Autonomous
@@ -23,6 +24,7 @@ public class AutoLeft extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this, true);
         Drivetrain drivetrain = new Drivetrain(robot);
+        //TODO: Drivetrain3DW drivetrain = new Drivetrain3DW(robot, telemetry);
         robot.registerSubsystem((Subsystem) drivetrain);
         objectDetector od = new objectDetector(robot, telemetry);
         robot.registerSubsystem((Subsystem)od);

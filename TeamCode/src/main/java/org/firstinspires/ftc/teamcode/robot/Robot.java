@@ -110,6 +110,10 @@ public class Robot {
         }
     }
 
+    public HardwareMap getHardwareMap() {
+        return this.hardwareMap;
+    }
+
     public DcMotorEx getMotor(String deviceName) {
         CachingDcMotorEx motor = new CachingDcMotorEx(hardwareMap.get(DcMotorEx.class, deviceName));
         listeners.add(motor);
