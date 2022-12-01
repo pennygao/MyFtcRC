@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Misc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.String;
 
 /**
  * Collection of utilites for interacting with Lynx modules.

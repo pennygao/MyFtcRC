@@ -23,8 +23,8 @@ public class AutoLeft extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this, true);
-        Drivetrain drivetrain = new Drivetrain(robot);
-        //TODO: Drivetrain3DW drivetrain = new Drivetrain3DW(robot, telemetry);
+        //Drivetrain drivetrain = new Drivetrain(robot);
+        Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
         objectDetector od = new objectDetector(robot, telemetry);
         robot.registerSubsystem((Subsystem)od);

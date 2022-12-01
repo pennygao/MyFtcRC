@@ -143,7 +143,6 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
     private VoltageSensor batteryVoltageSensor;
 
     private HardwareMap hardwareMap;
-    private TelemetryPacket telemetryPacket;
 
 
     public class FollowTrajectorySequenceCommand implements Command {
@@ -175,27 +174,27 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
     }
 
 
-    public Drivetrain3DW(Robot robot, TelemetryPacket telemetryPacket) {
+    public Drivetrain3DW(Robot robot) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
 
         this.hardwareMap = robot.getHardwareMap();
-        this.telemetryPacket = telemetryPacket;
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
-        batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
+        batteryVoltageSensor = robot.getVoltageSensor();
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu = robot.getIMU("imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
+        //BNO055IMUUtil.remapAxes(imu, AxesOrder.XZY, BNO055IMUUtil.AxesSigns.PNP);
 
         // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
         // not face up, remap the IMU axes so that the z-axis points upward (normal to the floor.)
@@ -219,10 +218,10 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        leftFront = robot.getMotor("DriveLF");
+        leftRear = robot.getMotor("DriveLR");
+        rightRear = robot.getMotor("DriveRR");
+        rightFront = robot.getMotor("DriveRF");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -280,10 +279,16 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
                         .build()
         );
     }
-
+/*
     public void turn(double angle) {
         turnAsync(angle);
         waitForIdle();
+    }
+*/
+    public FollowTrajectorySequenceCommand turn(double angle) {
+        return new FollowTrajectorySequenceCommand(trajectorySequenceBuilder(getPoseEstimate())
+                .turn(angle)
+                .build());
     }
 
     public void followTrajectoryAsync(Trajectory trajectory) {
@@ -294,33 +299,45 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
         );
     }
 
+/*
     public void followTrajectory(Trajectory trajectory) {
         followTrajectoryAsync(trajectory);
         waitForIdle();
     }
+*/
+    public FollowTrajectorySequenceCommand followTrajectory(Trajectory trajectory) {
+        return new FollowTrajectorySequenceCommand(trajectorySequenceBuilder(trajectory.start())
+                .addTrajectory(trajectory)
+                .build());
+    }
 
+/*
     public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
         trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);
     }
-
-    public void followTrajectorySequence(TrajectorySequence trajectorySequence) {
+*/
+/*    public void followTrajectorySequence(TrajectorySequence trajectorySequence) {
         followTrajectorySequenceAsync(trajectorySequence);
         waitForIdle();
+    }
+*/
+    public FollowTrajectorySequenceCommand followTrajectorySequence(TrajectorySequence trajectorySequence) {
+        return new FollowTrajectorySequenceCommand(trajectorySequence);
     }
 
     public Pose2d getLastError() {
         return trajectorySequenceRunner.getLastPoseError();
     }
 
-    public void update(TelemetryPacket telemetryPacket) {
+    public void update(TelemetryPacket packet) {
         updatePoseEstimate();
-        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity(), telemetryPacket);
+        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity(), packet);
         if (signal != null) setDriveSignal(signal);
     }
 
     public void waitForIdle() {
-        while (!Thread.currentThread().isInterrupted() && isBusy())
-            update(telemetryPacket);
+        while (!Thread.currentThread().isInterrupted() && isBusy()) {}
+            //update(telemetryPacket);
     }
 
     public boolean isBusy() {
