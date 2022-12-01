@@ -279,12 +279,7 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
                         .build()
         );
     }
-/*
-    public void turn(double angle) {
-        turnAsync(angle);
-        waitForIdle();
-    }
-*/
+
     public FollowTrajectorySequenceCommand turn(double angle) {
         return new FollowTrajectorySequenceCommand(trajectorySequenceBuilder(getPoseEstimate())
                 .turn(angle)
@@ -299,28 +294,12 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
         );
     }
 
-/*
-    public void followTrajectory(Trajectory trajectory) {
-        followTrajectoryAsync(trajectory);
-        waitForIdle();
-    }
-*/
     public FollowTrajectorySequenceCommand followTrajectory(Trajectory trajectory) {
         return new FollowTrajectorySequenceCommand(trajectorySequenceBuilder(trajectory.start())
                 .addTrajectory(trajectory)
                 .build());
     }
 
-/*
-    public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
-        trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);
-    }
-*/
-/*    public void followTrajectorySequence(TrajectorySequence trajectorySequence) {
-        followTrajectorySequenceAsync(trajectorySequence);
-        waitForIdle();
-    }
-*/
     public FollowTrajectorySequenceCommand followTrajectorySequence(TrajectorySequence trajectorySequence) {
         return new FollowTrajectorySequenceCommand(trajectorySequence);
     }
