@@ -185,10 +185,10 @@ public class Outtake implements Subsystem {
         }
          */
         obamaroller.setPosition(rollerPower);
-        telemetry.addData("automode:",autoMode);
-        telemetry.addData("slidePower:", slidePower);
-        telemetry.addData("target pos:", targetPosition);
-        telemetry.update();
+        //telemetry.addData("automode:",autoMode);
+        //telemetry.addData("slidePower:", slidePower);
+        //telemetry.addData("target pos:", targetPosition);
+        //telemetry.update();
         if (slidePower != 0) {
             slideMotor.setPower(slidePower);
 

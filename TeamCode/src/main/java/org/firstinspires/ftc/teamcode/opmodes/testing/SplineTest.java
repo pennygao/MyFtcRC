@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
@@ -21,7 +20,7 @@ public class SplineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        CrabRobot robot = new CrabRobot(this,true);
+        CrabRobot robot = new CrabRobot(this,true );
         Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
 
