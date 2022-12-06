@@ -13,9 +13,8 @@ import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Autonomous
 public class AutoRight extends LinearOpMode {
-    public static double HI_POLE_X = 52.5;
-    //public static double HI_POLE_X = 50.5;
-    public static double HI_POLE_SIDE = -13.5;
+    public static double HI_POLE_X = 53.0;
+    public static double HI_POLE_SIDE = 15.0;
     public static double HI_POLE_FWD = 5.5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
     public static double POLE_HT = 43.69;
@@ -51,11 +50,11 @@ public class AutoRight extends LinearOpMode {
         // hold preload
         robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.8));
 
-        // Move forward one tile
+        // Move forward two tile
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .forward(HI_POLE_X) // move forward
-                        .strafeRight(HI_POLE_SIDE)
+                        .strafeLeft(HI_POLE_SIDE)
                         .build()
         ));
 
@@ -98,26 +97,20 @@ public class AutoRight extends LinearOpMode {
         // park
         if  (elementPos == 1) {
             int toLeft;
-            toLeft = 14;
+            toLeft = 24;
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
                             .strafeLeft(toLeft) // move side ways
                             .build()
             ));
         }
-        if (elementPos == 2) {
-                int toRight;
-                toRight = 14;
-                robot.runCommand(drivetrain.followTrajectorySequence(
-                        drivetrain.trajectorySequenceBuilder(new Pose2d())
-                                .strafeRight(toRight) // move side ways
-                                .build()
-                ));
+        if (elementPos == 2 || elementPos == 4) {
+
             }
-        if (elementPos == 3 || elementPos == 4) {
+        if (elementPos == 3 ) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeRight(41) // move side ways
+                            .strafeRight(24) // move side ways
                             .build()
             ));
         }

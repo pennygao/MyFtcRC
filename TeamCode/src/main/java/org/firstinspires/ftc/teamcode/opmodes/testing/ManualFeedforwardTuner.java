@@ -50,7 +50,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
 
     public static double DISTANCE = 72; // in
 
-    private FtcDashboard dashboard = FtcDashboard.getInstance();
+    //private FtcDashboard dashboard = FtcDashboard.getInstance();
 
     enum Mode {
         DRIVER_MODE,
@@ -71,12 +71,13 @@ public class ManualFeedforwardTuner extends LinearOpMode {
         Drivetrain3DW drive = new Drivetrain3DW(robot);
         robot.registerSubsystem((Subsystem) drive);
 
+
         if (RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
                     "when using the built-in drive motor velocity PID.");
         }
 
-        Telemetry telemetry = new MultipleTelemetry(this.telemetry, dashboard.getTelemetry());
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         mode = Mode.TUNING_MODE;
 
@@ -117,7 +118,10 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     MotionState motionState = activeProfile.get(profileTime);
                     double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
 
-                    drive.setDrivePower(new Pose2d(targetPower, 0, 0));
+                    drive.setWeightedDrivePower(new Pose2d(targetPower, 0, 0));
+                    telemetry.addData("targetPower", targetPower);
+                    telemetry.addData("getV()", motionState.getV());
+                    telemetry.addData("getA()", motionState.getA());
                     drive.updatePoseEstimate();
 
                     Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");

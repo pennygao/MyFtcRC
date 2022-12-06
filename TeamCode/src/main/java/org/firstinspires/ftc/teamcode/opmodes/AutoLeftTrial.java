@@ -7,23 +7,23 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
-import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Autonomous
 public class AutoLeftTrial extends LinearOpMode {
-    public static double HI_POLE_X = 52.5;//26.5
+    public static double HI_POLE_X = 52.5;
     public static double MID_POLE_X = 26;
     public static double HI_POLE_SIDE = 14;
     public static double HI_POLE_FWD = 6;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
-    public static double POLE_HT = 43.69 ;
+    public static double POLE_HT = 44.0 ;
     public static double CONE_HT = 12;
 
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this, true);
-        Drivetrain drivetrain = new Drivetrain(robot);
+        Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
         objectDetector od = new objectDetector(robot, telemetry);
         robot.registerSubsystem((Subsystem)od);
@@ -36,134 +36,87 @@ public class AutoLeftTrial extends LinearOpMode {
         double driveTime;
         int elementPos = 4;
 
-        // Commands
-        telemetry.addLine("eddie is bad hahahahahahahhahaaa");
-
         //Servo init code here
         robot.outtake.setRollerPower(0.5);
         od.init();
         waitForStart();
         if (isStopRequested()) return;
 
-        elementPos = od.ssIndex(100);
+        elementPos = od.ssIndex(50);
 
 
 
         // hold preload
-        robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.8));
+        robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.3));
 
         // Move forward then right to high pole
+        autoLift liftUp = new autoLift(robot, 3, POLE_HT);
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .forward(HI_POLE_X) // move forward
-                        .strafeRight(HI_POLE_SIDE)
-                        .build()
-        ));
-
-        // Raise lift
-        autoLift liftUp = new autoLift(robot, 3, POLE_HT);
-        robot.runCommands(liftUp);
-
-        // Forward a little
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .addTemporalMarker(1.5, ()->robot.runCommands(liftUp)) // raise lift
+                        .strafeRight(HI_POLE_SIDE) // strafe to pole
                         .forward(HI_POLE_FWD) // move forward
                         .build()
         ));
 
         // Release cone
-        robot.runCommand(robot.outtake.rollerIntake(outtakePower, 0.5));
+        robot.runCommand(robot.outtake.rollerIntake(outtakePower, 0.1));
         // TODO: adjust power
-
-        // Back a little
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .back(HI_POLE_FWD) // move forward
-                        .build()
-        ));
-
-        // retract lift
-        autoLift liftDown = new autoLift(robot, 0, 0);
-        robot.runCommands(liftDown);
-
-        autoLift liftUp2 = new autoLift(robot, 1, CONE_HT);
         //go to cone
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .back(HI_POLE_FWD) // back a little
                         .strafeLeft(HI_POLE_SIDE)
-                        .turn(Math.toRadians(90 - drivetrain.getPoseEstimate().getHeading()))
-                        .addTemporalMarker(1.5, ()->robot.runCommands(liftUp2))
-                        .forward(25)
+                        .addTemporalMarker(0.3,
+                                ()->robot.runCommands(new autoLift(robot, 1, CONE_HT))) // retract lift
+                        .turn(Math.toRadians(92))
+                        .forward(28)
                         .build()
         ));
         //lower and pick up
         autoLift liftdown2 = new autoLift(robot, 0, 0);//TODO:CHANGE THE HEIGHT BASED ON THE NUMBER OF CONES
-        robot.runCommands(liftdown2);
+        robot.runCommands(new autoLift(robot, 1, CONE_HT-6));
         robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.8));
-        robot.runCommands(liftUp2);
+        robot.runCommands(new autoLift(robot, 1, CONE_HT+5));
 
 
         //go back to thingy
-        autoLift liftUp3 = new autoLift(robot, 3, POLE_HT);
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .back(25)
-                        .turn(Math.toRadians(0 - drivetrain.getPoseEstimate().getHeading()))
-                        .addTemporalMarker(1.5,()->robot.runCommands(liftUp3))
-                        .strafeRight(HI_POLE_SIDE)
+                        .back(50)
+                        //.turn(Math.toRadians(0 - drivetrain.getPoseEstimate().getHeading()))
+                        .addTemporalMarker(1.5,
+                                ()->robot.runCommands(new autoLift(robot, 3, POLE_HT+5)))
+                        .strafeRight(16)
+                        .forward(8)
                         .build()
         ));
-
-        //forward a little
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .forward(HI_POLE_FWD) // move forward
-                        .build()
-        ));
-
-        // Release cone
-        robot.runCommand(robot.outtake.rollerIntake(outtakePower, 0.5));
-        // TODO: adjust power
-
-        // Back a little
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .back(HI_POLE_FWD) // move forward
-                        .build()
-        ));
-        //go back
-        autoLift liftDown3 = new autoLift(robot, 0, POLE_HT);
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .strafeLeft(HI_POLE_SIDE)
-                        .addTemporalMarker(1.5,()->robot.runCommands(liftDown3))
-                        .back(26)
+                        .addTemporalMarker(0,()->robot.outtake.rollerIntake(outtakePower, 0.2))
+                        .back(8)
+                        .strafeLeft(40)
+                        .addTemporalMarker(1.0,
+                                ()->robot.runCommands(new autoLift(robot, 0, 0)))
                         .build()
         ));
 
         // park
-        if  (elementPos <3) {
-            int toLeft;
-            if (elementPos == 1)
-                toLeft = 26;
-            else
-                toLeft = 0;
+        if  (elementPos == 1) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeLeft(toLeft) // move side ways
+                            .forward(48) // move side ways
                             .build()
             ));
-        } else if (elementPos == 3||elementPos == 4) {
+        } else if (elementPos == 2) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeRight(25) // move side ways
+                            .forward(24) // move side ways
                             .build()
             ));
 
         }
-
-
-
 
     }
 }

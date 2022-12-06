@@ -74,7 +74,7 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 13; // in
+    public static double TRACK_WIDTH = 12.899; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -114,8 +114,8 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 30; //52.48291908330528;
-    public static double MAX_ACCEL = 30; //52.48291908330528;
+    public static double MAX_VEL = 40.0; //52.48291908330528;
+    public static double MAX_ACCEL = 40.0; //52.48291908330528;
     public static double MAX_ANG_VEL = Math.toRadians(180); //231.31152000000003);
     public static double MAX_ANG_ACCEL = Math.toRadians(180); //231.31152000000003);
 
