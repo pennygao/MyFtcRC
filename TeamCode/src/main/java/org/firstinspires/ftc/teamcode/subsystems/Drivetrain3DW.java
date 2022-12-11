@@ -74,7 +74,7 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 12.95; // in
+    public static double TRACK_WIDTH = 12.60; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -123,7 +123,7 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-    public static double LATERAL_MULTIPLIER = 1;
+    public static double LATERAL_MULTIPLIER = 1.2;
 
     public static double VX_WEIGHT = 1;
     public static double VY_WEIGHT = 1;
@@ -179,7 +179,7 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
 
         // Final accuracy
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
+                new Pose2d(0.5, 0.5, Math.toRadians(2.0)), 0.5);
 
         this.hardwareMap = robot.getHardwareMap();
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
