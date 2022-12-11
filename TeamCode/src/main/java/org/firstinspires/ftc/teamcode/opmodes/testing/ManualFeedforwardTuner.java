@@ -123,6 +123,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     telemetry.addData("getV()", motionState.getV());
                     telemetry.addData("getA()", motionState.getA());
                     drive.updatePoseEstimate();
+                    robot.update();
 
                     Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
                     double currentVelo = poseVelo.getX();
@@ -147,6 +148,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                                     -gamepad1.right_stick_x
                             )
                     );
+                    robot.update();
                     break;
             }
 
