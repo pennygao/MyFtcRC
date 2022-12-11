@@ -118,7 +118,8 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     MotionState motionState = activeProfile.get(profileTime);
                     double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
 
-                    drive.setWeightedDrivePower(new Pose2d(targetPower, 0, 0));
+                    drive.setDrivePower(new Pose2d(targetPower, 0, 0));
+                    robot.update();
                     telemetry.addData("targetPower", targetPower);
                     telemetry.addData("getV()", motionState.getV());
                     telemetry.addData("getA()", motionState.getA());
@@ -141,7 +142,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                         profileStart = clock.seconds();
                     }
 
-                    drive.setWeightedDrivePower(
+                    drive.setDrivePower(
                             new Pose2d(
                                     -gamepad1.left_stick_y,
                                     -gamepad1.left_stick_x,
