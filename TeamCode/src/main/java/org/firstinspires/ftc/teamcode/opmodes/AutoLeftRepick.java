@@ -18,7 +18,7 @@ public class AutoLeftRepick extends LinearOpMode {
     public static double HI_POLE_SIDE = 12;
     public static double HI_POLE_FWD = 6;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
-    public static double POLE_HT = 46.0 ;
+    public static double POLE_HT = 46.0 ;//46.0
     public static double CONE_HT = 10;
 
     @Override
@@ -84,7 +84,8 @@ public class AutoLeftRepick extends LinearOpMode {
                         .addTemporalMarker(0.5,
                                 ()->robot.runCommands(new autoLift(robot, 1, CONE_HT)))
                         .back(10) // move backward
-                        .turn( Math.toRadians(137))
+                        .turn( Math.toRadians(135))
+                        .strafeRight(1)
                         .forward(26.5)
                         .build()
         ));
@@ -97,9 +98,9 @@ public class AutoLeftRepick extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .addTemporalMarker(0.3,
-                                ()->robot.runCommands(new autoLift(robot, 3, POLE_HT)))
+                                ()->robot.runCommands(new autoLift(robot, 3, POLE_HT+3)))
                         .back(27)
-                        .turn(Math.toRadians(-137))
+                        .turn(Math.toRadians(-135))
                         .forward(9.0)
                         .build()
         ));
@@ -110,8 +111,8 @@ public class AutoLeftRepick extends LinearOpMode {
         // Back, turn and retract lift
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .addTemporalMarker(0.3,
-                                ()->robot.runCommands(new autoLift(robot, 0, 0)))
+                        //.addTemporalMarker(0.3,
+                        //        ()->robot.runCommands(new autoLift(robot, 0, 0)))
                         .back(10)
                         .turn(Math.toRadians(48))
                         .build()

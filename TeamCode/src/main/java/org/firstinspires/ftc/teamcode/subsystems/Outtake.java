@@ -23,6 +23,7 @@ public class Outtake implements Subsystem {
     public int targetPosition = 0;
     public Telemetry telemetry;
     private Servo obamaroller;
+    private Servo SSKnocker;
     private double rollerPower = 0.5;
     boolean autoMode = false;
     Servo.Direction rollerDirection = Servo.Direction.FORWARD;
@@ -74,6 +75,7 @@ public class Outtake implements Subsystem {
         this.telemetry = telemetry;
         obamaroller = robot.getServo("obamaroller");
         slideMotor = robot.getMotor("slideMotor");
+        SSKnocker = robot.getServo("SSKnocker");
         this.autoMode = autoMode;
         if (autoMode == true) {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -86,6 +88,7 @@ public class Outtake implements Subsystem {
 
             telemetry.addLine("slideMotor not in auto mode");
         }
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         telemetry.update();
         targetPosition = 0;
 
@@ -157,6 +160,9 @@ public class Outtake implements Subsystem {
     public void goalldown() { // slide_state.LEVEL_0) {
             level = 0;
             targetPosition = inchToTicks(0);
+    }
+    public void goToIntake(){
+        targetPosition = inchToTicks(4.42);
     }
 
     public void goToLevel(int level) {

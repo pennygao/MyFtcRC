@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -124,6 +126,10 @@ public class Robot {
         CachingServo servo = new CachingServo(hardwareMap.get(Servo.class, deviceName));
         listeners.add(servo);
         return servo;
+
+    }
+    public ColorSensor getcolorSensor(String deviceName){
+        return hardwareMap.colorSensor.get(deviceName);
     }
 
     public VoltageSensor getVoltageSensor() {

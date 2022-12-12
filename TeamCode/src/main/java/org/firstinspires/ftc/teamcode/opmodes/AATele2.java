@@ -3,22 +3,14 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 
 @TeleOp
-public class AATele extends LinearOpMode {
+public class AATele2 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        CrabRobot robot = new CrabRobot(this, true);
-
-
-
-
-
+        CrabRobot robot = new CrabRobot(this, false);
 
 
 //RESETS
@@ -89,83 +81,36 @@ public class AATele extends LinearOpMode {
             if (gamepad2.dpad_up) {
                 //robot.outtake.setSlideMotorMode(false);
                 //robot.outtake.slideMotor.setPower(1.0);
-                robot.outtake.goUp1Inch();
-                telemetry.addLine("dpad up pressed");
+                robot.outtake.slideMotor.setPower(0.4);
+                telemetry.addLine("going up slowly");
             } else if (gamepad2.dpad_down) {
                 //robot.outtake.setSlideMotorMode(false);
-                robot.outtake.goDown1Inch();
+                robot.outtake.slideMotor.setPower(-0.4);
                 //robot.outtake.slideMotor.setPower(-0.7);
-                telemetry.addLine("dpad down pressed");
-            } else if (buttonA) {
-                //robot.outtake.setSlideMotorMode(true);
-                robot.outtake.goToHt(18.69);
-                telemetry.addLine("going up to level 1");
+                telemetry.addLine("going down slowly");
             } else if (buttonX) {
                 //robot.outtake.setSlideMotorMode(true);
-                robot.outtake.goToHt(31.5);
-                telemetry.addLine("going up to level 2");
+                robot.outtake.slideMotor.setPower(-0.7);
+                telemetry.addLine("going down");
             } else if (buttonY) {
                 //robot.outtake.setSlideMotorMode(true);
-                robot.outtake.goToHt(47.19);
-                telemetry.addLine("going up to level 3");
-            } else if (buttonB) {
-                //robot.outtake.setSlideMotorMode(true);
-                robot.outtake.goToHt(4.42);
-                telemetry.addLine("going all the way down");
+                robot.outtake.slideMotor.setPower(0.7);
+                telemetry.addLine("going up");
+            }
+            else{
+                robot.outtake.slideMotor.setPower(0);
             }
 
 
-            telemetry.update();
+                telemetry.update();
 
-
-
-
-            // Roller intake
-            /*
-            if (leftTrigger!= 0.0 || rightTrigger != 0.0) {
-                double rollerPower = 0.5 + leftTrigger * 0.5 - rightTrigger * 0.5;
-                robot.outtake.setRollerPower(rollerPower);
-                telemetry.addData("Roller power: ", rollerPower);
-            }
-            */
-
-            if (leftBumper) {
-                robot.outtake.setRollerPower(0.5);
-            } else if (leftTrigger != 0) {
-                robot.outtake.setRollerPower(0.5 + leftTrigger * 0.5);
-            } else if (rightTrigger != 0.0) {
-                robot.outtake.setRollerPower(0.5 - rightTrigger * 0.5);
-            }
-
-
-//DUMP
-            /*
-            if(leftBumper) {
-                int level = robot.outtake.getLevel();
-                double servoPosition=0.6;
-                switch (level){
-                    case 1: servoPosition=0.25; //0.47 before fine-tune; hits the outer part of the tray
-                    break;
-                    case 2: servoPosition= 0.25;
-                    break;
-                    case 3: servoPosition= 0.25;
-                    break;
+                if (leftBumper) {
+                    robot.outtake.setRollerPower(0.5);
+                } else if (leftTrigger != 0) {
+                    robot.outtake.setRollerPower(0.5 + leftTrigger * 0.5);
+                } else if (rightTrigger != 0.0) {
+                    robot.outtake.setRollerPower(0.5 - rightTrigger * 0.5);
                 }
-                robot.outtake.setServoPosition(servoPosition);
-                telemetry.addLine("dumping  ");
-            }
-
-
-
-            if (rightBumper) {
-                robot.outtake.setServoPosition(0.6);
-                telemetry.addLine("resetting dumper");
-            }
-
-             */
-
-
-//DUCK SPINNER
 
         }
     }
