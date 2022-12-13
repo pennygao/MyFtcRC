@@ -22,11 +22,13 @@ public class Outtake implements Subsystem {
     private static final double INCHES_PER_LEVEL = 15.5;
     public int targetPosition = 0;
     public Telemetry telemetry;
-    private Servo obamaroller;
+    public Servo obamaroller;
     private Servo SSKnocker;
     private double rollerPower = 0.5;
     boolean autoMode = false;
     Servo.Direction rollerDirection = Servo.Direction.FORWARD;
+    private double ssKnockerPos = 0;
+
 
     private double[] level_ht = {5.0, 18.0, 29.0, 39.0, 32.0}; // in inches
 
@@ -183,6 +185,10 @@ public class Outtake implements Subsystem {
         return slideMotor.isBusy();
     }
 
+    public void SSKnockerSetPosition(double pos) {
+        ssKnockerPos = pos;
+    }
+
 
     @Override
     public void update(TelemetryPacket packet) {
@@ -191,6 +197,7 @@ public class Outtake implements Subsystem {
         }
          */
         obamaroller.setPosition(rollerPower);
+        SSKnocker.setPosition(ssKnockerPos);
         //telemetry.addData("automode:",autoMode);
         //telemetry.addData("slidePower:", slidePower);
         //telemetry.addData("target pos:", targetPosition);

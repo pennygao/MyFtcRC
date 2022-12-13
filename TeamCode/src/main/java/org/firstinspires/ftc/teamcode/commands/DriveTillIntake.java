@@ -13,14 +13,17 @@ public class DriveTillIntake implements Command {
     SimpleMecanumDrive mecanumDrive;
     NanoClock clock;
     Pose2d drivePower;
+    double xPwr;
+    double coef = 0.5;
     double initialTimeStamp, intakeCompleteTime;
     double driveTime;
 
     public DriveTillIntake (CrabRobot robot, SimpleMecanumDrive drive, Pose2d power, double time){
         this.robot = robot;
-        mecanumDrive=drive;
+        mecanumDrive = drive;
         clock=NanoClock.system();
         drivePower= power;
+        xPwr = drivePower.getX();
         driveTime=time;
     }
     @Override
@@ -32,22 +35,20 @@ public class DriveTillIntake implements Command {
 
     @Override
     public void update() {
-        /*
-        if (robot.intake.checkFreightIn()) {
-            intakeCompleteTime = clock.seconds();
-            robot.intake.stop();
-            mecanumDrive.setDrivePower(new Pose2d(0,0,0));
-            Configuration.intakeFreightIn = true;
+        // L online, R not online => turn left
+        if (robot.robotcolorsensor.csLonLine() && !robot.robotcolorsensor.csRonLine()) {
+            mecanumDrive.setDrivePower(new Pose2d(xPwr,xPwr*coef ,0));
+        } else if (!robot.robotcolorsensor.csLonLine() && robot.robotcolorsensor.csRonLine()) {
+            mecanumDrive.setDrivePower(new Pose2d(xPwr, -xPwr*coef, 0));
+        } else {
+            mecanumDrive.setDrivePower(drivePower);
         }
-
-         */
 
     }
 
     @Override
     public void stop() {
-        mecanumDrive.setDrivePower(new Pose2d());
-//        robot.intake.reset();
+        mecanumDrive.setDrivePower(new Pose2d(0,0,0));
     }
 
     @Override

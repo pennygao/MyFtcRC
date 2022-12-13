@@ -38,10 +38,8 @@ public class AATele extends LinearOpMode {
             boolean normieMode = gamepad1.right_bumper;
             float leftTrigger = gamepad2.left_trigger;
             float rightTrigger = gamepad2.right_trigger;
-            telemetry.addData("mode:", robot.outtake.slideMotor.getMode());
-            telemetry.addData("slide motor power: ", robot.outtake.slideMotor.getPower());
-//            telemetry.addData("dumpServo Position:",robot.outtake.getDumpPosition());
-            telemetry.update();
+            //telemetry.addData("mode:", robot.outtake.slideMotor.getMode());
+            //telemetry.addData("slide motor power: ", robot.outtake.slideMotor.getPower());
 
             robot.update();
 
@@ -57,35 +55,25 @@ public class AATele extends LinearOpMode {
                 robot.mecanumDrive.setPowerFactor(0.8);
             }
 
-//INTAKE
+//Color sensor
+            if (gamepad1.a) {
+                telemetry.addData("RRed: ", robot.robotcolorsensor.csR[0]);
+                telemetry.addData("RGreen: ", robot.robotcolorsensor.csR[1]);
+                telemetry.addData("RBlue: ", robot.robotcolorsensor.csR[2]);
+                telemetry.addData("RonLine:", robot.robotcolorsensor.csRonLine());
+                telemetry.addLine("Gamepad1 A pressed");
+                telemetry.update();
+            } else if (gamepad1.b) {
+                telemetry.addData("LRed: ", robot.robotcolorsensor.csL[0]);
+                telemetry.addData("LGreen: ", robot.robotcolorsensor.csL[1]);
+                telemetry.addData("LBlue: ", robot.robotcolorsensor.csL[2]);
+                telemetry.addData("LonLine:", robot.robotcolorsensor.csLonLine());
+                telemetry.addLine("Gamepad1 B pressed");
+                telemetry.update();
+            }
 
 
 //RAISE SLIDE
-            /*
-                if (buttonA) {
-                    if (!isApressed) {
-                        robot.outtake.goUp();
-                        isApressed = true;
-                        telemetry.addData("going up. level: ", robot.outtake.targetPosition);
-                    }
-                } else {
-                    isApressed = false;
-                }
-
-                if (buttonB) {
-                    robot.outtake.goalldown();
-                    ///telemetry.addData("going down to: ", robot.outtake.targetPosition);
-                }
-
-                if (buttonX) {
-                    robot.outtake.goUp1Inch();
-                }
-                if (buttonY) {
-                    robot.outtake.goDown1Inch();
-                }
-          */
-
-
             if (gamepad2.dpad_up) {
                 //robot.outtake.setSlideMotorMode(false);
                 //robot.outtake.slideMotor.setPower(1.0);
@@ -115,57 +103,20 @@ public class AATele extends LinearOpMode {
             }
 
 
-            telemetry.update();
-
-
-
-
-            // Roller intake
-            /*
-            if (leftTrigger!= 0.0 || rightTrigger != 0.0) {
-                double rollerPower = 0.5 + leftTrigger * 0.5 - rightTrigger * 0.5;
-                robot.outtake.setRollerPower(rollerPower);
-                telemetry.addData("Roller power: ", rollerPower);
-            }
-            */
-
             if (leftBumper) {
                 robot.outtake.setRollerPower(0.5);
-            } else if (leftTrigger != 0) {
+            } else if (leftTrigger > 0.1) {
                 robot.outtake.setRollerPower(0.5 + leftTrigger * 0.5);
-            } else if (rightTrigger != 0.0) {
+            } else if (rightTrigger > 0.1) {
                 robot.outtake.setRollerPower(0.5 - rightTrigger * 0.5);
             }
 
-
-//DUMP
-            /*
-            if(leftBumper) {
-                int level = robot.outtake.getLevel();
-                double servoPosition=0.6;
-                switch (level){
-                    case 1: servoPosition=0.25; //0.47 before fine-tune; hits the outer part of the tray
-                    break;
-                    case 2: servoPosition= 0.25;
-                    break;
-                    case 3: servoPosition= 0.25;
-                    break;
-                }
-                robot.outtake.setServoPosition(servoPosition);
-                telemetry.addLine("dumping  ");
+// SSKnocker
+            if (gamepad1.left_bumper) {
+                robot.outtake.SSKnockerSetPosition(0.0);
+            } else if (gamepad1.right_bumper) {
+                robot.outtake.SSKnockerSetPosition(0.45);
             }
-
-
-
-            if (rightBumper) {
-                robot.outtake.setServoPosition(0.6);
-                telemetry.addLine("resetting dumper");
-            }
-
-             */
-
-
-//DUCK SPINNER
 
         }
     }
