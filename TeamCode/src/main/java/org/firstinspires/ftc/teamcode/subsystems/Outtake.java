@@ -56,7 +56,7 @@ public class Outtake implements Subsystem {
 
         @Override
         public void stop() {
-            setRollerPower(0.5);
+            //setRollerPower(0.5);
         }
 
         @Override
@@ -198,7 +198,8 @@ public class Outtake implements Subsystem {
          */
         obamaroller.setPosition(rollerPower);
         SSKnocker.setPosition(ssKnockerPos);
-        //telemetry.addData("automode:",autoMode);
+        //telemetry.addData("rollerPower:", rollerPower);
+        //telemetry.addData("rollerPos: ", obamaroller.getPosition());
         //telemetry.addData("slidePower:", slidePower);
         //telemetry.addData("target pos:", targetPosition);
         //telemetry.update();

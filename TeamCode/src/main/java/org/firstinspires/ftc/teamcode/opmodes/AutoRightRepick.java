@@ -45,9 +45,10 @@ public class AutoRightRepick extends LinearOpMode {
 
         elementPos = od.ssIndex(10);
 
+
         // hold preload
         //robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.5));
-        robot.runCommand(robot.outtake.rollerIntake(0.7, 0.4));
+        robot.runCommand(robot.outtake.rollerIntake(intakePower, 1.0));
 
         // Move forward then right to high pole
         autoLift liftUp = new autoLift(robot, 3, POLE_HT);
@@ -59,7 +60,7 @@ public class AutoRightRepick extends LinearOpMode {
                         .addTemporalMarker(0.0, ()->robot.runCommands(liftUp)) // raise lift
                         .addTemporalMarker(0.7, ()->robot.runCommand(knock))
                         .addTemporalMarker(1.5, ()->robot.runCommand(knockerReset))
-                        .splineTo(new Vector2d(58.5, 6.8), Math.toRadians(48)) // strafe to pole
+                        .splineTo(new Vector2d(58, 6), Math.toRadians(48)) // strafe to pole
                         .build()
         ));
         // Release cone
@@ -75,15 +76,15 @@ public class AutoRightRepick extends LinearOpMode {
                         .back(9.5) // move backward
                         .turn( Math.toRadians(-134))
                         //.strafeRight(1)
-                        .forward(24)
+                        .forward(11)
                         .build()
         ));
 
-/*        // Follow line
-        DriveTillIntake flwLine = new DriveTillIntake(robot, robot.mecanumDrive,
-                new Pose2d(0.1, 0, 0), 2);
+        // Follow line
+        DriveTillIntake flwLine = new DriveTillIntake(robot, drivetrain,
+                new Pose2d(0.1, 0, 0), 2.5, telemetry);
         robot.runCommand(flwLine);
-*/
+
         robot.runCommands(new autoLift(robot, 1, CONE_HT-4));
         robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.8));
         robot.runCommands(new autoLift(robot, 1, CONE_HT+5));
@@ -92,10 +93,10 @@ public class AutoRightRepick extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .addTemporalMarker(0.3,
-                                ()->robot.runCommands(new autoLift(robot, 3, POLE_HT+3)))
+                                ()->robot.runCommands(new autoLift(robot, 3, POLE_HT)))
                         .back(26)
-                        .turn(Math.toRadians(133))
-                        .forward(10.0)
+                        .turn(Math.toRadians(130))
+                        .forward(9.0)
                         .build()
         ));
 
@@ -106,9 +107,9 @@ public class AutoRightRepick extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .addTemporalMarker(0.3,
-                                ()->robot.runCommands(new autoLift(robot, 1, CONE_HT)))
+                                ()->robot.runCommands(new autoLift(robot, 0, 0)))
                         .back(9)
-                        .turn(Math.toRadians(-48))
+                        .turn(Math.toRadians(135))
                         .build()
         ));
 
@@ -116,17 +117,18 @@ public class AutoRightRepick extends LinearOpMode {
         if  (elementPos == 1) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeLeft(24) // move side ways
+                            .strafeRight(24) // move side ways
                             .build()
             ));
-        } else if (elementPos == 3) {
+        } else if (elementPos == 3 || elementPos == 4) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeRight(24) // move side ways
+                            .strafeLeft(24) // move side ways
                             .build()
             ));
 
         }
+
 
     }
 }

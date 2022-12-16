@@ -104,13 +104,12 @@ public class AATele extends LinearOpMode {
 
 
             if (leftBumper) {
-                robot.outtake.setRollerPower(0.5);
+                //robot.outtake.setRollerPower(0.5);
             } else if (leftTrigger > 0.1) {
-                robot.outtake.setRollerPower(0.5 + leftTrigger * 0.5);
+                robot.outtake.setRollerPower(0.8); //0.5 + leftTrigger * 0.5);
             } else if (rightTrigger > 0.1) {
-                robot.outtake.setRollerPower(0.5 - rightTrigger * 0.5);
+                robot.outtake.setRollerPower(0.2); // - rightTrigger * 0.5);
             }
-
 // SSKnocker
             if (gamepad1.left_bumper) {
                 robot.outtake.SSKnockerSetPosition(0.0);
