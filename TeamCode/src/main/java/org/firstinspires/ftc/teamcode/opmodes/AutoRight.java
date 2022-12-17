@@ -14,10 +14,10 @@ import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 @Autonomous
 public class AutoRight extends LinearOpMode {
     public static double HI_POLE_X = 53.0;
-    public static double HI_POLE_SIDE = 15.0;
+    public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5.5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
-    public static double POLE_HT = 43.69;
+    public static double POLE_HT = 44.69;
 
     @Override
     public void runOpMode() throws InterruptedException {

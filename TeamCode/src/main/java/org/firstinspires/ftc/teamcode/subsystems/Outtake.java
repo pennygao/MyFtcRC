@@ -24,7 +24,7 @@ public class Outtake implements Subsystem {
     public Telemetry telemetry;
     public Servo obamaroller;
     private Servo SSKnocker;
-    private double rollerPower = 0.5;
+    private double rollerPower = 0.1;
     boolean autoMode = false;
     Servo.Direction rollerDirection = Servo.Direction.FORWARD;
     private double ssKnockerPos = 0;
@@ -198,11 +198,11 @@ public class Outtake implements Subsystem {
          */
         obamaroller.setPosition(rollerPower);
         SSKnocker.setPosition(ssKnockerPos);
-        //telemetry.addData("rollerPower:", rollerPower);
-        //telemetry.addData("rollerPos: ", obamaroller.getPosition());
+        telemetry.addData("rollerPower:", rollerPower);
+        telemetry.addData("rollerPos: ", obamaroller.getPosition());
         //telemetry.addData("slidePower:", slidePower);
         //telemetry.addData("target pos:", targetPosition);
-        //telemetry.update();
+        telemetry.update();
         if (slidePower != 0) {
             slideMotor.setPower(slidePower);
 

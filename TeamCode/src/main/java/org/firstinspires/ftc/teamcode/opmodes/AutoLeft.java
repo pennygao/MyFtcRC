@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 public class AutoLeft extends LinearOpMode {
     public static double HI_POLE_X = 52.5;//26.5
     public static double MID_POLE_X = 26;
-    public static double HI_POLE_SIDE = 15;
+    public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
     public static double POLE_HT = 44.69;
@@ -92,23 +92,19 @@ public class AutoLeft extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .strafeLeft(HI_POLE_SIDE)
-                        .back(26)
+                        .back(25)
                         .build()
         ));
 
 
         // park
-        if  (elementPos <3) {
-            int toLeft;
-            if (elementPos == 1)
-                toLeft = 26;
-            else
-                toLeft = 0;
+        if (elementPos == 1){
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeLeft(toLeft) // move side ways
+                            .strafeLeft(25) // move side ways
                             .build()
             ));
+
         } else if (elementPos == 3||elementPos == 4) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())

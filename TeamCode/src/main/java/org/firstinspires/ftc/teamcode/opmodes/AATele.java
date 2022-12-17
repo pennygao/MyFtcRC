@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
 import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Outtake;
@@ -71,8 +72,19 @@ public class AATele extends LinearOpMode {
                 telemetry.addLine("Gamepad1 B pressed");
                 telemetry.update();
             }
+//SS knocker
+            if (gamepad2.right_bumper){
+                KnockerCommand knock = new KnockerCommand(robot, 0.4, 1.5);
+                robot.runCommands(knock);
+            }
 
-
+/* SSKnocker thing?????
+            if (gamepad1.left_bumper) {
+                robot.outtake.SSKnockerSetPosition(0.0);
+            } else if (gamepad1.right_bumper) {
+                robot.outtake.SSKnockerSetPosition(0.45);
+            }
+*/
 //RAISE SLIDE
             if (gamepad2.dpad_up) {
                 //robot.outtake.setSlideMotorMode(false);
@@ -94,7 +106,7 @@ public class AATele extends LinearOpMode {
                 telemetry.addLine("going up to level 2");
             } else if (buttonY) {
                 //robot.outtake.setSlideMotorMode(true);
-                robot.outtake.goToHt(47.19);
+                robot.outtake.goToHt(44.69);
                 telemetry.addLine("going up to level 3");
             } else if (buttonB) {
                 //robot.outtake.setSlideMotorMode(true);
@@ -103,18 +115,10 @@ public class AATele extends LinearOpMode {
             }
 
 
-            if (leftBumper) {
-                //robot.outtake.setRollerPower(0.5);
-            } else if (leftTrigger > 0.1) {
-                robot.outtake.setRollerPower(0.8); //0.5 + leftTrigger * 0.5);
-            } else if (rightTrigger > 0.1) {
-                robot.outtake.setRollerPower(0.2); // - rightTrigger * 0.5);
-            }
-// SSKnocker
-            if (gamepad1.left_bumper) {
-                robot.outtake.SSKnockerSetPosition(0.0);
-            } else if (gamepad1.right_bumper) {
-                robot.outtake.SSKnockerSetPosition(0.45);
+            if (leftTrigger > 0.5) {
+                robot.outtake.setRollerPower(0.5); //0.5 + leftTrigger * 0.5);
+            } else if (rightTrigger > 0.5) {
+                robot.outtake.setRollerPower(0.1); // - rightTrigger * 0.5);
             }
 
         }

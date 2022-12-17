@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Autonomous
-public class AutoLeftRepick extends LinearOpMode {
+public class ZZAutoLeftRepick extends LinearOpMode {
     public static double HI_POLE_X = 52.5;
     public static double MID_POLE_X = 26;
     public static double HI_POLE_SIDE = 12;

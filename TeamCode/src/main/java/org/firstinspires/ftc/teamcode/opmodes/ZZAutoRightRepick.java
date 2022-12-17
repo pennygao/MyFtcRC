@@ -11,11 +11,10 @@ import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Autonomous
-public class AutoRightRepick extends LinearOpMode {
+public class ZZAutoRightRepick extends LinearOpMode {
     public static double POLE_HT = 46.0 ;//46.0
     public static double CONE_HT = 10;
 
@@ -92,13 +91,15 @@ public class AutoRightRepick extends LinearOpMode {
 
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .addTemporalMarker(0.3,
-                                ()->robot.runCommands(new autoLift(robot, 3, POLE_HT)))
-                        .back(26)
-                        .turn(Math.toRadians(121))
-                        .forward(11.0)
+                        //.addTemporalMarker(0.3, ()->robot.runCommands(new autoLift(robot, 3, POLE_HT)))
+                        //.back(26)
+                        //.turn(Math.toRadians(121))
+                        //.forward(11.0)
+                        .splineTo(new Vector2d(60, 8), Math.toRadians(48))
                         .build()
         ));
+
+
 
         // Release cone
         robot.runCommand(robot.outtake.rollerIntake(outtakePower, 0.1));
