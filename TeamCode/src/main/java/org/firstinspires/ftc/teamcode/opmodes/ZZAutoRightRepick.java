@@ -48,11 +48,11 @@ public class AutoRightRepick extends LinearOpMode {
 
         // hold preload
         //robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.5));
-        robot.runCommand(robot.outtake.rollerIntake(intakePower, 1.0));
+        robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.2));
 
         // Move forward then right to high pole
         autoLift liftUp = new autoLift(robot, 3, POLE_HT);
-        KnockerCommand knock = new KnockerCommand(robot, 0.3, 1.0);
+        KnockerCommand knock = new KnockerCommand(robot, 0.45, 1.5);
         KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
 
         robot.runCommand(drivetrain.followTrajectorySequence(
@@ -60,7 +60,7 @@ public class AutoRightRepick extends LinearOpMode {
                         .addTemporalMarker(0.0, ()->robot.runCommands(liftUp)) // raise lift
                         .addTemporalMarker(0.7, ()->robot.runCommand(knock))
                         .addTemporalMarker(1.5, ()->robot.runCommand(knockerReset))
-                        .splineTo(new Vector2d(58, 6), Math.toRadians(48)) // strafe to pole
+                        .splineTo(new Vector2d(60, 8), Math.toRadians(48)) // strafe to pole
                         .build()
         ));
         // Release cone
@@ -82,11 +82,11 @@ public class AutoRightRepick extends LinearOpMode {
 
         // Follow line
         DriveTillIntake flwLine = new DriveTillIntake(robot, drivetrain,
-                new Pose2d(0.1, 0, 0), 2.5, telemetry);
+                new Pose2d(0.1, 0, 0), 3.3, telemetry);
         robot.runCommand(flwLine);
 
-        robot.runCommands(new autoLift(robot, 1, CONE_HT-4));
-        robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.8));
+        robot.runCommands(new autoLift(robot, 1, CONE_HT-5));
+        robot.runCommand(robot.outtake.rollerIntake(intakePower, 1.0));
         robot.runCommands(new autoLift(robot, 1, CONE_HT+5));
 
 
@@ -95,8 +95,8 @@ public class AutoRightRepick extends LinearOpMode {
                         .addTemporalMarker(0.3,
                                 ()->robot.runCommands(new autoLift(robot, 3, POLE_HT)))
                         .back(26)
-                        .turn(Math.toRadians(130))
-                        .forward(9.0)
+                        .turn(Math.toRadians(121))
+                        .forward(11.0)
                         .build()
         ));
 
@@ -109,7 +109,7 @@ public class AutoRightRepick extends LinearOpMode {
                         .addTemporalMarker(0.3,
                                 ()->robot.runCommands(new autoLift(robot, 0, 0)))
                         .back(9)
-                        .turn(Math.toRadians(135))
+                        .turn(Math.toRadians(-35))
                         .build()
         ));
 
@@ -117,13 +117,13 @@ public class AutoRightRepick extends LinearOpMode {
         if  (elementPos == 1) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeRight(24) // move side ways
+                            .strafeLeft(24) // move side ways
                             .build()
             ));
         } else if (elementPos == 3 || elementPos == 4) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeLeft(24) // move side ways
+                            .strafeRight(24) // move side ways
                             .build()
             ));
 
