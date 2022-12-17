@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
 import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
@@ -11,13 +13,14 @@ import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
+@Config
 @Autonomous
 public class AutoRight extends LinearOpMode {
     public static double HI_POLE_X = 53.0;
     public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5.5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
-    public static double POLE_HT = 44.69;
+    public static double POLE_HT = 43.69;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -46,6 +49,10 @@ public class AutoRight extends LinearOpMode {
         if (isStopRequested()) return;
         elementPos = od.ssIndex(100);
 
+        KnockerCommand knock = new KnockerCommand(robot, 0.45, 1.5);
+        KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
+
+        autoLift liftUp = new autoLift(robot, 3, POLE_HT);
 
         // hold preload
         robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.8));
@@ -54,15 +61,12 @@ public class AutoRight extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .forward(HI_POLE_X) // move forward
+                        .addTemporalMarker(0.0, ()->robot.runCommands(liftUp)) // raise lift
+                        .addTemporalMarker(0.55, ()->robot.runCommand(knock))
+                        .addTemporalMarker(2, ()->robot.runCommand(knockerReset))
                         .strafeLeft(HI_POLE_SIDE)
                         .build()
         ));
-
-        // Raise lift
-        autoLift liftUp = new autoLift(robot, 3, POLE_HT);
-        robot.runCommands(liftUp);
-
-
 
         // Forward a little
         robot.runCommand(drivetrain.followTrajectorySequence(
