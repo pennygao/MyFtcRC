@@ -79,7 +79,7 @@ public class Outtake implements Subsystem {
         slideMotor = robot.getMotor("slideMotor");
         SSKnocker = robot.getServo("SSKnocker");
         this.autoMode = autoMode;
-        if (autoMode == true) {
+        if (autoMode) {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             this.setPower(1.0);
@@ -100,7 +100,7 @@ public class Outtake implements Subsystem {
         if (encoderMode == true) {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            this.setPower(0.7);
+            this.setPower(0.6);
             telemetry.addLine("slideMotor in auto mode");
         }
         else{
@@ -134,7 +134,7 @@ public class Outtake implements Subsystem {
 
     public void goUp1Inch() {
         int current = slideMotor.getCurrentPosition();
-        targetPosition = current + inchToTicks(1.5);
+        targetPosition = current + inchToTicks(2.5);
         /*
         if (level < 3 && !slideMotor.isBusy()) {
             targetPosition = inchToTicks(level_ht[level] + 1);
@@ -144,7 +144,7 @@ public class Outtake implements Subsystem {
 
     public void goDown1Inch() {
         int current = slideMotor.getCurrentPosition();
-        targetPosition = current - inchToTicks(1.5);
+        targetPosition = current - inchToTicks(2.5);
         /*
         if (level < 3 && !slideMotor.isBusy()) {
             targetPosition = inchToTicks(level_ht[level] - 1);

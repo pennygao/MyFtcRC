@@ -91,11 +91,11 @@ public class ZZAutoRightRepick extends LinearOpMode {
 
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        //.addTemporalMarker(0.3, ()->robot.runCommands(new autoLift(robot, 3, POLE_HT)))
-                        //.back(26)
-                        //.turn(Math.toRadians(121))
-                        //.forward(11.0)
-                        .splineTo(new Vector2d(60, 8), Math.toRadians(48))
+                        .addTemporalMarker(0.3, ()->robot.runCommands(new autoLift(robot, 3, POLE_HT)))
+                        .back(26)
+                        .turn(Math.toRadians(121))
+                        .forward(11.0)
+
                         .build()
         ));
 

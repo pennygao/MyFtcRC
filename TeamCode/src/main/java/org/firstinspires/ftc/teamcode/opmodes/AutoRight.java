@@ -53,6 +53,7 @@ public class AutoRight extends LinearOpMode {
         KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
 
         autoLift liftUp = new autoLift(robot, 3, POLE_HT);
+        autoLift liftSlightlyDown = new autoLift(robot, 3, POLE_HT-2);
 
         // hold preload
         robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.8));
@@ -74,10 +75,13 @@ public class AutoRight extends LinearOpMode {
                         .forward(HI_POLE_FWD) // move forward
                         .build()
         ));
+        robot.runCommands(liftSlightlyDown);
 
         // Release cone
         robot.runCommand(robot.outtake.rollerIntake(outtakePower, 0.5));
         // TODO: adjust power
+
+        robot.runCommands(liftUp);
 
         // Back a little
         robot.runCommand(drivetrain.followTrajectorySequence(
@@ -101,7 +105,7 @@ public class AutoRight extends LinearOpMode {
         // park
         if  (elementPos == 1) {
             int toLeft;
-            toLeft = 24;
+            toLeft = 22;
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
                             .strafeLeft(toLeft) // move side ways
