@@ -17,10 +17,10 @@ import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 @Autonomous
 public class AutoRight extends LinearOpMode {
     public static double HI_POLE_X = 53.0;
-    public static double HI_POLE_SIDE = 14.5;
+    public static double HI_POLE_SIDE = 12.5;
     public static double HI_POLE_FWD = 5.5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
-    public static double POLE_HT = 43.69;
+    public static double POLE_HT = 45.69;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -86,7 +86,7 @@ public class AutoRight extends LinearOpMode {
         // Back a little
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .back(HI_POLE_FWD) // move forward
+                        .back(HI_POLE_FWD-2) // move forward
                         .build()
         ));
 
@@ -105,7 +105,7 @@ public class AutoRight extends LinearOpMode {
         // park
         if  (elementPos == 1) {
             int toLeft;
-            toLeft = 22;
+            toLeft = 25;
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
                             .strafeLeft(toLeft) // move side ways
