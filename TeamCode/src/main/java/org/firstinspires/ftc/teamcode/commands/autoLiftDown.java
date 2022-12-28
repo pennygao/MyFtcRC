@@ -14,10 +14,8 @@ public class autoLiftDown implements Command {
 
     @Override
     public void start() {
-         robot.outtake.goalldown();
+         robot.scoringSystem.goAllDown();
          robot.update();
-//        startTime = NanoClock.system().seconds();
-
     }
 
     @Override
@@ -27,14 +25,11 @@ public class autoLiftDown implements Command {
 
     @Override
     public void stop() {
-        robot.outtake.slideMotor.setPower(0);
+        robot.scoringSystem.dualMotorLift.adjustLift(0);
     }
 
     @Override
     public boolean isCompleted() {
-
-        return (!this.robot.outtake.slideMotorBusy());
-
-
+        return (!this.robot.scoringSystem.dualMotorLift.isLevelReached());
     }
 }

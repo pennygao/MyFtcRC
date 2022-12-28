@@ -3,27 +3,18 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
-import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
-import org.firstinspires.ftc.teamcode.subsystems.Outtake;
+import android.util.Log;
 
 @TeleOp
 public class AATele extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this, true);
-
-
-
-
-
-
-
 //RESETS
-//        robot.outtake.setServoPosition(0.6);
+//        robot.scoringSystem.setServoPosition(0.6);
 
         waitForStart();
 
@@ -37,18 +28,21 @@ public class AATele extends LinearOpMode {
             boolean rightBumper = gamepad2.right_bumper;
             boolean slowMode = gamepad1.left_bumper;
             boolean normieMode = gamepad1.right_bumper;
-            float leftTrigger = gamepad2.left_trigger;
-            float rightTrigger = gamepad2.right_trigger;
-            //telemetry.addData("mode:", robot.outtake.slideMotor.getMode());
-            //telemetry.addData("slide motor power: ", robot.outtake.slideMotor.getPower());
+            float leftTrigger2 = gamepad2.left_trigger;
+            float rightTrigger2 = gamepad2.right_trigger;
+            double lTrigger1 = gamepad2.left_stick_x; //gamepad1.left_trigger;
+            double rTrigger1 = gamepad2.right_stick_x;
+
+            //telemetry.addData("mode:", robot.scoringSystem.slideMotor.getMode());
+            //telemetry.addData("slide motor power: ", robot.scoringSystem.slideMotor.getPower());
 
             robot.update();
+            Log.v("updatetarget", "robot.update() is done");
 
             //check the bottom of the code (A) for the deleted bit i commented out
 
 //DRIVE
             robot.mecanumDrive.setDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
-
             if (slowMode) {
                 robot.mecanumDrive.setPowerFactor(0.4);
             }
@@ -80,46 +74,59 @@ public class AATele extends LinearOpMode {
 
 /* SSKnocker thing?????
             if (gamepad1.left_bumper) {
-                robot.outtake.SSKnockerSetPosition(0.0);
+                robot.scoringSystem.SSKnockerSetPosition(0.0);
             } else if (gamepad1.right_bumper) {
-                robot.outtake.SSKnockerSetPosition(0.45);
+                robot.scoringSystem.SSKnockerSetPosition(0.45);
             }
 */
 //RAISE SLIDE
             if (gamepad2.dpad_up) {
-                //robot.outtake.setSlideMotorMode(false);
-                //robot.outtake.slideMotor.setPower(1.0);
-                robot.outtake.goUp1Inch();
+                robot.scoringSystem.adjustLift(1);
                 telemetry.addLine("dpad up pressed");
             } else if (gamepad2.dpad_down) {
-                //robot.outtake.setSlideMotorMode(false);
-                robot.outtake.goDown1Inch();
-                //robot.outtake.slideMotor.setPower(-0.7);
+                robot.scoringSystem.adjustLift(-1);
                 telemetry.addLine("dpad down pressed");
             } else if (buttonA) {
-                //robot.outtake.setSlideMotorMode(true);
-                robot.outtake.goToHt(18.69);
+                //robot.scoringSystem.goToHt(18.69);
+                robot.scoringSystem.dualMotorLift.goToLevel(1);
                 telemetry.addLine("going up to level 1");
             } else if (buttonX) {
-                //robot.outtake.setSlideMotorMode(true);
-                robot.outtake.goToHt(31.5);
+                //robot.scoringSystem.goToHt(31.5);
+                robot.scoringSystem.dualMotorLift.goToLevel(2);
                 telemetry.addLine("going up to level 2");
             } else if (buttonY) {
-                //robot.outtake.setSlideMotorMode(true);
-                robot.outtake.goToHt(44.69);
+                //robot.scoringSystem.goToHt(44.69);
+                robot.scoringSystem.dualMotorLift.goToLevel(3);
                 telemetry.addLine("going up to level 3");
             } else if (buttonB) {
-                //robot.outtake.setSlideMotorMode(true);
-                robot.outtake.goToHt(4.42);
+                //robot.scoringSystem.goToHt(4.42);
+                robot.scoringSystem.goAllDown();
                 telemetry.addLine("going all the way down");
+            } else if (robot.scoringSystem.isLiftLevelReached()){
+                robot.scoringSystem.adjustLift(0); //set to adjust lift mode, but don't turn motor
+                Log.v("updatetarget","idling mode");
+                //or set its mode to Move with encoder?
+            }
+//FIXME use game pad 1's triggers not joystick
+            if(lTrigger1>0) {
+                robot.scoringSystem.swingChainBar(-1);
+            }
+            else if (lTrigger1<0){
+                robot.scoringSystem.swingChainBar(1);
+            }
+            if(rTrigger1>0) {
+                robot.scoringSystem.adjustChainBar(-1);
+            }
+            else if (rTrigger1<0){
+                robot.scoringSystem.adjustChainBar(1);
             }
 
-
-            if (leftTrigger > 0.5) {
-                robot.outtake.setRollerPower(0.5); //0.5 + leftTrigger * 0.5);
-            } else if (rightTrigger > 0.5) {
-                robot.outtake.setRollerPower(0.1); // - rightTrigger * 0.5);
+            if (leftTrigger2 > 0.5) {
+                robot.scoringSystem.closeClaw(); //0.5 + leftTrigger * 0.5);
+            } else if (rightTrigger2 > 0.5) {
+                robot.scoringSystem.openClaw(); // - rightTrigger * 0.5);
             }
+            Log.v("updatetarget", "Opmode loop finished one iteration.");
 
         }
     }

@@ -21,7 +21,7 @@ public class KnockerCommand implements Command {
 
     @Override
     public void start() {
-        robot.outtake.SSKnockerSetPosition(servoPos);
+        robot.scoringSystem.SSKnockerSetPosition(servoPos);
         initialTimeStamp = clock.seconds();
     }
 
@@ -31,7 +31,7 @@ public class KnockerCommand implements Command {
 
     @Override
     public void stop() {
-        robot.outtake.SSKnockerSetPosition(0.0);
+        robot.scoringSystem.SSKnockerSetPosition(0.0);
     }
 
     @Override

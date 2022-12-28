@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.acmerobotics.roadrunner.util.NanoClock;
-
 import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
@@ -16,15 +14,16 @@ public class autoLift implements Command {
         this.robot= robot;
         this.level = level;
         this.ht = ht;
+
     }
 
     @Override
     public void start() {
         if (this.level == 0) {
-            robot.outtake.goalldown();
+            robot.scoringSystem.goAllDown();
             robot.update();
         } else {
-            robot.outtake.goToHt(ht);
+            robot.scoringSystem.dualMotorLift.goToLevel(level);
             robot.update();
         }
 //        startTime = NanoClock.system().seconds();
@@ -38,14 +37,11 @@ public class autoLift implements Command {
 
     @Override
     public void stop() {
-        robot.outtake.slideMotor.setPower(0);
+        robot.scoringSystem.dualMotorLift.adjustLift(0);
     }
 
     @Override
     public boolean isCompleted() {
-
-        return (!this.robot.outtake.slideMotorBusy());
-
-
+        return (!this.robot.scoringSystem.dualMotorLift.isLevelReached());
     }
 }

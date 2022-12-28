@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
 import org.firstinspires.ftc.teamcode.commands.autoLift;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
-import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
@@ -43,7 +42,8 @@ public class AutoRight extends LinearOpMode {
 
 
         //Servo init code here
-        robot.outtake.setRollerPower(0.5);
+        robot.scoringSystem.openClaw();
+        //robot.scoringSystem.setClawPos(0.5);
         od.init();
         waitForStart();
         if (isStopRequested()) return;
@@ -55,7 +55,8 @@ public class AutoRight extends LinearOpMode {
         autoLift liftUp = new autoLift(robot, 3, POLE_HT);
 
         // hold preload
-        robot.runCommand(robot.outtake.rollerIntake(intakePower, 0.8));
+        robot.scoringSystem.closeClaw();
+        //robot.runCommand(robot.scoringSystem.rollerIntake(intakePower, 0.8));
 
         // Move forward two tile
         robot.runCommand(drivetrain.followTrajectorySequence(
@@ -76,7 +77,8 @@ public class AutoRight extends LinearOpMode {
         ));
 
         // Release cone
-        robot.runCommand(robot.outtake.rollerIntake(outtakePower, 0.5));
+        robot.scoringSystem.openClaw();
+       // robot.runCommand(robot.scoringSystem.rollerIntake(outtakePower, 0.5));
         // TODO: adjust power
 
         // Back a little

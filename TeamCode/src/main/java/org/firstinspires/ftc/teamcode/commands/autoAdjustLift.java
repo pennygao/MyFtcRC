@@ -5,13 +5,13 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
-public class autoLiftInch implements Command {
+public class autoAdjustLift implements Command {
 
     CrabRobot robot;
     private double startTime;
     private boolean down;
 
-    public autoLiftInch(CrabRobot robot, boolean down) {
+    public autoAdjustLift(CrabRobot robot, boolean down) {
         this.robot= robot;
         this.down = down;
     }
@@ -19,9 +19,9 @@ public class autoLiftInch implements Command {
     @Override
     public void start() {
         if (down) {
-            robot.outtake.goDown1Inch();
+            robot.scoringSystem.dualMotorLift.adjustLift(-1);
         } else {
-            robot.outtake.goUp1Inch();
+            robot.scoringSystem.dualMotorLift.adjustLift(1);
         }
         startTime = NanoClock.system().seconds();
         robot.update();
@@ -34,13 +34,13 @@ public class autoLiftInch implements Command {
 
     @Override
     public void stop() {
-        robot.outtake.slideMotor.setPower(0);
+        robot.scoringSystem.dualMotorLift.adjustLift(0);
     }
 
     @Override
     public boolean isCompleted() {
 
-        return (!this.robot.outtake.slideMotorBusy());
+        return (!this.robot.scoringSystem.dualMotorLift.isLevelReached());
 
 
     }
