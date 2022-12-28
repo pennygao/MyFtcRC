@@ -1,11 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 import android.util.Log;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-public class SmartGamepad extends Gamepad implements PeriodicUpdateCallback {
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
+
+public class SmartGamepad extends Gamepad implements Subsystem {
 
     private Gamepad original = null;  // reference to the original gamepad object from opmode
     private Gamepad previous = null;  // a copy of gamepad with previous state
@@ -13,18 +16,13 @@ public class SmartGamepad extends Gamepad implements PeriodicUpdateCallback {
     public SmartGamepad(Gamepad gamepad) {
         original = gamepad;
         previous = new Gamepad();
-        Utilities.getSharedUtility().registerForPeriodicUpdate(this);
         Log.v("gamepad", "Smart gamepad check in.");
     }
 
     @Override
-    public void update () {
-        try {
-            previous.copy(this);
-            copy(original);
-        } catch (RobotCoreException e) {
-            ;
-        }
+    public void update (TelemetryPacket packet) {
+        previous.copy(this);
+        copy(original);
     }
 
     public boolean dpad_up_pressed() {
@@ -43,10 +41,21 @@ public class SmartGamepad extends Gamepad implements PeriodicUpdateCallback {
         return dpad_right && !previous.dpad_right;
     }
 
+    public boolean a_pressed() {
+        return a && !previous.a;
+    }
+
+    public boolean b_pressed() {
+        return b && !previous.b;
+    }
+
+    public boolean x_pressed() {
+        return x && !previous.x;
+    }
+
     public boolean y_pressed() {
         return y && !previous.y;
     }
-
     public boolean dpad_changed() {
         Log.v("gamepad", String.format("Dpad (up/down/left/right): %b,%b,%b,%b, previous: %b,%b,%b,%b", dpad_up, dpad_down, dpad_left, dpad_right,
                 previous.dpad_up, previous.dpad_down, previous.dpad_left, previous.dpad_right));

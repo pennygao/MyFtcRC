@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.subsystems.SmartGamepad;
+
 @TeleOp(name="MecanumX OpMode", group="Linear Opmode")
 
 public class MecanumXOpMode extends LinearOpMode {

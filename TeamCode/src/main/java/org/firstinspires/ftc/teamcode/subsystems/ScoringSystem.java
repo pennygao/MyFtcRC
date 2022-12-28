@@ -107,7 +107,7 @@ public class ScoringSystem implements Subsystem {
     public void goAllDown() {
         lowerState = 1;
         dualMotorLift.goToLevel(4);   //go to level that's safe for lowering chain bar
-        Log.v("updatetaret", "gotoLevel(4) get called in goAllDown()");
+        Log.v("DualMotorSlide-updatetaret", "gotoLevel(4) get called in goAllDown()");
     }
 
     public boolean isLiftLevelReached(){
@@ -138,7 +138,7 @@ public class ScoringSystem implements Subsystem {
     @Override
     public void update(TelemetryPacket packet) {
         dualMotorLift.update(packet);
-        Log.v("updatetarget", "ScoringSystem update is called.");
+        Log.v("DualMotorSlide-updatetarget", "ScoringSystem update is called.");
         //case for how to lower chain bar :wah:
         /*
          * 0: chain bar does not need to raise, skip this sequence if so.
@@ -146,9 +146,9 @@ public class ScoringSystem implements Subsystem {
          * 2: height reached, swing chain bar.
          */
         if(swingState==1){
-            if(dualMotorLift.getPosition()<=dualMotorLift.LEVEL_HT[4]){
+            if(dualMotorLift.chainBarCanSwing()){
                 dualMotorLift.goToLevel(4);
-                Log.v("updatetarget", "gotoLevel(4) get called");
+                Log.v("DualMotorSlide-updatetarget", "gotoLevel(4) get called");
             }else{
                 swingState++;
             }
@@ -171,7 +171,7 @@ public class ScoringSystem implements Subsystem {
         else if(lowerState==2){
             if(chainBar.doneMoving()){
                 dualMotorLift.goToLevel(0);
-                Log.v("updatetarget", "gotoLevel(0) got called");
+                Log.v("DualMotorSlide-updatetarget", "gotoLevel(0) got called");
                 lowerState=0;
             }
             telemetry.addLine("CB: chain bar is down, lowering slide");
@@ -190,7 +190,7 @@ public class ScoringSystem implements Subsystem {
         // debug only,  remove it on release
         // packet.put("Current Position", slideMotor.getCurrentPosition());
         //  packet.put("target position", slideMotor.getTargetPosition());
-        Log.v("updatetarget", "ScoringSystem update returning.");
+        Log.v("DualMotorSlide-updatetarget", "ScoringSystem update returning.");
     }
 }
 

@@ -38,49 +38,50 @@ public class DualMotorLift implements Subsystem {
         slideMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotorL.setTargetPosition(0);
         slideMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //slideMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         slideMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Log.v("motormode update", "initiating");
+        Log.v("DualMotorSlide-motormode update", "initiating");
     }
 
     public void goToLevel(int level){
         //4 levels: 0 ground, 1 low, 2 middle, 3 high, 4 (minimum height for free chain bar movement)
+        Log.v("DualMotorSlide-updatetarget", "goToLevel," + level + "; current status: " + targetReached);
+        int targetPosition = inchToTicks(LEVEL_HT[level]);
+        goToHt(targetPosition);
+    }
+    //for going to non-junction heights
+    public void goToHt(int ticks) {
         targetReached=false;
         slideMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Log.v("motormode update", "goToLevel, run to position");
-        Log.v("updatetarget", "goToLevel," + level + "; current status: " + targetReached);
-        int targetPosition = inchToTicks(LEVEL_HT[level]);
-        slideMotorL.setTargetPosition(targetPosition);
-        slideMotorL.setVelocity(UP_VELOCITY); //fine tune velocity?
-        //In case if i should set right motor right when i set left motor (prob not useful)
-        //slideMotorR.setVelocity(UP_VELOCITY);
-//        double velocity = slideMotorL.getVelocity();
- //       slideMotorR.setVelocity(velocity);
-    }
-    //for going to non-level heights
-    public void goToHt(double inches) {
-        slideMotorL.setTargetPosition(inchToTicks(inches));
+        slideMotorL.setTargetPosition(ticks);
         slideMotorL.setVelocity(UP_VELOCITY);
-        telemetry.addData("inches:",inches);
+        Log.v("DualMotorSlide-motormode update", String.format("gotoHt: mode: %s, moving to: %4.2f.", slideMotorL.getMode(), ticksToInches(ticks)));
+        //fine tune velocity?
+        //        In case if i should set right motor right when i set left motor (prob not useful)
+        //          slideMotorR.setVelocity(UP_VELOCITY);
+        //          double velocity = slideMotorL.getVelocity();
+        //          slideMotorR.setVelocity(velocity);
+        telemetry.addData("inches:",ticksToInches(ticks));
     }
 
     public void adjustLift(int direction){
         //TODO: make slide motor less laggy
         slideMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Log.v("motormode update", "adjustLift, run without encoder");
         slideMotorL.setPower(0.3*direction);
-        //int current = slideMotorL.getCurrentPosition();
+        Log.v("DualMotorSlide-motormode update", String.format("adjustLift to direction: %d, power %4.2f, mode: %s", direction, slideMotorL.getPower(), slideMotorL.getMode()));
         //for using run-using-encoder mode
-        //int targetPosition = current + inchToTicks(1)*direction;
+        //int current = slideMotorL.getCurrentPosition();
+        // int targetPosition = current + inchToTicks(1)*direction;
         //slideMotorL.setTargetPosition(targetPosition);
     }
 
-//    public boolean isLiftBusy() {
-//        return slideMotorL.isBusy(); //report both? or one? and/or ???
-//        //return if the lift has reached destination and not moving.
-//    }
+    public void stopMotor(){
+        slideMotorL.setVelocity(0.0);
+        slideMotorL.setPower(0);
+        Log.v("DualMotorSlide-motormode update", "power off: " + slideMotorL.getPower()+" mode: " + slideMotorL.getMode());
+    }
 
     private void updateTargetReached(){
         boolean original = this.targetReached;
@@ -89,7 +90,7 @@ public class DualMotorLift implements Subsystem {
         this.targetReached = (this.targetReached ||
                 (Math.abs(slideMotorL.getVelocity())<=20
                     && (Math.abs(slideMotorL.getTargetPosition()-slideMotorL.getCurrentPosition())<=HEIGHT_DIFF_TOLERANCE)));
-        Log.v("updatetarget", String.format("updateTargetReached: original: %b, velocity: %4.2f, position diff: %d, pos diff tolerance: %d, targetReached set to %b. ",
+        Log.v("DualMotorSlide-updatetarget", String.format("updateTargetReached: original: %b, velocity: %4.2f, position diff: %d, pos diff tolerance: %d, targetReached set to %b. ",
                         original,
                         slideMotorL.getVelocity(),
                         slideMotorL.getTargetPosition() - slideMotorL.getCurrentPosition(),
@@ -98,7 +99,7 @@ public class DualMotorLift implements Subsystem {
     }
 
     public boolean isLevelReached(){
-        Log.v("updatetarget", "read " + this.targetReached);
+        Log.v("DualMotorSlide-updatetarget", "read " + this.targetReached);
         return this.targetReached;
     }
 
@@ -112,11 +113,14 @@ public class DualMotorLift implements Subsystem {
     public double getPosition(){
         return slideMotorL.getCurrentPosition() / (TICKS_PER_REV/(PULLEY_DIAMETER * Math.PI));
     }
+    public boolean chainBarCanSwing(){
+        return slideMotorL.getCurrentPosition()<=inchToTicks(LEVEL_HT[4]);
+    }
 
     @Override
     public void update(TelemetryPacket packet) {
 
-        Log.v("updatetarget", "DualMotorLift update is called.");
+        Log.v("DualMotorSlide-updatetarget", "DualMotorLift update is called.");
 
         updateTargetReached();
         //TODO: Figure out why right motor is overreacting, then uncomment this
@@ -126,22 +130,16 @@ public class DualMotorLift implements Subsystem {
         //}//if target is reached and not in manual mode, set velocity of right motor to 0
 
         telemetry.addLine("Slide motor set to " + ticksToInches(slideMotorL.getTargetPosition()));
-        Log.v("Slide motor set to ", slideMotorL.getTargetPosition()+"");
         telemetry.addLine("current slide velocity: " + slideMotorL.getVelocity());
-        Log.v("current slide velocity: ", slideMotorL.getVelocity()+"");
         telemetry.addLine("current slide position: " + ticksToInches(slideMotorL.getCurrentPosition()));
-        Log.v("current slide position: ", slideMotorL.getCurrentPosition()+"");
         packet.put("target pos (inches)", ticksToInches(slideMotorL.getTargetPosition()));
         packet.put("left velocity", slideMotorL.getVelocity());
-        packet.put("right velocity", slideMotorR.getVelocity());
         packet.put("L pos (inches)", ticksToInches(slideMotorL.getCurrentPosition()));
-        packet.put("R pos", slideMotorR.getCurrentPosition());
+//        packet.put("R pos", slideMotorR.getCurrentPosition());
+        packet.put("motor power", slideMotorL.getPower());
         telemetry.addLine("motor mode" + slideMotorL.getMode());
-        Log.v("motor mode", slideMotorL.getMode()+"");
         packet.put("motor mode", slideMotorL.getMode());
         FtcDashboard.getInstance().sendTelemetryPacket(packet);
         telemetry.update();
-
-        Log.v("updatetarget", "DualMotorLift update is returning.");
     }
 }

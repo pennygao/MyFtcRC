@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -70,6 +72,7 @@ public class Robot {
         TelemetryPacket packet = new TelemetryPacket();
 
         for (Subsystem subsystem : subsystems) {
+            Log.v("update", "Invoking update for class " + subsystem.getClass().getSimpleName());
             subsystem.update(packet);
         }
 
