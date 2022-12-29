@@ -70,25 +70,31 @@ public class AATele extends LinearOpMode {
             if (smartGamepad2.dpad_up) {
                 robot.scoringSystem.adjustLift(1);
                 telemetry.addLine("dpad up pressed");
+                Log.v("PIDLift: gamepad", "dpad up");
             } else if (smartGamepad2.dpad_down) {
                 robot.scoringSystem.adjustLift(-1);
                 telemetry.addLine("dpad down pressed");
+                Log.v("PIDLift: gamepad", "dpad down");
             } else if (smartGamepad2.a_pressed()) {
                 //robot.scoringSystem.goToHt(18.69);
                 robot.scoringSystem.dualMotorLift.goToLevel(1);
                 telemetry.addLine("going up to level 1");
+                Log.v("PIDLift: gamepad", "a");
             } else if (smartGamepad2.x_pressed()) {
                 //robot.scoringSystem.goToHt(31.5);
                 robot.scoringSystem.dualMotorLift.goToLevel(2);
                 telemetry.addLine("going up to level 2");
+                Log.v("PIDLift: gamepad", "x");
             } else if (smartGamepad2.y_pressed()) {
                 //robot.scoringSystem.goToHt(44.69);
                 robot.scoringSystem.dualMotorLift.goToLevel(3);
                 telemetry.addLine("going up to level 3");
+                Log.v("PIDLift: gamepad", "y");
             } else if (smartGamepad2.b_pressed()) {
                 //robot.scoringSystem.goToHt(4.42);
                 robot.scoringSystem.goAllDown();
                 telemetry.addLine("going all the way down");
+                Log.v("PIDLift: gamepad", "b");
             } else if (robot.scoringSystem.isLiftLevelReached()){
                 robot.scoringSystem.dualMotorLift.stopMotor(); //set to adjust lift mode, but don't turn motor
                 Log.v("updatetarget","idling mode");

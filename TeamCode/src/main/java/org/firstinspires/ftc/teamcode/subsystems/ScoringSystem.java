@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Robot;
-import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import com.acmerobotics.roadrunner.util.NanoClock;
 
@@ -91,7 +88,7 @@ public class ScoringSystem implements Subsystem {
         claw = new Claw(robot);
         chainBar = new ChainBar(robot);
         SSKnocker = robot.getServo("SSKnocker");
-        dualMotorLift = new DualMotorLift(robot, telemetry);
+        dualMotorLift = new DualMotorLift(robot, telemetry, DualMotorLift.Mode.BOTH_MOTORS_PID);
         telemetry.update();
 
     }
@@ -146,36 +143,38 @@ public class ScoringSystem implements Subsystem {
          * 2: height reached, swing chain bar.
          */
         if(swingState==1){
-            if(dualMotorLift.chainBarCanSwing()){
+            Log.v("ChainBar", dualMotorLift.chainBarCanSwing()+"");
+            if(!dualMotorLift.chainBarCanSwing()){
                 dualMotorLift.goToLevel(4);
-                Log.v("DualMotorSlide-updatetarget", "gotoLevel(4) get called");
-            }else{
-                swingState++;
+                Log.v("DualMotorSlide- ChainBar", "gotoLevel(4) get called");
             }
+            swingState=2;
             telemetry.addLine("CB: waiting to raise slide...");
-            Log.v("CB:", "waiting to raise slide...");
+            Log.v("ChainBar:", "waiting to raise slide...");
         }
         else if(swingState==2){
-            chainBar.swing();
-            swingState=0;
-            telemetry.addLine("CB: slide is able to swing");
-            Log.v("CB:","slide is able to swing");
+            if(dualMotorLift.chainBarCanSwing()) {
+                chainBar.swing();
+                swingState = 0;
+                telemetry.addLine("CB: slide is able to swing");
+                Log.v("ChainBar:", "slide is able to swing");
+            }
         }
 
         if(lowerState==1){
             chainBar.lower();
             lowerState++;
             telemetry.addLine("CB: waiting for chain bar to lower...");
-            Log.v("CB:", "waiting for chain bar to lower...");
+            Log.v("ChainBar:", "waiting for chain bar to lower...");
         }
         else if(lowerState==2){
             if(chainBar.doneMoving()){
                 dualMotorLift.goToLevel(0);
-                Log.v("DualMotorSlide-updatetarget", "gotoLevel(0) got called");
+                Log.v("DualMotorSlide- ChainBar", "gotoLevel(0) got called");
                 lowerState=0;
             }
             telemetry.addLine("CB: chain bar is down, lowering slide");
-            Log.v("CB:", "chain bar is down, lowering slide");
+            Log.v("ChainBar:", "chain bar is down, lowering slide");
         }
         SSKnocker.setPosition(ssKnockerPos);
         telemetry.addData("clawPos: ", claw.clawServo.getPosition());
