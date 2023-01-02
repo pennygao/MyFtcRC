@@ -25,8 +25,8 @@ public class ScoringSystem implements Subsystem {
     private ChainBar chainBar;
     public Claw claw;
     //TODO: tune
-    public static double CLAW_OPEN_POSITION = 0.5;
-    public static double CLAW_CLOSE_POSITION = 0.1;
+    public static double CLAW_OPEN_POSITION = 0.67;
+    public static double CLAW_CLOSE_POSITION = 0.5;
 
     public static double CHAIN_BAR_DOWN = 0.44;
     public static double CHAIN_BAR_UP = 0.14; //How much you move the chain bar up from down position
