@@ -25,7 +25,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TfodBase;
  */
 public class TfodSS extends TfodBase {
     // TODO(lizlooney): This file should be updated when the FTC game changes.
-    public static final String TFOD_MODEL_ASSET = "ss_model_20221121_162902.tflite"; // TODO: replace with new model
+    public static final String TFOD_MODEL_ASSET = "model_20230102_130645.tflite"; // TODO: replace with new model
 
     public static final String[] LABELS = {
             "img1",
@@ -41,6 +41,6 @@ public class TfodSS extends TfodBase {
         // P-TSE setModelFromFile("/storage/emulated/0/FIRST/tflitemodels/purpleTSE_20220213_210831.tflite", LABELS);
         // TODO: replace with new tflite model
         // FreightFrenzy TSE: setModelFromFile( "/storage/emulated/0/FIRST/tflitemodels/model_20220117_133234.tflite", LABELS);
-        setModelFromFile( "/storage/emulated/0/FIRST/tflitemodels/ss_model_20221121_162902.tflite", LABELS);
+        setModelFromFile( "/storage/emulated/0/FIRST/tflitemodels/model_20230102_130645.tflite", LABELS);
     }
 }
