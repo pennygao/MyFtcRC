@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -9,7 +10,7 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 
 import android.util.Log;
 
-
+@Config
 public class ScoringSystem implements Subsystem {
     //Hardware: 1 motor, 1 encoder
     public static final double TICKS_PER_REV = 537.7*(11.0/15.0);
@@ -26,8 +27,8 @@ public class ScoringSystem implements Subsystem {
     private ChainBar chainBar;
     private Claw claw;
     //TODO: tune
-    final double CLAW_OPEN_POSITION = 0.5;
-    final double CLAW_CLOSE_POSITION = 0.1;
+    public static final double CLAW_OPEN_POSITION = 0.5;
+    public static final double CLAW_CLOSE_POSITION = 0.1;
 
     public class Claw {
         public Servo clawServo;

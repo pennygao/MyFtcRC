@@ -100,11 +100,10 @@ public class AATele extends LinearOpMode {
                 Log.v("updatetarget","idling mode");
                 //or set its mode to Move with encoder?
             }
-//FIXME use game pad 1's triggers not joystick
-            if(smartGamepad2.left_stick_x>0) {
+            if(smartGamepad1.left_trigger_pressed()) {
                 robot.scoringSystem.swingChainBar(-1);
             }
-            else if (smartGamepad2.left_stick_x<0){
+            else if (smartGamepad1.right_trigger_pressed()){
                 robot.scoringSystem.swingChainBar(1);
             }
             if(smartGamepad2.right_stick_x>0) {

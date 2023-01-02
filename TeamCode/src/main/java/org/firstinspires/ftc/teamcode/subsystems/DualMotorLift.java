@@ -31,13 +31,13 @@ public class DualMotorLift implements Subsystem {
         RIGHT_FOLLOW_LEFT
     };
     public Mode mode;
-    private final double  UP_VELOCITY = 500;
-    public final double[] LEVEL_HT = {0, 8.1, 13.0, 23.0, 8.0}; // in inches, please fine-tune
+    // Public just to allow tuning through Dashboard
+    public static final double  UP_VELOCITY = 500;
+    public static final double[] LEVEL_HT = {0, 8.1, 13.0, 23.0, 8.0}; // in inches, please fine-tune
     //4 levels: 0 ground, 1 low, 2 middle, 3 high, 4 (minimum height for free chain bar movement)
                             //0:5.0
 
     private PIDFController pidfController;
-    // Public just to allow tuning through Dashboard
     public static double kP = 0.2;
     public static double kI = 0.0000000001;
     public static double kD = 0.0;

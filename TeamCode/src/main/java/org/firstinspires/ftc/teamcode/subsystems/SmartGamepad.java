@@ -41,6 +41,13 @@ public class SmartGamepad extends Gamepad implements Subsystem {
         return dpad_right && !previous.dpad_right;
     }
 
+    public boolean left_trigger_pressed() {
+        return left_trigger>0.1 && !(previous.left_trigger>0.1);
+    }
+    public boolean right_trigger_pressed() {
+        return right_trigger>0.1 && !(previous.right_trigger>0.1);
+    }
+
     public boolean a_pressed() {
         return a && !previous.a;
     }
