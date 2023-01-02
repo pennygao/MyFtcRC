@@ -114,9 +114,9 @@ public class AATele extends LinearOpMode {
             }
 
             if (smartGamepad2.left_trigger > 0.5) {
-                robot.scoringSystem.closeClaw(); //0.5 + leftTrigger * 0.5);
+                robot.scoringSystem.claw.closeClaw(); //0.5 + leftTrigger * 0.5);
             } else if (smartGamepad2.right_trigger > 0.5) {
-                robot.scoringSystem.openClaw(); // - rightTrigger * 0.5);
+                robot.scoringSystem.claw.openClaw(); // - rightTrigger * 0.5);
             }
             Log.v("updatetarget", "Opmode loop finished one iteration.");
 

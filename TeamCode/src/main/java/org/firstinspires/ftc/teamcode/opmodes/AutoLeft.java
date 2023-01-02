@@ -44,7 +44,7 @@ public class AutoLeft extends LinearOpMode {
 
 
         //Servo init code here
-        robot.scoringSystem.openClaw();
+        robot.scoringSystem.claw.openClaw();
         od.init();
         waitForStart();
         if (isStopRequested()) return;
@@ -58,7 +58,7 @@ public class AutoLeft extends LinearOpMode {
         autoLift liftUp = new autoLift(robot, 3, POLE_HT);
 
         // hold preload
-        robot.scoringSystem.closeClaw();
+        robot.scoringSystem.claw.closeClaw();
         //robot.runCommand(robot.scoringSystem.rollerIntake(intakePower, 0.8));
 
         // Move forward one tile
@@ -82,7 +82,7 @@ public class AutoLeft extends LinearOpMode {
         ));
 
         // Release cone
-        robot.scoringSystem.openClaw();
+        robot.scoringSystem.claw.openClaw();
         //robot.runCommand(robot.scoringSystem.rollerIntake(outtakePower, 0.5));
         // TODO: adjust power
 

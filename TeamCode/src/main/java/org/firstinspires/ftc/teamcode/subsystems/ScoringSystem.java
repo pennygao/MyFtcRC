@@ -13,8 +13,6 @@ import android.util.Log;
 @Config
 public class ScoringSystem implements Subsystem {
     //Hardware: 1 motor, 1 encoder
-    public static final double TICKS_PER_REV = 537.7*(11.0/15.0);
-    public static final double PULLEY_DIAMETER = 38.0 / 25.4;
     public DualMotorLift dualMotorLift;
     public Telemetry telemetry;
 
@@ -25,10 +23,13 @@ public class ScoringSystem implements Subsystem {
     private double ssKnockerPos = 0;
 
     private ChainBar chainBar;
-    private Claw claw;
+    public Claw claw;
     //TODO: tune
-    public static final double CLAW_OPEN_POSITION = 0.5;
-    public static final double CLAW_CLOSE_POSITION = 0.1;
+    public static double CLAW_OPEN_POSITION = 0.5;
+    public static double CLAW_CLOSE_POSITION = 0.1;
+
+    public static double CHAIN_BAR_DOWN = 0.5;
+    public static double CHAIN_BAR_UP = 0.1; //How much you move the chain bar up from down position
 
     public class Claw {
         public Servo clawServo;
@@ -37,8 +38,13 @@ public class ScoringSystem implements Subsystem {
         double movementTime;
         double toPos;
 
-        public Claw(Robot robot){
+        private double openPos;
+        private double closePos;
+
+        public Claw(Robot robot, double openPos, double closePos){
             clawServo = robot.getServo("claw");
+            this.openPos=openPos;
+            this.closePos=closePos;
         }
         public void setClawPos(double pos) {
             toPos = pos;
@@ -50,14 +56,20 @@ public class ScoringSystem implements Subsystem {
         public boolean isCompleted() {
             return clock.seconds() - initialTimestamp >= movementTime;
         }
+
+        public void openClaw(){
+            claw.setClawPos(CLAW_OPEN_POSITION);
+        }
+
+        public void closeClaw(){
+            claw.setClawPos(CLAW_CLOSE_POSITION);
+        }
     }
 
     public class ChainBar{
         public Servo cbServo;
         private double lastMovement=0;
         //TODO: tune these values to actual chain bar
-        private final double CHAIN_BAR_DOWN = 0.5;
-        private final double CHAIN_BAR_UP = 0.1; //How much you move the chain bar up from down position
         private int CBDirection = 0;
 
         public ChainBar(Robot robot){
@@ -86,16 +98,12 @@ public class ScoringSystem implements Subsystem {
 
     public ScoringSystem(Robot robot, boolean autoMode, Telemetry telemetry) {
         this.telemetry = telemetry;
-        claw = new Claw(robot);
+        claw = new Claw(robot, CLAW_OPEN_POSITION, CLAW_CLOSE_POSITION);
         chainBar = new ChainBar(robot);
         SSKnocker = robot.getServo("SSKnocker");
         dualMotorLift = new DualMotorLift(robot, telemetry, DualMotorLift.Mode.BOTH_MOTORS_PID);
         telemetry.update();
 
-    }
-
-    public int inchToTicks(double inches) {
-        return (int) (inches * TICKS_PER_REV / (PULLEY_DIAMETER * Math.PI));
     }
 
     public void adjustLift(int direction){
@@ -125,18 +133,10 @@ public class ScoringSystem implements Subsystem {
         ssKnockerPos = pos;
     }
 
-    public void openClaw(){
-        claw.setClawPos(CLAW_OPEN_POSITION);
-    }
-    public void closeClaw(){
-        claw.setClawPos(CLAW_CLOSE_POSITION);
-    }
-
 
     @Override
     public void update(TelemetryPacket packet) {
         dualMotorLift.update(packet);
-        Log.v("DualMotorSlide-updatetarget", "ScoringSystem update is called.");
         //case for how to lower chain bar :wah:
         /*
          * 0: chain bar does not need to raise, skip this sequence if so.
@@ -183,8 +183,9 @@ public class ScoringSystem implements Subsystem {
         //telemetry.addData("target pos:", targetPosition);
         packet.put("time since cb movement", chainBar.lastMovement);
         telemetry.addData("is chainbar done?", chainBar.doneMoving());
-        packet.put("is chainbar done?", chainBar.doneMoving());
+        packet.put("is chain bar done?", chainBar.doneMoving());
         packet.put("slide target reached?", isLiftLevelReached());
+        packet.put("Chain Bar position: ", chainBar.cbServo.getPosition());
         telemetry.update();
 
         // debug only,  remove it on release

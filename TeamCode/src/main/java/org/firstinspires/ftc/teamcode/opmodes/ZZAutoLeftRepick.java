@@ -38,7 +38,7 @@ public class ZZAutoLeftRepick extends LinearOpMode {
         int elementPos = 3;
 
         //Servo init code here
-        robot.scoringSystem.openClaw();
+        robot.scoringSystem.claw.openClaw();
         od.init();
         waitForStart();
 
@@ -49,7 +49,7 @@ public class ZZAutoLeftRepick extends LinearOpMode {
 
 
         // hold preload
-        robot.scoringSystem.closeClaw();
+        robot.scoringSystem.claw.closeClaw();
 
         // Move forward then right to high pole
         autoLift liftUp = new autoLift(robot, 3, POLE_HT);
@@ -63,7 +63,7 @@ public class ZZAutoLeftRepick extends LinearOpMode {
                         .build()
         ));
         // Release cone
-        robot.scoringSystem.openClaw();
+        robot.scoringSystem.claw.openClaw();
         //robot.runCommand(robot.scoringSystem.rollerIntake(outtakePower, 0.1));
 /*
         robot.runCommand(drivetrain.followTrajectorySequence(
@@ -92,7 +92,7 @@ public class ZZAutoLeftRepick extends LinearOpMode {
         ));
 
         robot.runCommands(new autoLift(robot, 1, CONE_HT-4));
-        robot.scoringSystem.closeClaw();
+        robot.scoringSystem.claw.closeClaw();
         robot.runCommands(new autoLift(robot, 1, CONE_HT+5));
 
 
@@ -107,7 +107,7 @@ public class ZZAutoLeftRepick extends LinearOpMode {
         ));
 
         // Release cone
-        robot.scoringSystem.openClaw();
+        robot.scoringSystem.claw.openClaw();
 
         // Back, turn and retract lift
         robot.runCommand(drivetrain.followTrajectorySequence(
