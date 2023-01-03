@@ -62,7 +62,7 @@ public class AATele extends LinearOpMode {
             }
 //SS knocker
             if (gamepad2.right_bumper){
-                KnockerCommand knock = new KnockerCommand(robot, 0.4, 1.5);
+                KnockerCommand knock = new KnockerCommand(robot, 0.2, 1.5);
                 robot.runCommands(knock);
             }
 
@@ -101,10 +101,10 @@ public class AATele extends LinearOpMode {
                 //or set its mode to Move with encoder?
             }
             if(smartGamepad1.left_trigger_pressed()) {
-                robot.scoringSystem.swingChainBar(-1);
+                robot.scoringSystem.swingChainBar(1);
             }
             else if (smartGamepad1.right_trigger_pressed()){
-                robot.scoringSystem.swingChainBar(1);
+                robot.scoringSystem.swingChainBar(-1);
             }
             if(smartGamepad2.right_stick_x>0) {
                 robot.scoringSystem.adjustChainBar(-1);
