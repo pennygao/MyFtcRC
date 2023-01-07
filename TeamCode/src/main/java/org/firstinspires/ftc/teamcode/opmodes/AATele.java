@@ -68,14 +68,23 @@ public class AATele extends LinearOpMode {
 
 //RAISE SLIDE
             if (smartGamepad2.dpad_up) {
-                robot.scoringSystem.adjustLift(1);
+                robot.scoringSystem.adjustLift(1, true);
                 telemetry.addLine("dpad up pressed");
                 Log.v("PIDLift: gamepad", "dpad up");
             } else if (smartGamepad2.dpad_down) {
-                robot.scoringSystem.adjustLift(-1);
+                robot.scoringSystem.adjustLift(-1, true);
                 telemetry.addLine("dpad down pressed");
                 Log.v("PIDLift: gamepad", "dpad down");
-            } else if (smartGamepad2.a_pressed()) {
+            } else if (smartGamepad2.dpad_right) {
+                robot.scoringSystem.adjustLift(1, false);
+                telemetry.addLine("dpad right pressed");
+                Log.v("PIDLift: gamepad", "dpad right");
+            } else if (smartGamepad2.dpad_left) {
+                robot.scoringSystem.adjustLift(-1, false);
+                telemetry.addLine("dpad left pressed");
+                Log.v("PIDLift: gamepad", "dpad left");
+            }
+            else if (smartGamepad2.a_pressed()) {
                 //robot.scoringSystem.goToHt(18.69);
                 robot.scoringSystem.dualMotorLift.goToLevel(1);
                 telemetry.addLine("going up to level 1");
@@ -101,10 +110,10 @@ public class AATele extends LinearOpMode {
                 //or set its mode to Move with encoder?
             }
             if(smartGamepad1.left_trigger_pressed()) {
-                robot.scoringSystem.swingChainBar(-1);
+                robot.scoringSystem.swingChainBar(1);
             }
             else if (smartGamepad1.right_trigger_pressed()){
-                robot.scoringSystem.swingChainBar(1);
+                robot.scoringSystem.swingChainBar(-1);
             }
             if(smartGamepad2.right_stick_x>0) {
                 robot.scoringSystem.adjustChainBar(-1);

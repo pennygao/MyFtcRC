@@ -26,6 +26,8 @@ public class DualMotorLift implements Subsystem {
     private final int HEIGHT_DIFF_TOLERANCE = inchToTicks(0.3); //(int) (0.3*TICKS_PER_REV / (PULLEY_DIAMETER * Math.PI));
     private Telemetry telemetry;
     private boolean targetReached = true;
+    private final double FAST_POWER = 0.6;
+    private final double SLOW_POWER = 0.3;
     public enum Mode {
         BOTH_MOTORS_PID,
         RIGHT_FOLLOW_LEFT
@@ -101,16 +103,20 @@ public class DualMotorLift implements Subsystem {
         Log.v("Lift: status", String.format("Lift moving to height %f", ticksToInches(slideMotorL.getTargetPosition())));
     }
 
-    public void adjustLift(int direction){
+    public void adjustLift(int direction, boolean slow){
         //TODO: make slide motor less laggy
         targetReached=true;
+        double power = SLOW_POWER;
+        if(!slow){
+            power = FAST_POWER;
+        }
         if(mode == Mode.RIGHT_FOLLOW_LEFT) {
             slideMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            slideMotorL.setPower(0.3*direction);
+            slideMotorL.setPower(power*direction);
         }
         else{
-            slideMotorL.setPower(0.3*direction);
-            slideMotorR.setPower(0.3*direction);
+            slideMotorL.setPower(power*direction);
+            slideMotorR.setPower(power*direction);
         }
         Log.v("PIDLift: status: ", "adjust lift");
         //for using run-using-encoder mode
