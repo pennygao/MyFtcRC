@@ -62,7 +62,7 @@ public class AATele extends LinearOpMode {
             }
 //SS knocker
             if (gamepad2.right_bumper){
-                KnockerCommand knock = new KnockerCommand(robot, 0.4, 1.5);
+                KnockerCommand knock = new KnockerCommand(robot, 0.2, 1.5);
                 robot.runCommands(knock);
             }
 
