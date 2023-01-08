@@ -74,7 +74,7 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 12.60; // in
+    public static double TRACK_WIDTH = 11.22; // in: 180->11.22, 90->11.51
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -243,8 +243,8 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        //leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        //leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // TODO: if desired, use setLocalizer() to change the localization method
         setLocalizer(new StandardTrackingWheelLocalizer(this.hardwareMap));
@@ -388,10 +388,10 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        leftFront.setPower(-v);
+        leftRear.setPower(-v1);
+        rightRear.setPower(-v2);
+        rightFront.setPower(-v3);
     }
 
 

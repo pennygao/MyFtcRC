@@ -31,7 +31,7 @@ public class KnockerCommand implements Command {
 
     @Override
     public void stop() {
-        robot.scoringSystem.SSKnockerSetPosition(0.0);
+        robot.scoringSystem.SSKnockerSetPosition(0.4);
     }
 
     @Override

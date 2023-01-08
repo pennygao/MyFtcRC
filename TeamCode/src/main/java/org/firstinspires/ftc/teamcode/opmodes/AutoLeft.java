@@ -49,11 +49,12 @@ public class AutoLeft extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
-        elementPos = od.ssIndex(100);
+        //elementPos = od.ssIndex(100);
 
         //autoLift liftUp = new autoLift(robot, 3, POLE_HT);
-        KnockerCommand knock = new KnockerCommand(robot, 0.45, 1.5);
-        KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
+        KnockerCommand knock = new KnockerCommand(robot, 0.0, 1.5);
+        //KnockerCommand knockerReset = new KnockerCommand(robot, 0.4, 1.5);
+
 
         autoLift liftUp = new autoLift(robot, 3, POLE_HT);
 
@@ -67,7 +68,7 @@ public class AutoLeft extends LinearOpMode {
                         .forward(HI_POLE_X) // move forward
                         .addTemporalMarker(0.0, ()->robot.runCommands(liftUp)) // raise lift
                         .addTemporalMarker(0.55, ()->robot.runCommand(knock))
-                        .addTemporalMarker(2, ()->robot.runCommand(knockerReset))
+                        //.addTemporalMarker(2, ()->robot.runCommand(knockerReset))
                         .strafeRight(HI_POLE_SIDE)
                         .build()
         ));
@@ -122,6 +123,8 @@ public class AutoLeft extends LinearOpMode {
             ));
 
         }
+
+
 
     }
 }

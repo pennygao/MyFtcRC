@@ -44,10 +44,15 @@
     private Double[] powers = {0.0, 0.0, 0.0, 0.0};
 
     public SimpleMecanumDrive (Robot robot) {
-        motors[0] = robot.getMotor("DriveLF");
-        motors[1] = robot.getMotor("DriveLR");
-        motors[2] = robot.getMotor("DriveRR");
-        motors[3] = robot.getMotor("DriveRF");
+        // This robot tele is going backward
+        // Tele LF -> Auto RR
+        // Tele LR -> Auto RF
+        // Tele RF -> Auto LR
+        // Tele RR -> Auto LF
+        motors[0] = robot.getMotor("DriveRR"); //DriveLF");
+        motors[1] = robot.getMotor("DriveRF"); //DriveLR");
+        motors[2] = robot.getMotor("DriveLF"); //RR");
+        motors[3] = robot.getMotor("DriveLR"); //RF");
 
 
 

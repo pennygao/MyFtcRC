@@ -25,8 +25,8 @@ public class LocalizationTest extends LinearOpMode {
         CrabRobot robot = new CrabRobot(this,false);
         Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
-        Encoder leftEncoder = new Encoder(robot.getHardwareMap().get(DcMotorEx.class, "slideMotorR"));
-        Encoder rightEncoder = new Encoder(robot.getHardwareMap().get(DcMotorEx.class, "rightEncoder"));
+        Encoder leftEncoder = new Encoder(robot.getHardwareMap().get(DcMotorEx.class, "leftEncoder"));
+        Encoder rightEncoder = new Encoder(robot.getHardwareMap().get(DcMotorEx.class, "slideMotorR"));
         Encoder frontEncoder = new Encoder(robot.getHardwareMap().get(DcMotorEx.class, "frontEncoder"));
 
         waitForStart();
@@ -35,8 +35,8 @@ public class LocalizationTest extends LinearOpMode {
             robot.update();
             drivetrain.setWeightedDrivePower(
                     new Pose2d(
-                            -gamepad1.left_stick_y * 0.2,
-                            -gamepad1.left_stick_x * 0.2,
+                            gamepad1.left_stick_y * 0.2,
+                            gamepad1.left_stick_x * 0.2,
                             -gamepad1.right_stick_x * 0.2
                     ));
 

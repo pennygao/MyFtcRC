@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -49,8 +50,8 @@ public class AutoRight extends LinearOpMode {
         if (isStopRequested()) return;
         elementPos = od.ssIndex(100);
 
-        KnockerCommand knock = new KnockerCommand(robot, 0.45, 1.5);
-        KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
+        KnockerCommand knock = new KnockerCommand(robot, 0.0, 1.5);
+        //KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
 
         autoLift liftUp = new autoLift(robot, 3, POLE_HT);
 
@@ -64,11 +65,11 @@ public class AutoRight extends LinearOpMode {
                         .forward(HI_POLE_X) // move forward
                         .addTemporalMarker(0.0, ()->robot.runCommands(liftUp)) // raise lift
                         .addTemporalMarker(0.55, ()->robot.runCommand(knock))
-                        .addTemporalMarker(2, ()->robot.runCommand(knockerReset))
+                        //.addTemporalMarker(2, ()->robot.runCommand(knockerReset))
                         .strafeLeft(HI_POLE_SIDE)
                         .build()
         ));
-
+/*
         // Forward a little
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
@@ -120,7 +121,7 @@ public class AutoRight extends LinearOpMode {
                             .build()
             ));
         }
-
+*/
 
 
     }

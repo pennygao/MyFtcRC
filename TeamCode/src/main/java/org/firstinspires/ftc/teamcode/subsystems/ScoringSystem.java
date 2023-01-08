@@ -178,11 +178,11 @@ public class ScoringSystem implements Subsystem {
             Log.v("ChainBar:", "chain bar is down, lowering slide");
         }
         SSKnocker.setPosition(ssKnockerPos);
-        telemetry.addData("clawPos: ", claw.clawServo.getPosition());
+        //telemetry.addData("clawPos: ", claw.clawServo.getPosition());
         //telemetry.addData("slidePower:", slidePower);
         //telemetry.addData("target pos:", targetPosition);
         packet.put("time since cb movement", chainBar.lastMovement);
-        telemetry.addData("is chainbar done?", chainBar.doneMoving());
+        //telemetry.addData("is chainbar done?", chainBar.doneMoving());
         packet.put("is chain bar done?", chainBar.doneMoving());
         packet.put("slide target reached?", isLiftLevelReached());
         packet.put("Chain Bar position: ", chainBar.cbServo.getPosition());

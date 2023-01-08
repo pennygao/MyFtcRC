@@ -91,8 +91,8 @@ public class Robot {
         commands.removeAll(commandsToRemove);
 
         //TODO: when turning, comment following out, as opmode sends telemetry directly.
-        // After tuning, un-comment this for robot to send telementry instead
-        //dashboard.sendTelemetryPacket(packet);
+        // After tuning, in BackAndForth step, un-comment this for robot to send telementry instead
+        dashboard.sendTelemetryPacket(packet);
     }
 
     public void runUntil(Target target) {
