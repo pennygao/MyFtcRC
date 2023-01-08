@@ -104,7 +104,6 @@ public class DualMotorLift implements Subsystem {
     }
 
     public void adjustLift(int direction, boolean slow){
-        //TODO: make slide motor less laggy
         targetReached=true;
         double power = SLOW_POWER;
         if(!slow){

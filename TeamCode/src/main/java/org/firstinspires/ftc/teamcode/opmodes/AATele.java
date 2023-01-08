@@ -18,7 +18,7 @@ public class AATele extends LinearOpMode {
         SmartGamepad smartGamepad1 = robot.smartGamepad1;
         SmartGamepad smartGamepad2 = robot.smartGamepad2;
 //RESETS
-//        robot.scoringSystem.setServoPosition(0.6);
+        robot.scoringSystem.goAllDown();
 
         waitForStart();
 
