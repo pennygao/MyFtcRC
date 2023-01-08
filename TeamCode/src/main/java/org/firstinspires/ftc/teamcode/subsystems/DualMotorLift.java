@@ -197,7 +197,7 @@ public class DualMotorLift implements Subsystem {
         //Log.v("PIDLift: modes", String.format("left mode: %s, right mode: %s", slideMotorL.getMode().toString(), slideMotorR.getMode().toString()));
         //packet.put("motor power", slideMotorL.getPower());
         packet.put("R motor mode", slideMotorR.getMode());
-        FtcDashboard.getInstance().sendTelemetryPacket(packet);
+        //FtcDashboard.getInstance().sendTelemetryPacket(packet);
         telemetry.update();
     }
 }
