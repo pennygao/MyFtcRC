@@ -11,7 +11,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
-import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
+//import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 
 @Config
 @Autonomous(group = "test")
@@ -23,7 +24,7 @@ public class StraightTest extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         CrabRobot robot = new CrabRobot(this,true);
-        Drivetrain drivetrain = new Drivetrain(robot);
+        Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
 
         Trajectory trajectory = drivetrain.trajectoryBuilder(new Pose2d())

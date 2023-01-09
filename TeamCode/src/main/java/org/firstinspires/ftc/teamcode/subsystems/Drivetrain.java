@@ -307,10 +307,10 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        leftFront.setPower(-v);
+        leftRear.setPower(-v1);
+        rightRear.setPower(-v2);
+        rightFront.setPower(-v3);
     }
 
 

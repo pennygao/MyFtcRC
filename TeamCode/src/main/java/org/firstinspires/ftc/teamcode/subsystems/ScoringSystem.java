@@ -22,10 +22,10 @@ public class ScoringSystem implements Subsystem {
     private Servo SSKnocker;
     private double ssKnockerPos = 0;
 
-    private ChainBar chainBar;
+    public ChainBar chainBar;
     public Claw claw;
     //TODO: tune
-    public static double CLAW_OPEN_POSITION = 0.3;
+    public static double CLAW_OPEN_POSITION = 0.38;
     public static double CLAW_CLOSE_POSITION = 0.58; //0
 
     public static double CHAIN_BAR_DOWN = 0.44;
@@ -88,7 +88,7 @@ public class ScoringSystem implements Subsystem {
             CBDirection = direction;
         }
         public boolean doneMoving(){
-            return (NanoClock.system().seconds() - lastMovement > 1);
+            return (NanoClock.system().seconds() - lastMovement > 2);
         }
         public void adjust(int direction){
             double toPosition = cbServo.getPosition(); //get target position

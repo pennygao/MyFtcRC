@@ -49,7 +49,7 @@ public class ZZAutoRightRepick extends LinearOpMode {
         robot.scoringSystem.claw.closeClaw();
 
         // Move forward then right to high pole
-        autoLift liftUp = new autoLift(robot, 3, POLE_HT);
+        autoLift liftUp = new autoLift(robot, 1, 20);
         KnockerCommand knock = new KnockerCommand(robot, 0.45, 1.5);
         KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
 

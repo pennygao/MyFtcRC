@@ -74,7 +74,7 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
      */
     public static double WHEEL_RADIUS = 1.8898; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 11.22; // in: 180->11.22, 90->11.51
+    public static double TRACK_WIDTH = 11.2; // in: 180->11.2, 90->11.3
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -84,7 +84,7 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
      */
     public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
     public static double kA = 0.002;
-    public static double kStatic = 0.015;
+    public static double kStatic = 0.01;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -114,8 +114,8 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 40.0; //52.48291908330528;
-    public static double MAX_ACCEL = 40.0; //52.48291908330528;
+    public static double MAX_VEL = 35.0; //52.48291908330528;
+    public static double MAX_ACCEL = 35.0; //52.48291908330528;
     public static double MAX_ANG_VEL = Math.toRadians(180); //231.31152000000003);
     public static double MAX_ANG_ACCEL = Math.toRadians(180); //231.31152000000003);
 
@@ -191,11 +191,13 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
+        /*
         imu = robot.getIMU("imu");
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
         //BNO055IMUUtil.remapAxes(imu, AxesOrder.XZY, BNO055IMUUtil.AxesSigns.PNP);
+         */
 
         // TODO: If the hub containing the IMU you are using is mounted so that the "REV" logo does
         // not face up, remap the IMU axes so that the z-axis points upward (normal to the floor.)
@@ -397,7 +399,8 @@ public class Drivetrain3DW extends MecanumDrive implements Subsystem {
 
     @Override
     public double getRawExternalHeading() {
-        return imu.getAngularOrientation().firstAngle;
+        return 0;
+        //return imu.getAngularOrientation().firstAngle;
     }
 
     @Override

@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
 import org.firstinspires.ftc.teamcode.commands.autoLift;
+import org.firstinspires.ftc.teamcode.commands.autoLiftCBClaw;
+import org.firstinspires.ftc.teamcode.commands.autoCB;
+import org.firstinspires.ftc.teamcode.commands.autoClaw;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
@@ -16,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 @Config
 @Autonomous
 public class AutoRight extends LinearOpMode {
-    public static double HI_POLE_X = 53.0;
+    public static double HI_POLE_X = 55;
     public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5.5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
@@ -44,6 +47,7 @@ public class AutoRight extends LinearOpMode {
 
         //Servo init code here
         robot.scoringSystem.claw.openClaw();
+        robot.scoringSystem.SSKnockerSetPosition(0.4);
         //robot.scoringSystem.setClawPos(0.5);
         od.init();
         waitForStart();
@@ -53,7 +57,11 @@ public class AutoRight extends LinearOpMode {
         KnockerCommand knock = new KnockerCommand(robot, 0.0, 1.5);
         //KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
 
-        autoLift liftUp = new autoLift(robot, 3, POLE_HT);
+        autoLift liftUp = new autoLift(robot, 3, 38);
+        //autoLiftCBClaw liftUpCBClaw = new autoLiftCBClaw(robot, 3, -1, 2);
+        autoCB   cbLeft = new autoCB(robot, -1); // auto left is -1
+        autoClaw clawClose = new autoClaw(robot, 0, 1);
+        autoClaw clawOpen = new autoClaw(robot, 1, 1);
 
         // hold preload
         robot.scoringSystem.claw.closeClaw();
@@ -62,13 +70,21 @@ public class AutoRight extends LinearOpMode {
         // Move forward two tile
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .forward(HI_POLE_X) // move forward
+                        .lineTo(new Vector2d(HI_POLE_X, 0)) // move forward
+                        .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
                         .addTemporalMarker(0.0, ()->robot.runCommands(liftUp)) // raise lift
-                        .addTemporalMarker(0.55, ()->robot.runCommand(knock))
-                        //.addTemporalMarker(2, ()->robot.runCommand(knockerReset))
-                        .strafeLeft(HI_POLE_SIDE)
+                        .addTemporalMarker(0.8, ()->robot.runCommand(knock))
+                        //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
+                        //.strafeLeft(HI_POLE_SIDE)
                         .build()
         ));
+        robot.runCommand(cbLeft);
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(new Pose2d())
+                        .strafeLeft(4)
+                        .build()
+        ));
+        robot.runCommand(clawOpen);
 /*
         // Forward a little
         robot.runCommand(drivetrain.followTrajectorySequence(

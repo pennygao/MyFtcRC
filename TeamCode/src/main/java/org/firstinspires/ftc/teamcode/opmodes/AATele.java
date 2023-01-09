@@ -110,7 +110,7 @@ public class AATele extends LinearOpMode {
                 //or set its mode to Move with encoder?
             }
             if(smartGamepad1.left_trigger_pressed()) {
-                robot.scoringSystem.swingChainBar(1);
+                robot.scoringSystem.swingChainBar(1); // left for tele
             }
             else if (smartGamepad1.right_trigger_pressed()){
                 robot.scoringSystem.swingChainBar(-1);

@@ -35,8 +35,8 @@ public class LocalizationTest extends LinearOpMode {
             robot.update();
             drivetrain.setWeightedDrivePower(
                     new Pose2d(
-                            gamepad1.left_stick_y * 0.2,
-                            gamepad1.left_stick_x * 0.2,
+                            -gamepad1.left_stick_y * 0.2,
+                            -gamepad1.left_stick_x * 0.2,
                             -gamepad1.right_stick_x * 0.2
                     ));
 
