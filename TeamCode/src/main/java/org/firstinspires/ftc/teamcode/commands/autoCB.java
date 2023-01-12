@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.roadrunner.util.NanoClock;
+
 import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
@@ -8,12 +10,12 @@ public class autoCB implements Command {
     CrabRobot robot;
     private double startTime;
     int direction;
-    double ht;
+    double duration;
 
-    public autoCB(CrabRobot robot, int direction) {
+    public autoCB(CrabRobot robot, int direction, double duration) {
         this.robot= robot;
         this.direction = direction;
-        //this.ht = ht;
+        this.duration = duration;
 
     }
 
@@ -29,11 +31,13 @@ public class autoCB implements Command {
 
     @Override
     public void stop() {
-        robot.scoringSystem.dualMotorLift.adjustLift(0, true);
+
+        //robot.scoringSystem.dualMotorLift.adjustLift(0, true);
     }
 
     @Override
     public boolean isCompleted() {
-        return (this.robot.scoringSystem.chainBar.doneMoving());
+        //return (this.robot.scoringSystem.chainBar.doneMoving());
+        return (NanoClock.system().seconds() - startTime > 2);
     }
 }

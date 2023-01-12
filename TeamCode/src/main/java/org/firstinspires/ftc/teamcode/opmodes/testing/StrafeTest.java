@@ -46,6 +46,9 @@ public class StrafeTest extends LinearOpMode {
             robot.runCommand((Command) drivetrain.followTrajectory(trajLeft));
         }
 
+        Pose2d poseEstimate = drivetrain.getPoseEstimate();
+        telemetry.addData("finalY", poseEstimate.getY());
+        telemetry.update();
 
     }
 }

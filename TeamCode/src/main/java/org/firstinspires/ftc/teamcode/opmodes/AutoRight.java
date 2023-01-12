@@ -14,12 +14,14 @@ import org.firstinspires.ftc.teamcode.commands.autoClaw;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Config
 @Autonomous
 public class AutoRight extends LinearOpMode {
-    public static double HI_POLE_X = 55;
+    public static double HI_POLE_X = 52;
+    public static double HI_POLE_Y = 4;
     public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5.5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
@@ -28,7 +30,8 @@ public class AutoRight extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this,true);
-        Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
+        //Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
+        Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
         objectDetector od = new objectDetector(robot, telemetry);
         robot.registerSubsystem((Subsystem)od);
@@ -57,9 +60,10 @@ public class AutoRight extends LinearOpMode {
         KnockerCommand knock = new KnockerCommand(robot, 0.0, 1.5);
         //KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
 
-        autoLift liftUp = new autoLift(robot, 3, 38);
-        //autoLiftCBClaw liftUpCBClaw = new autoLiftCBClaw(robot, 3, -1, 2);
-        autoCB   cbLeft = new autoCB(robot, -1); // auto left is -1
+        autoLift liftUp1 = new autoLift(robot, 1, 38);
+        autoLift liftUp3 = new autoLift(robot, 3, 38);
+        autoLiftCBClaw liftUpCBClaw = new autoLiftCBClaw(robot, 3, -1, 2);
+        autoCB   cbLeft = new autoCB(robot, -1, 2); // auto left is -1
         autoClaw clawClose = new autoClaw(robot, 0, 1);
         autoClaw clawOpen = new autoClaw(robot, 1, 1);
 
@@ -72,20 +76,26 @@ public class AutoRight extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .lineTo(new Vector2d(HI_POLE_X, 0)) // move forward
                         .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
-                        .addTemporalMarker(0.0, ()->robot.runCommands(liftUp)) // raise lift
+                        .addTemporalMarker(0.0, ()->robot.runCommands(liftUp3)) // raise lift
                         .addTemporalMarker(0.8, ()->robot.runCommand(knock))
                         //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
-                        //.strafeLeft(HI_POLE_SIDE)
+                        .strafeLeft(2)
                         .build()
         ));
-        robot.runCommand(cbLeft);
+        robot.scoringSystem.swingChainBar(-1);
+        robot.update();
+        /*
+        robot.runCommands(cbLeft);
+        robot.runCommands(clawOpen);
+
         robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .strafeLeft(4)
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .forward(5)
+                        //.addTemporalMarker(0.0, ()->robot.runCommands(clawOpen))
                         .build()
         ));
         robot.runCommand(clawOpen);
-/*
+
         // Forward a little
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())

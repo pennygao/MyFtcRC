@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
-import org.firstinspires.ftc.teamcode.subsystems.SimpleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 
 /*
  * This is a simple routine to test turning capabilities.
@@ -27,7 +27,8 @@ public class BackAndForth extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this,true);
-        Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
+        //Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
+        Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 

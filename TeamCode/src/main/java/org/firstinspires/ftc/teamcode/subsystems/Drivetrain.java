@@ -49,8 +49,8 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
             //getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
     public static double WHEEL_RADIUS = 1.93; // in
-    public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 18.8; // 11/13 calibration
+    public static double GEAR_RATIO = 0.97; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 10.5; // 11/13 calibration
     //however, we changed it to 15.95 after some testing to make things more accurate. idk how it works but it did.
 
     public static double kV = 1.0 / rpmToVelocity(MAX_RPM);
@@ -63,7 +63,7 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
     public static double MAX_ANG_ACCEL = Math.toRadians(100);
 
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0,0); //5.0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.0, 0, 0); //5.0,0,0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(2.0, 0, 0); //5.0,0,0);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -290,25 +290,33 @@ public class  Drivetrain extends MecanumDrive implements Subsystem {
     @Override
     public List<Double> getWheelPositions() {
         List<Double> wheelPositions = new ArrayList<>();
-        for (DcMotorEx motor : motors) {
-            wheelPositions.add(encoderTicksToInches(motor.getCurrentPosition()));
-        }
+        //for (DcMotorEx motor : motors) {
+        //    wheelPositions.add(encoderTicksToInches(motor.getCurrentPosition()));
+        //}
+        wheelPositions.add(encoderTicksToInches(leftFront.getCurrentPosition()));
+        wheelPositions.add(encoderTicksToInches(leftRear.getCurrentPosition()));
+        wheelPositions.add(encoderTicksToInches(-rightFront.getCurrentPosition()));
+        wheelPositions.add(encoderTicksToInches(-rightRear.getCurrentPosition()));
         return wheelPositions;
     }
 
     @Override
     public List<Double> getWheelVelocities() {
         List<Double> wheelVelocities = new ArrayList<>();
-        for (DcMotorEx motor : motors) {
-            wheelVelocities.add(encoderTicksToInches(motor.getVelocity()));
-        }
+        //for (DcMotorEx motor : motors) {
+        //    wheelVelocities.add(encoderTicksToInches(motor.getVelocity()));
+        //}
+        wheelVelocities.add(encoderTicksToInches(leftFront.getVelocity()));
+        wheelVelocities.add(encoderTicksToInches(leftRear.getVelocity()));
+        wheelVelocities.add(encoderTicksToInches(-rightFront.getVelocity()));
+        wheelVelocities.add(encoderTicksToInches(-rightRear.getVelocity()));
         return wheelVelocities;
     }
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(-v);
-        leftRear.setPower(-v1);
+        leftFront.setPower(v);
+        leftRear.setPower(v1);
         rightRear.setPower(-v2);
         rightFront.setPower(-v3);
     }
