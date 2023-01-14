@@ -23,7 +23,7 @@ public class DualMotorLift implements Subsystem {
     private DcMotorEx slideMotorR;
     private static final double TICKS_PER_REV = 537.7; //fix this
     private static final double PULLEY_DIAMETER = 50.4 / 25.4; //update diameter of the pulley
-    private final int HEIGHT_DIFF_TOLERANCE = inchToTicks(0.3); //(int) (0.3*TICKS_PER_REV / (PULLEY_DIAMETER * Math.PI));
+    private final int HEIGHT_DIFF_TOLERANCE = inchToTicks(1.5); //(int) (0.3*TICKS_PER_REV / (PULLEY_DIAMETER * Math.PI));
     private Telemetry telemetry;
     private boolean targetReached = true;
     private final double FAST_POWER = 0.6;
@@ -54,7 +54,7 @@ public class DualMotorLift implements Subsystem {
         this.telemetry = telemetry;
         slideMotorL = robot.getMotor("slideMotorL");
         slideMotorR = robot.getMotor("slideMotorR");
-        slideMotorL.setTargetPositionTolerance(HEIGHT_DIFF_TOLERANCE);
+        slideMotorL.setTargetPositionTolerance(inchToTicks(0.3)); //HEIGHT_DIFF_TOLERANCE);
         slideMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -135,22 +135,43 @@ public class DualMotorLift implements Subsystem {
 
     private void updateTargetReached() {
         //if it is already true, don't change it. only change when slide is set to a level
+        double motorLVel = Math.abs(slideMotorL.getVelocity());
+        double targetPos, currPos;
+
+        motorLVel = Math.abs(slideMotorL.getVelocity());
+        currPos = slideMotorL.getCurrentPosition();
+
+
+
         if (mode == Mode.RIGHT_FOLLOW_LEFT) {
+            targetPos = slideMotorL.getTargetPosition();
+
+            /*
             this.targetReached = (this.targetReached ||
                     (Math.abs(slideMotorL.getVelocity()) <= 20
                             && (Math.abs(slideMotorL.getTargetPosition() - slideMotorL.getCurrentPosition()) <= HEIGHT_DIFF_TOLERANCE)));
+
+            */
         } else {
+            targetPos = inchToTicks(pidfController.getTargetPosition());
+            /*
             this.targetReached = (this.targetReached ||
                     (Math.abs(slideMotorL.getVelocity()) <= 20
                             && (Math.abs(inchToTicks(pidfController.getTargetPosition()) - slideMotorL.getCurrentPosition()) <= HEIGHT_DIFF_TOLERANCE)));
+            */
         }
+        this.targetReached = (this.targetReached || (motorLVel <= 20 && Math.abs(targetPos - currPos) <= HEIGHT_DIFF_TOLERANCE));
+        //telemetry.addData("slideMotorL.getVelocity() ", Math.abs(slideMotorL.getVelocity()));
+        //telemetry.addData("lastError ", ticksToInches((int)Math.abs(targetPos - currPos)));
+        //telemetry.addData("targetReached ", this.targetReached);
+        //telemetry.update();
     }
 
     public boolean isLevelReached(){
         return this.targetReached;
     }
 
-    private int inchToTicks(double inches) {
+    public int inchToTicks(double inches) {
         return (int) (inches * TICKS_PER_REV / (PULLEY_DIAMETER * Math.PI));
     }
     private double ticksToInches(int ticks){
@@ -187,7 +208,9 @@ public class DualMotorLift implements Subsystem {
         //telemetry.addLine("current slide velocity: " + slideMotorL.getVelocity());
         //telemetry.addLine("current slide position: " + ticksToInches(slideMotorL.getCurrentPosition()));
         packet.put("target pos (inches)", ticksToInches(slideMotorL.getTargetPosition()));
-        packet.put("PID target pos", pidfController.getTargetPosition());
+        if (mode == Mode.BOTH_MOTORS_PID) {
+            packet.put("PID target pos", pidfController.getTargetPosition());
+        }
         packet.put("left velocity", slideMotorL.getVelocity());
         packet.put("right velocity", slideMotorR.getVelocity());
         packet.put("L pos (inches)", ticksToInches(slideMotorL.getCurrentPosition()));

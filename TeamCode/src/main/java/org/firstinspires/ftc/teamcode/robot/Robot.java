@@ -90,7 +90,7 @@ public class Robot {
         }
         commands.removeAll(commandsToRemove);
 
-        //TODO: when turning, comment following out, as opmode sends telemetry directly.
+        //TODO: when tuning, comment following out, as opmode sends telemetry directly.
         // After tuning, in BackAndForth step, un-comment this for robot to send telementry instead
         dashboard.sendTelemetryPacket(packet);
     }

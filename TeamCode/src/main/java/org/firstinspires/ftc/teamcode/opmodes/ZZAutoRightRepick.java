@@ -7,9 +7,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.commands.DriveTillIntake;
 import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
-import org.firstinspires.ftc.teamcode.commands.autoLift;
+import org.firstinspires.ftc.teamcode.commands.AutoLift;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
@@ -21,7 +22,8 @@ public class ZZAutoRightRepick extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this, true);
-        Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
+        //Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
+        Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
         objectDetector od = new objectDetector(robot, telemetry);
         robot.registerSubsystem((Subsystem)od);
@@ -49,7 +51,7 @@ public class ZZAutoRightRepick extends LinearOpMode {
         robot.scoringSystem.claw.closeClaw();
 
         // Move forward then right to high pole
-        autoLift liftUp = new autoLift(robot, 1, 20);
+        AutoLift liftUp = new AutoLift(robot, 1, 20);
         KnockerCommand knock = new KnockerCommand(robot, 0.45, 1.5);
         KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
 
@@ -70,7 +72,7 @@ public class ZZAutoRightRepick extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         // retract lift
                         .addTemporalMarker(0.5,
-                                ()->robot.runCommands(new autoLift(robot, 1, CONE_HT)))
+                                ()->robot.runCommands(new AutoLift(robot, 1, CONE_HT)))
                         .back(9.5) // move backward
                         .turn( Math.toRadians(-134))
                         //.strafeRight(1)
@@ -83,9 +85,9 @@ public class ZZAutoRightRepick extends LinearOpMode {
                 new Pose2d(0.1, 0, 0), 3.3, telemetry);
         robot.runCommand(flwLine);
 
-        robot.runCommands(new autoLift(robot, 1, CONE_HT-5));
+        robot.runCommands(new AutoLift(robot, 1, CONE_HT-5));
         robot.scoringSystem.claw.closeClaw();
-        robot.runCommands(new autoLift(robot, 1, CONE_HT+5));
+        robot.runCommands(new AutoLift(robot, 1, CONE_HT+5));
 
 
         robot.runCommand(drivetrain.followTrajectorySequence(
@@ -107,7 +109,7 @@ public class ZZAutoRightRepick extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .addTemporalMarker(0.3,
-                                ()->robot.runCommands(new autoLift(robot, 0, 0)))
+                                ()->robot.runCommands(new AutoLift(robot, 0, 0)))
                         .back(9)
                         .turn(Math.toRadians(-35))
                         .build()

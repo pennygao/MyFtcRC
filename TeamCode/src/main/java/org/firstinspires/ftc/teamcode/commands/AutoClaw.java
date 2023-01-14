@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
-public class autoClaw implements Command {
+public class AutoClaw implements Command {
 
     CrabRobot robot;
     private double startTime;
@@ -13,7 +13,7 @@ public class autoClaw implements Command {
     double duration;
     NanoClock clock;
 
-    public autoClaw(CrabRobot robot, int direction, double duration) {
+    public AutoClaw(CrabRobot robot, int direction, double duration) {
         this.robot= robot;
         this.direction = direction;
         this.duration = duration;

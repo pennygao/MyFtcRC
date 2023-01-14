@@ -6,9 +6,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
-import org.firstinspires.ftc.teamcode.commands.autoLift;
+import org.firstinspires.ftc.teamcode.commands.AutoLift;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
@@ -25,8 +26,8 @@ public class AutoLeft extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this, true);
-        //Drivetrain drivetrain = new Drivetrain(robot);
-        Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
+        Drivetrain drivetrain = new Drivetrain(robot);
+        //Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
         objectDetector od = new objectDetector(robot, telemetry);
         robot.registerSubsystem((Subsystem)od);
@@ -56,7 +57,7 @@ public class AutoLeft extends LinearOpMode {
         //KnockerCommand knockerReset = new KnockerCommand(robot, 0.4, 1.5);
 
 
-        autoLift liftUp = new autoLift(robot, 3, POLE_HT);
+        AutoLift liftUp = new AutoLift(robot, 3, POLE_HT);
 
         // hold preload
         robot.scoringSystem.claw.closeClaw();
@@ -95,7 +96,7 @@ public class AutoLeft extends LinearOpMode {
         ));
 
         // retract lift
-        autoLift liftDown = new autoLift(robot, 0, 0.0);
+        AutoLift liftDown = new AutoLift(robot, 0, 0.0);
         robot.runCommands(liftDown);
 
         //go back

@@ -1,34 +1,31 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import com.acmerobotics.roadrunner.util.NanoClock;
-
 import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
+import org.firstinspires.ftc.teamcode.subsystems.DualMotorLift;
+import org.firstinspires.ftc.teamcode.subsystems.ScoringSystem;
 
-public class autoLiftCBClaw implements Command {
+public class AutoLift implements Command {
 
     CrabRobot robot;
     private double startTime;
     int level;
-    double duration;
-    int CBDir;
+    double ht;
 
-    public autoLiftCBClaw(CrabRobot robot, int level, int CBDir, double duration) {
+    public AutoLift(CrabRobot robot, int level, double ht) {
         this.robot= robot;
         this.level = level;
-        this.duration = duration;
-        this.CBDir = CBDir;
+        this.ht = ht;
     }
 
     @Override
     public void start() {
-        robot.scoringSystem.swingChainBar(this.CBDir);
         if (this.level == 0) {
             robot.scoringSystem.goAllDown();
-            robot.update();
+        } else if (this.level == 5) {
+            robot.scoringSystem.dualMotorLift.goToHt(robot.scoringSystem.dualMotorLift.inchToTicks(this.ht));
         } else {
             robot.scoringSystem.dualMotorLift.goToLevel(level);
-            robot.update();
         }
 //        startTime = NanoClock.system().seconds();
 
@@ -45,9 +42,6 @@ public class autoLiftCBClaw implements Command {
 
     @Override
     public boolean isCompleted() {
-        return (this.robot.scoringSystem.dualMotorLift.isLevelReached() &&
-                this.robot.scoringSystem.chainBar.doneMoving()
-        );
-
+        return (this.robot.scoringSystem.dualMotorLift.isLevelReached());
     }
 }

@@ -16,7 +16,7 @@ public class ScoringSystem implements Subsystem {
     public DualMotorLift dualMotorLift;
     public Telemetry telemetry;
 
-    private int swingState = 0;
+    public int swingState = 0;
     private int lowerState = 0;
 
     private Servo SSKnocker;
@@ -80,6 +80,11 @@ public class ScoringSystem implements Subsystem {
             cbServo.setPosition(CHAIN_BAR_DOWN + CHAIN_BAR_UP*CBDirection);
             lastMovement = NanoClock.system().seconds();
         }
+
+        public void swing_direction(int direction){
+            cbServo.setPosition(CHAIN_BAR_DOWN + CHAIN_BAR_UP * direction);
+            lastMovement = NanoClock.system().seconds();
+        }
         public void lower(){
             cbServo.setPosition(CHAIN_BAR_DOWN);
             lastMovement = NanoClock.system().seconds();
@@ -102,6 +107,7 @@ public class ScoringSystem implements Subsystem {
         chainBar = new ChainBar(robot);
         SSKnocker = robot.getServo("SSKnocker");
         dualMotorLift = new DualMotorLift(robot, telemetry, DualMotorLift.Mode.BOTH_MOTORS_PID);
+        //dualMotorLift = new DualMotorLift(robot, telemetry, DualMotorLift.Mode.RIGHT_FOLLOW_LEFT);
         telemetry.update();
 
     }
@@ -184,9 +190,9 @@ public class ScoringSystem implements Subsystem {
         packet.put("time since cb movement", chainBar.lastMovement);
         //telemetry.addData("is chainbar done?", chainBar.doneMoving());
         packet.put("is chain bar done?", chainBar.doneMoving());
-        packet.put("slide target reached?", isLiftLevelReached());
-        packet.put("Chain Bar position: ", chainBar.cbServo.getPosition());
-        telemetry.update();
+        //telemetry.addData("slide target reached?", isLiftLevelReached());
+        //telemetry.addData("Chain Bar position: ", chainBar.cbServo.getPosition());
+        //telemetry.update();
 
         // debug only,  remove it on release
         // packet.put("Current Position", slideMotor.getCurrentPosition());

@@ -8,23 +8,24 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
+import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.SimpleMecanumDrive;
 
 public class DriveTillIntake implements Command {
     CrabRobot robot;
     //SimpleMecanumDrive mecanumDrive;
-    Drivetrain3DW mecanumDrive;
+    Drivetrain mecanumDrive;
     Telemetry telemetry;
     NanoClock clock;
     Pose2d drivePower;
-    Pose2d startPos;
+    double startX, startY;
     double xPwr;
     double coef = 0.5;
     double initialTimeStamp, intakeCompleteTime;
     double driveDisp;
 
     //public DriveTillIntake (CrabRobot robot, SimpleMecanumDrive drive, Pose2d power, double time){
-    public DriveTillIntake (CrabRobot robot, Drivetrain3DW drive, Pose2d power, double xDisp, Telemetry telemetry){
+    public DriveTillIntake (CrabRobot robot, Drivetrain drive, Pose2d power, double xDisp, Telemetry telemetry){
         this.robot = robot;
         this.telemetry = telemetry;
         mecanumDrive = drive;
@@ -37,11 +38,13 @@ public class DriveTillIntake implements Command {
     public void start() {
         mecanumDrive.setDrivePower(drivePower);
         initialTimeStamp=clock.seconds();
-        startPos = mecanumDrive.getPoseEstimate();
+        startX = mecanumDrive.getPoseEstimate().getX();
+        startY = mecanumDrive.getPoseEstimate().getY();
     }
 
     @Override
     public void update() {
+
         // L online, R not online => turn left
         if (robot.robotcolorsensor.csLonLine() && !robot.robotcolorsensor.csRonLine()) {
             mecanumDrive.setDrivePower(new Pose2d(xPwr,xPwr*coef ,0));
@@ -60,16 +63,19 @@ public class DriveTillIntake implements Command {
 
     @Override
     public boolean isCompleted() {
-        double currTime=clock.seconds();
-        return (currTime - initialTimeStamp >=driveDisp); // || currTime - intakeCompleteTime >= 1);
-        /*
+        //double currTime=clock.seconds();
+        //return (currTime - initialTimeStamp >=driveDisp); // || currTime - intakeCompleteTime >= 1);
+
         Pose2d currPos = mecanumDrive.getPoseEstimate();
-        double disp = currPos.getX() - startPos.getX();
+        double disp = Math.abs(currPos.getY() - startY);
         telemetry.addData("currX: ", currPos.getX());
-        telemetry.addData("startX: ", startPos.getX());
+        telemetry.addData("currY: ", currPos.getY());
+        telemetry.addData("startX: ", startX);
+        telemetry.addData("startY: ", startY);
+        telemetry.addData("disp: ", disp);
         telemetry.update();
         return (disp >= driveDisp);
 
-         */
+
     }
 }

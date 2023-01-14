@@ -60,6 +60,7 @@ public class AATele extends LinearOpMode {
                 telemetry.addLine("Gamepad1 B pressed");
                 telemetry.update();
             }
+
 //SS knocker
             if (gamepad2.right_bumper){
                 KnockerCommand knock = new KnockerCommand(robot, 0.0, 1.5);

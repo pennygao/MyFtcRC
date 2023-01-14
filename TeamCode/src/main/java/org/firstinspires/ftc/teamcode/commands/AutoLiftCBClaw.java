@@ -3,23 +3,24 @@ package org.firstinspires.ftc.teamcode.commands;
 import org.firstinspires.ftc.teamcode.robot.Command;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
-import com.acmerobotics.roadrunner.util.NanoClock;
-
-public class autoLift implements Command {
+public class AutoLiftCBClaw implements Command {
 
     CrabRobot robot;
     private double startTime;
     int level;
-    double ht;
+    double duration;
+    int CBDir;
 
-    public autoLift(CrabRobot robot, int level, double ht) {
+    public AutoLiftCBClaw(CrabRobot robot, int level, int CBDir, double duration) {
         this.robot= robot;
         this.level = level;
-        this.ht = ht;
+        this.duration = duration;
+        this.CBDir = CBDir;
     }
 
     @Override
     public void start() {
+        robot.scoringSystem.swingChainBar(this.CBDir);
         if (this.level == 0) {
             robot.scoringSystem.goAllDown();
             robot.update();
@@ -42,6 +43,9 @@ public class autoLift implements Command {
 
     @Override
     public boolean isCompleted() {
-        return (this.robot.scoringSystem.dualMotorLift.isLevelReached());
+        return (this.robot.scoringSystem.dualMotorLift.isLevelReached() &&
+                this.robot.scoringSystem.chainBar.doneMoving()
+        );
+
     }
 }
