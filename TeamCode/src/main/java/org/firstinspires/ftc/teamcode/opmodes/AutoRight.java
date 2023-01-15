@@ -21,7 +21,7 @@ import android.util.Log;
 @Config
 @Autonomous
 public class AutoRight extends LinearOpMode {
-    public static double HI_POLE_X = 57.5;
+    public static double HI_POLE_X = 58.5;
     public static double HI_POLE_Y = 4;
     public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5.5;
@@ -62,7 +62,7 @@ public class AutoRight extends LinearOpMode {
         KnockerCommand knock = new KnockerCommand(robot, 0.0, 1.5);
         //KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
 
-        AutoLift liftUp1 = new AutoLift(robot, 1, 38);
+        AutoLift liftUp_manual = new AutoLift(robot, 5, 37);
         AutoLift liftUp3 = new AutoLift(robot, 3, 38);
         AutoLift liftUp4 = new AutoLift(robot, 4, 38);
         AutoLiftCBClaw liftUpCBClaw = new AutoLiftCBClaw(robot, 3, -1, 2);
@@ -84,9 +84,9 @@ public class AutoRight extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
                         .splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
                         .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
-                        .addTemporalMarker(0.0, ()->robot.runCommands(liftUp3)) // raise lift
-                        .addTemporalMarker(1.1, ()->robot.runCommand(knock))
-                        .addTemporalMarker(1.0, ()->robot.runCommand(cbLeft))
+                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 32))) // raise lift
+                        .addTemporalMarker(1.0, ()->robot.runCommand(knock))
+                        .addTemporalMarker(0.8, ()->robot.runCommand(cbLeft))
                         //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
                         //.strafeLeft(2)
                         .build()
@@ -128,11 +128,22 @@ public class AutoRight extends LinearOpMode {
         robot.runCommands(clawClose);
 
         // back to release claw
+        /*
+        robot.runCommand(drivetrain.followTrajectory(
+                drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
+                        .splineTo(new Vector2d(HI_POLE_X-6, 15), Math.toRadians(-90))
+                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
+                        .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
+                        .build()
+        ));
+
+         */
+
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
                         .back(45)
-                        .strafeLeft(3.5)
+                        .strafeLeft(2)
                         .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
                         .build()
@@ -144,31 +155,38 @@ public class AutoRight extends LinearOpMode {
 
         // park
         if  (elementPos == 1) {
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+            robot.runCommand(drivetrain.followTrajectory(
+                    drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+                            //.splineTo(new Vector2d(HI_POLE_X-6, 17), Math.toRadians(-90))
                             .back(2)
+                            .addTemporalMarker(0, ()->robot.runCommands(cbDown))
+                            .addTemporalMarker(0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
                             .build()
             ));
-            robot.runCommands(cbDown);
         }
         if (elementPos == 2 || elementPos == 4) {
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+            robot.runCommand(drivetrain.followTrajectory(
+                    drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+                            //.splineTo(new Vector2d(HI_POLE_X-6, 0), Math.toRadians(-90))
                             .forward(20)
+                            //.addTemporalMarker(0.5, ()->robot.runCommands(cbDown))
+                            //.addTemporalMarker(0.5, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
                             .build()
             ));
             robot.runCommands(cbDown);
+            robot.runCommands(new AutoLift(robot, 0, 0));
         }
         if (elementPos == 3 ) {
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(43)
-                            .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
+            robot.runCommand(drivetrain.followTrajectory(
+                    drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+                            //.splineTo(new Vector2d(HI_POLE_X-6, -23), Math.toRadians(-90))
+                            .forward(32)
+                            .addTemporalMarker(0.1, ()->robot.runCommands(cbDown))
+                            .addTemporalMarker(0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
                             .build()
             ));
 
         }
-        robot.runCommands(new AutoLift(robot, 0, 0));
         robot.runCommands(clawOpen); // ready to pick
     }
 }
