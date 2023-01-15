@@ -21,7 +21,7 @@ import android.util.Log;
 @Config
 @Autonomous
 public class AutoRight extends LinearOpMode {
-    public static double HI_POLE_X = 58;
+    public static double HI_POLE_X = 57.5;
     public static double HI_POLE_Y = 4;
     public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5.5;
@@ -85,7 +85,7 @@ public class AutoRight extends LinearOpMode {
                         .splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
                         .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
                         .addTemporalMarker(0.0, ()->robot.runCommands(liftUp3)) // raise lift
-                        .addTemporalMarker(0.8, ()->robot.runCommand(knock))
+                        .addTemporalMarker(1.1, ()->robot.runCommand(knock))
                         .addTemporalMarker(1.0, ()->robot.runCommand(cbLeft))
                         //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
                         //.strafeLeft(2)
@@ -115,12 +115,14 @@ public class AutoRight extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .addTemporalMarker(0, ()->robot.runCommands(new AutoLift(robot, 5, 6)))
                         .forward(18)
+                        //.addTemporalMarker(0.9, ()->robot.runCommand(knock))
                         .build()
         ));
 
         // Follow line
         DriveTillIntake flwLine = new DriveTillIntake(robot, drivetrain,
                 new Pose2d(0.1, 0, 0), 6.5, telemetry);
+
         robot.runCommands(flwLine);
 
         robot.runCommands(clawClose);
@@ -129,14 +131,16 @@ public class AutoRight extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                        .back(45)
-                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 32)))
+                        .back(45)git
+                        .strafeLeft(3.5)
+                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
                         .build()
         ));
 
         // Release cone
         robot.runCommands(clawOpen);
+
 
         // park
         if  (elementPos == 1) {
@@ -150,7 +154,7 @@ public class AutoRight extends LinearOpMode {
         if (elementPos == 2 || elementPos == 4) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(22)
+                            .forward(20)
                             .build()
             ));
             robot.runCommands(cbDown);
@@ -164,7 +168,7 @@ public class AutoRight extends LinearOpMode {
             ));
 
         }
-
+        robot.runCommands(new AutoLift(robot, 0, 0));
         robot.runCommands(clawOpen); // ready to pick
     }
 }
