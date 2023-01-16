@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -50,7 +51,6 @@ public class AutoRight extends LinearOpMode {
 
 
         //Servo init code here
-        robot.scoringSystem.claw.openClaw();
         robot.scoringSystem.SSKnockerSetPosition(0.6);
         robot.scoringSystem.chainBar.lower();
         //robot.scoringSystem.setClawPos(0.5);
@@ -62,6 +62,18 @@ public class AutoRight extends LinearOpMode {
         AutoCB cbDown = new AutoCB(robot, 0, 2); // down is 0
         AutoClaw clawClose = new AutoClaw(robot, 0, 1);
         AutoClaw clawOpen = new AutoClaw(robot, 1, 0.5);
+
+        Trajectory traj1 = drivetrain.trajectoryBuilder(new Pose2d())
+                //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
+                .lineTo(new Vector2d(HI_POLE_X, 0)) // move forward
+                .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
+                .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 31))) // raise lift
+                .addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
+                .addTemporalMarker(0.8, ()->robot.runCommand(cbLeft))
+                //.addTemporalMarker(1.5, ()->robot.runCommand(knock))
+                //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
+                //.strafeLeft(2)
+                .build();
 
         waitForStart();
         if (isStopRequested()) return;
@@ -76,19 +88,8 @@ public class AutoRight extends LinearOpMode {
 
 
         // Move forward two tile
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
-                        .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
-                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 31))) // raise lift
-                        .addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
-                        .addTemporalMarker(0.8, ()->robot.runCommand(cbLeft))
-                        //.addTemporalMarker(1.5, ()->robot.runCommand(knock))
-                        //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
-                        //.strafeLeft(2)
-                        .build()
-        ));
-        robot.runCommand(new AutoLift(robot, 5, 27));
+        robot.runCommand(drivetrain.followTrajectory(traj1));
+        robot.runCommand(new AutoLift(robot, 5, 26));
         robot.runCommand(new KnockerCommand(robot, 0.05, 0.5));
         /*
         robot.runCommand(drivetrain.followTrajectorySequence(
@@ -115,8 +116,8 @@ public class AutoRight extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .addTemporalMarker(0, ()->robot.runCommands(new AutoLift(robot, 5, 6)))
                         .forward(15)
-                        .addTemporalMarker(0.1, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.5)))
-                        //.addTemporalMarker(0.9, ()->robot.runCommand(knock))
+                        //.addTemporalMarker(0.1, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.5)))
+
                         .build()
         ));
 

@@ -77,6 +77,7 @@ public class ScoringSystem implements Subsystem {
 
         public ChainBar(Robot robot){
             cbServo = robot.getServo("chainBar");
+            cbServo.setPosition(CHAIN_BAR_DOWN);
         }
 
         public void swing(){

@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+
+import android.util.Log;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -42,7 +46,6 @@ public class AutoLeft extends LinearOpMode {
 
 
         //Servo init code here
-        robot.scoringSystem.claw.openClaw();
         robot.scoringSystem.SSKnockerSetPosition(0.6);
         robot.scoringSystem.chainBar.lower();
         //robot.scoringSystem.setClawPos(0.5);
@@ -55,40 +58,37 @@ public class AutoLeft extends LinearOpMode {
         AutoClaw clawClose = new AutoClaw(robot, 0, 1);
         AutoClaw clawOpen = new AutoClaw(robot, 1, 0.5);
 
+        Trajectory traj1 = drivetrain.trajectoryBuilder(new Pose2d())
+                //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
+                .lineTo(new Vector2d(HI_POLE_X, 0)) // move forward
+                .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
+                .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 32))) // raise lift
+                .addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
+                .addTemporalMarker(0.8, ()->robot.runCommand(cbLeft))
+                //.addTemporalMarker(1.5, ()->robot.runCommand(knock))
+                //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
+                //.strafeLeft(2)
+                .build();
+
+
         waitForStart();
+
         if (isStopRequested()) return;
         elementPos = od.ssIndex(20);
+        Log.v("delay","done scanning");
 
         // hold preload
         robot.scoringSystem.claw.closeClaw();
-        //robot.runCommand(robot.scoringSystem.rollerIntake(intakePower, 0.8));
-
-        //robot.runCommands(liftUp3);
-        //robot.runCommands(cbLeft);
-
-
+        Log.v("delay","claw is closed" );
         // Move forward two tile
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
-                        .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
-                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 31))) // raise lift
-                        .addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
-                        .addTemporalMarker(0.8, ()->robot.runCommand(cbLeft))
-                        //.addTemporalMarker(1.5, ()->robot.runCommand(knock))
-                        //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
-                        //.strafeLeft(2)
-                        .build()
-        ));
+        Log.v("delay","started splining");
+
+        robot.runCommand(drivetrain.followTrajectory(traj1));
+        Log.v("delay","finished splining");
         robot.runCommand(new AutoLift(robot, 5, 27));
+        Log.v("delay","going down");
         robot.runCommand(new KnockerCommand(robot, 0.05, 0.5));
-        /*
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .strafeLeft(3)
-                        .build()
-        ));
-         */
+
         robot.runCommands(clawOpen);
         robot.runCommand(new AutoLift(robot, 5, 32));
 
@@ -97,8 +97,8 @@ public class AutoLeft extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbDown))
                         //.addTemporalMarker(0.8, ()->robot.runCommands(liftUp1))
-                        .lineTo(new Vector2d(HI_POLE_X-5.5, 0))
-                        .turn(Math.toRadians(90))
+                        .lineTo(new Vector2d(HI_POLE_X-6, 0))
+                        .turn(Math.toRadians(87))
                         //.forward(12)
                         .build()
         ));
@@ -121,16 +121,7 @@ public class AutoLeft extends LinearOpMode {
         robot.runCommands(clawClose);
 
         // back to release claw
-        /*
-        robot.runCommand(drivetrain.followTrajectory(
-                drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
-                        .splineTo(new Vector2d(HI_POLE_X-6, 15), Math.toRadians(-90))
-                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
-                        .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
-                        .build()
-        ));
 
-         */
 
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
@@ -161,7 +152,7 @@ public class AutoLeft extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 0), Math.toRadians(-90))
-                            .forward(20)
+                            .forward(18)
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
                             .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
                             .build()
@@ -172,7 +163,7 @@ public class AutoLeft extends LinearOpMode {
         if (elementPos == 1 || elementPos == 4) {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
-                            //.splineTo(new Vector2d(HI_POLE_X-6, -23), Math.toRadians(-90))
+
                             .forward(43)
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
                             .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
@@ -183,3 +174,5 @@ public class AutoLeft extends LinearOpMode {
         robot.runCommands(clawOpen); // ready to pick
     }
 }
+
+
