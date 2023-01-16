@@ -83,4 +83,8 @@ public class SmartGamepad extends Gamepad implements Subsystem {
         }
         return result;
     }
+
+    public boolean leftJoystickButton() {
+        return left_stick_button && !previous.left_stick_button;
+    }
 }

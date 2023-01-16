@@ -162,7 +162,7 @@ public class AutoRight extends LinearOpMode {
                             //.splineTo(new Vector2d(HI_POLE_X-6, 17), Math.toRadians(-90))
                             .back(4)
                             .addTemporalMarker(0.5, ()->robot.runCommands(cbDown))
-                            .addTemporalMarker(0.5, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
+                            .addTemporalMarker(0.5, ()->robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
             ));
         }
@@ -172,7 +172,7 @@ public class AutoRight extends LinearOpMode {
                             //.splineTo(new Vector2d(HI_POLE_X-6, 0), Math.toRadians(-90))
                             .forward(20)
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
-                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
+                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
             ));
             //robot.runCommands(cbDown);
@@ -184,7 +184,7 @@ public class AutoRight extends LinearOpMode {
                             //.splineTo(new Vector2d(HI_POLE_X-6, -23), Math.toRadians(-90))
                             .forward(43)
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
-                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
+                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
             ));
 

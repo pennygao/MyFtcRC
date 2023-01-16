@@ -123,6 +123,7 @@ public class ScoringSystem implements Subsystem {
     public void goAllDown() {
         lowerState = 1;
         dualMotorLift.goToLevel(4);   //go to level that's safe for lowering chain bar
+
         Log.v("DualMotorSlide-updatetaret", "gotoLevel(4) get called in goAllDown()");
     }
 

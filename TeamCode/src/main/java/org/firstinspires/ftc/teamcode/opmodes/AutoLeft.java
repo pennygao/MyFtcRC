@@ -128,7 +128,7 @@ public class AutoLeft extends LinearOpMode {
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
                         .back(45.5)
                         //.strafeLeft(2)
-                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
+                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 32)))
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
                         .build()
         ));
@@ -144,7 +144,7 @@ public class AutoLeft extends LinearOpMode {
                             //.splineTo(new Vector2d(HI_POLE_X-6, 17), Math.toRadians(-90))
                             .back(4)
                             .addTemporalMarker(0.5, ()->robot.runCommands(cbDown))
-                            .addTemporalMarker(0.5, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
+                            .addTemporalMarker(0.5, ()->robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
             ));
         }
@@ -154,7 +154,7 @@ public class AutoLeft extends LinearOpMode {
                             //.splineTo(new Vector2d(HI_POLE_X-6, 0), Math.toRadians(-90))
                             .forward(18)
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
-                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
+                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
             ));
             //robot.runCommands(cbDown);
@@ -166,7 +166,7 @@ public class AutoLeft extends LinearOpMode {
 
                             .forward(43)
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
-                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
+                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
             ));
 
