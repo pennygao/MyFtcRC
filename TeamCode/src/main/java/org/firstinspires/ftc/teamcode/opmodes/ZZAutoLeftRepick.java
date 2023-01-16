@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.commands.AutoLift;
+import org.firstinspires.ftc.teamcode.commands.DriveTillIntake;
+import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
@@ -41,6 +43,7 @@ public class ZZAutoLeftRepick extends LinearOpMode {
 
         //Servo init code here
         robot.scoringSystem.claw.openClaw();
+        robot.scoringSystem.SSKnockerSetPosition(0.0);
         od.init();
         waitForStart();
 
@@ -54,30 +57,20 @@ public class ZZAutoLeftRepick extends LinearOpMode {
         robot.scoringSystem.claw.closeClaw();
 
         // Move forward then right to high pole
-        AutoLift liftUp = new AutoLift(robot, 3, POLE_HT);
+        AutoLift liftUp = new AutoLift(robot, 1, 20);
+        KnockerCommand knock = new KnockerCommand(robot, 0.45, 1.5);
+        KnockerCommand knockerReset = new KnockerCommand(robot, 0.0, 0.0);
 
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        //.forward(HI_POLE_X) // move forward
-                        .addTemporalMarker(0.2, ()->robot.runCommands(liftUp)) // raise lift
-                        .splineTo(new Vector2d(57.5, -5.8), Math.toRadians(-48)) // strafe to pole
-                        //.forward(HI_POLE_FWD) // move forward
+                        .addTemporalMarker(0.0, ()->robot.runCommands(liftUp)) // raise lift
+                        .addTemporalMarker(0.7, ()->robot.runCommand(knock))
+                        .addTemporalMarker(1.5, ()->robot.runCommand(knockerReset))
+                        .splineTo(new Vector2d(60, -8), Math.toRadians(48)) // strafe to pole
                         .build()
         ));
         // Release cone
         robot.scoringSystem.claw.openClaw();
-        //robot.runCommand(robot.scoringSystem.rollerIntake(outtakePower, 0.1));
-/*
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .addTemporalMarker(1.0, ()->robot.runCommands(liftUp)) // raise lift
-                        .forward(58) // move forward
-                        .back(8)
-                        .turn(Math.toRadians(-43))
-                        .forward(10.5)
-                        .build()
-        ));
-*/
 
 
         // re-pick
@@ -86,27 +79,34 @@ public class ZZAutoLeftRepick extends LinearOpMode {
                         // retract lift
                         .addTemporalMarker(0.5,
                                 ()->robot.runCommands(new AutoLift(robot, 1, CONE_HT)))
-                        .back(10) // move backward
-                        .turn( Math.toRadians(135))
-                        .strafeRight(1)
-                        .forward(26.5)
+                        .back(9.5) // move backward
+                        .turn( Math.toRadians(134))
+                        //.strafeRight(1)
+                        .forward(11)
                         .build()
         ));
 
-        robot.runCommands(new AutoLift(robot, 1, CONE_HT-4));
+        // Follow line
+        DriveTillIntake flwLine = new DriveTillIntake(robot, drivetrain,
+                new Pose2d(0.1, 0, 0), 3.3, telemetry);
+        robot.runCommand(flwLine);
+
+        robot.runCommands(new AutoLift(robot, 1, CONE_HT-5));
         robot.scoringSystem.claw.closeClaw();
         robot.runCommands(new AutoLift(robot, 1, CONE_HT+5));
 
 
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .addTemporalMarker(0.3,
-                                ()->robot.runCommands(new AutoLift(robot, 3, POLE_HT+3)))
-                        .back(27)
-                        .turn(Math.toRadians(-135))
-                        .forward(9.0)
+                        //.addTemporalMarker(0.3, ()->robot.runCommands(new autoLift(robot, 3, POLE_HT)))
+                        //.back(26)
+                        //.turn(Math.toRadians(121))
+                        //.forward(11.0)
+                        .splineTo(new Vector2d(60, -8), Math.toRadians(48))
                         .build()
         ));
+
+
 
         // Release cone
         robot.scoringSystem.claw.openClaw();
@@ -114,10 +114,10 @@ public class ZZAutoLeftRepick extends LinearOpMode {
         // Back, turn and retract lift
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        //.addTemporalMarker(0.3,
-                        //        ()->robot.runCommands(new autoLift(robot, 0, 0)))
-                        .back(10)
-                        .turn(Math.toRadians(48))
+                        .addTemporalMarker(0.3,
+                                ()->robot.runCommands(new AutoLift(robot, 0, 0)))
+                        .back(9)
+                        .turn(Math.toRadians(35))
                         .build()
         ));
 
@@ -128,7 +128,7 @@ public class ZZAutoLeftRepick extends LinearOpMode {
                             .strafeLeft(24) // move side ways
                             .build()
             ));
-        } else if (elementPos == 3) {
+        } else if (elementPos == 3 || elementPos == 4) {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(new Pose2d())
                             .strafeRight(24) // move side ways
@@ -136,7 +136,6 @@ public class ZZAutoLeftRepick extends LinearOpMode {
             ));
 
         }
-
 
 
     }

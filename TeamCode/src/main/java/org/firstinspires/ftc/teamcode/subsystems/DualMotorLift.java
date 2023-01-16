@@ -35,7 +35,7 @@ public class DualMotorLift implements Subsystem {
     public Mode mode;
     // Public just to allow tuning through Dashboard
     public static double  UP_VELOCITY = 500;
-    public static double[] LEVEL_HT = {0, 7, 18.0, 32.0, 2}; // in inches, please fine-tune
+    public static double[] LEVEL_HT = {0, 7, 17.0, 32.0, 5}; // in inches, please fine-tune
     //4 levels: 0 ground, 1 low, 2 middle, 3 high, 4 (minimum height for free chain bar movement)
                             //0:5.0
 
