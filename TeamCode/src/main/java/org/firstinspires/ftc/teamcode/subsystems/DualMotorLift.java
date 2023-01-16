@@ -41,7 +41,7 @@ public class DualMotorLift implements Subsystem {
 
     private PIDFController pidfController;
     public static double kP = 0.2;
-    public static double kI = 0.0000000001;
+    public static double kI = 0; //0.0000000001;
     public static double kD = 0.0;
     public static double kA = 0.0;
     public static double kV = 0.0;

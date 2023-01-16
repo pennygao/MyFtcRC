@@ -27,7 +27,7 @@ public class ScoringSystem implements Subsystem {
     //TODO: tune
     //public static double CLAW_OPEN_POSITION = 0.38;
     //public static double CLAW_CLOSE_POSITION = 0.58; //0
-    public static double CLAW_OPEN_POSITION = 0.48;
+    public static double CLAW_OPEN_POSITION = 0.53;
     public static double CLAW_CLOSE_POSITION = 0.78;
 
 

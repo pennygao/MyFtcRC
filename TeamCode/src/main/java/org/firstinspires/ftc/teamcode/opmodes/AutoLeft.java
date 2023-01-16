@@ -2,42 +2,39 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
+import org.firstinspires.ftc.teamcode.commands.AutoCB;
+import org.firstinspires.ftc.teamcode.commands.AutoClaw;
 import org.firstinspires.ftc.teamcode.commands.AutoLift;
+import org.firstinspires.ftc.teamcode.commands.DriveTillIntake;
+import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
-import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Config
 @Autonomous
 public class AutoLeft extends LinearOpMode {
-    public static double HI_POLE_X = 52.5;//26.5
-    public static double MID_POLE_X = 26;
-    public static double HI_POLE_SIDE = 13;
+    public static double HI_POLE_X = 57;
+    public static double HI_POLE_Y = 4;
+    public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5.5;
     public static double HI_POLE_HEADING = Math.toRadians(40); // degree
-    public static double POLE_HT = 44.69;
+    public static double POLE_HT = 43.69;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        CrabRobot robot = new CrabRobot(this, true);
-        Drivetrain drivetrain = new Drivetrain(robot);
+        CrabRobot robot = new CrabRobot(this,true);
         //Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
+        Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
         objectDetector od = new objectDetector(robot, telemetry);
         robot.registerSubsystem((Subsystem)od);
 
-        // Update following parameters
-        double intakePower = 0.6;
-        double outtakePower = 0.1;
-
-        // general variable
-        double driveTime;
         int elementPos = 4;
 
         // Commands
@@ -46,87 +43,143 @@ public class AutoLeft extends LinearOpMode {
 
         //Servo init code here
         robot.scoringSystem.claw.openClaw();
+        robot.scoringSystem.SSKnockerSetPosition(0.6);
+        robot.scoringSystem.chainBar.lower();
+        //robot.scoringSystem.setClawPos(0.5);
         od.init();
+
+        KnockerCommand knock = new KnockerCommand(robot, 0.05, 0.5);
+
+        AutoCB cbLeft = new AutoCB(robot, 1, 2); // auto left is -1
+        AutoCB cbDown = new AutoCB(robot, 0, 2); // down is 0
+        AutoClaw clawClose = new AutoClaw(robot, 0, 1);
+        AutoClaw clawOpen = new AutoClaw(robot, 1, 0.5);
+
         waitForStart();
         if (isStopRequested()) return;
-
-        //elementPos = od.ssIndex(100);
-
-        //autoLift liftUp = new autoLift(robot, 3, POLE_HT);
-        KnockerCommand knock = new KnockerCommand(robot, 0.0, 1.5);
-        //KnockerCommand knockerReset = new KnockerCommand(robot, 0.4, 1.5);
-
-
-        AutoLift liftUp = new AutoLift(robot, 3, POLE_HT);
+        elementPos = od.ssIndex(20);
 
         // hold preload
         robot.scoringSystem.claw.closeClaw();
         //robot.runCommand(robot.scoringSystem.rollerIntake(intakePower, 0.8));
 
-        // Move forward one tile
+        //robot.runCommands(liftUp3);
+        //robot.runCommands(cbLeft);
+
+
+        // Move forward two tile
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .forward(HI_POLE_X) // move forward
-                        .addTemporalMarker(0.0, ()->robot.runCommands(liftUp)) // raise lift
-                        .addTemporalMarker(0.55, ()->robot.runCommand(knock))
-                        //.addTemporalMarker(2, ()->robot.runCommand(knockerReset))
-                        .strafeRight(HI_POLE_SIDE)
+                        .splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
+                        .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
+                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 31))) // raise lift
+                        .addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
+                        .addTemporalMarker(0.8, ()->robot.runCommand(cbLeft))
+                        //.addTemporalMarker(1.5, ()->robot.runCommand(knock))
+                        //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
+                        //.strafeLeft(2)
+                        .build()
+        ));
+        robot.runCommand(new AutoLift(robot, 5, 27));
+        robot.runCommand(new KnockerCommand(robot, 0.05, 0.5));
+        /*
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .strafeLeft(3)
+                        .build()
+        ));
+         */
+        robot.runCommands(clawOpen);
+        robot.runCommand(new AutoLift(robot, 5, 32));
+
+        // Back, turn, drop chainBar, and forward to line
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .addTemporalMarker(0.5, ()->robot.runCommands(cbDown))
+                        //.addTemporalMarker(0.8, ()->robot.runCommands(liftUp1))
+                        .lineTo(new Vector2d(HI_POLE_X-5.5, 0))
+                        .turn(Math.toRadians(90))
+                        //.forward(12)
                         .build()
         ));
 
-        // Raise lift
-
-        // Forward a little
         robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .forward(HI_POLE_FWD) // move forward
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        .addTemporalMarker(0, ()->robot.runCommands(new AutoLift(robot, 5, 6)))
+                        .forward(15)
+                        .addTemporalMarker(0.1, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.5)))
+                        //.addTemporalMarker(0.9, ()->robot.runCommand(knock))
                         .build()
         ));
 
+        // Follow line
+        DriveTillIntake flwLine = new DriveTillIntake(robot, drivetrain,
+                new Pose2d(0.1, 0, 0), 9.5, telemetry);
+
+        robot.runCommands(flwLine);
+
+        robot.runCommands(clawClose);
+
+        // back to release claw
+        /*
+        robot.runCommand(drivetrain.followTrajectory(
+                drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
+                        .splineTo(new Vector2d(HI_POLE_X-6, 15), Math.toRadians(-90))
+                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
+                        .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
+                        .build()
+        ));
+
+         */
+
+        robot.runCommand(drivetrain.followTrajectorySequence(
+                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                        //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
+                        .back(45.5)
+                        //.strafeLeft(2)
+                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
+                        .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
+                        .build()
+        ));
+        robot.runCommand(new AutoLift(robot, 5, 27));
         // Release cone
-        robot.scoringSystem.claw.openClaw();
-        //robot.runCommand(robot.scoringSystem.rollerIntake(outtakePower, 0.5));
-        // TODO: adjust power
-
-        // Back a little
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .back(HI_POLE_FWD) // move forward
-                        .build()
-        ));
-
-        // retract lift
-        AutoLift liftDown = new AutoLift(robot, 0, 0.0);
-        robot.runCommands(liftDown);
-
-        //go back
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(new Pose2d())
-                        .strafeLeft(HI_POLE_SIDE)
-                        .back(24)
-                        .build()
-        ));
-
+        robot.runCommands(clawOpen);
+        robot.runCommand(new AutoLift(robot, 5, 32));
 
         // park
-        if (elementPos == 1){
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeLeft(25) // move side ways
+        if  (elementPos == 3) {
+            robot.runCommand(drivetrain.followTrajectory(
+                    drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+                            //.splineTo(new Vector2d(HI_POLE_X-6, 17), Math.toRadians(-90))
+                            .back(4)
+                            .addTemporalMarker(0.5, ()->robot.runCommands(cbDown))
+                            .addTemporalMarker(0.5, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
                             .build()
             ));
-
-        } else if (elementPos == 3||elementPos == 4) {
-            robot.runCommand(drivetrain.followTrajectorySequence(
-                    drivetrain.trajectorySequenceBuilder(new Pose2d())
-                            .strafeRight(25) // move side ways
+        }
+        if (elementPos == 2 ) {
+            robot.runCommand(drivetrain.followTrajectory(
+                    drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+                            //.splineTo(new Vector2d(HI_POLE_X-6, 0), Math.toRadians(-90))
+                            .forward(20)
+                            .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
+                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
+                            .build()
+            ));
+            //robot.runCommands(cbDown);
+            //robot.runCommands(new AutoLift(robot, 0, 0));
+        }
+        if (elementPos == 1 || elementPos == 4) {
+            robot.runCommand(drivetrain.followTrajectory(
+                    drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
+                            //.splineTo(new Vector2d(HI_POLE_X-6, -23), Math.toRadians(-90))
+                            .forward(43)
+                            .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
+                            .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 0, 0)))
                             .build()
             ));
 
         }
-
-
-
+        robot.runCommands(clawOpen); // ready to pick
     }
 }
-

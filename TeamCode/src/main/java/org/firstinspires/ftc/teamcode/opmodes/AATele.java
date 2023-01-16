@@ -63,10 +63,10 @@ public class AATele extends LinearOpMode {
 
 //SS knocker
             if (gamepad2.right_bumper){
-                robot.scoringSystem.SSKnockerSetPosition(0);
+                robot.scoringSystem.SSKnockerSetPosition(0.1);
             }
             else if (gamepad2.left_bumper){
-                robot.scoringSystem.SSKnockerSetPosition(0.4);
+                robot.scoringSystem.SSKnockerSetPosition(0.55);
             }
 //RAISE SLIDE
             if (smartGamepad2.dpad_up) {
