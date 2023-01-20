@@ -33,6 +33,7 @@ public class ScoringSystem implements Subsystem {
 
     public static double CHAIN_BAR_DOWN = 0.44;
     public static double CHAIN_BAR_UP = 0.14; //How much you move the chain bar up from down position
+    public static double CHAIN_BAR_ADJ = 0.01;
 
     public class Claw {
         public Servo clawServo;
@@ -81,7 +82,15 @@ public class ScoringSystem implements Subsystem {
         }
 
         public void swing(){
-            cbServo.setPosition(CHAIN_BAR_DOWN + CHAIN_BAR_UP*CBDirection);
+            double CBOffset = CHAIN_BAR_UP;
+            if(CBDirection == -1) {
+                CBOffset = (CHAIN_BAR_UP - CHAIN_BAR_ADJ) * CBDirection;
+            }
+            else if (CBDirection == 1){
+                CBOffset = (CHAIN_BAR_UP + CHAIN_BAR_ADJ) *CBDirection;
+            }
+
+            cbServo.setPosition(CHAIN_BAR_DOWN + CBOffset);
             lastMovement = NanoClock.system().seconds();
         }
 
