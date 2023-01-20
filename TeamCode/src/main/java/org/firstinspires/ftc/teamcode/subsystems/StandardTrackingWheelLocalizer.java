@@ -36,7 +36,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
     public static double X_MULTIPLIER = -0.346;
     public static double Y_MULTIPLIER = 0.345;
-    public static double R_OVER_L_MULTIPLIER = 1.0;// 0.97;
+    public static double R_OVER_L_MULTIPLIER = 1.03;
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
@@ -81,7 +81,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
         return Arrays.asList(
                 encoderTicksToInches(leftEncoder.getCorrectedVelocity()) * X_MULTIPLIER,
-                encoderTicksToInches(rightEncoder.getCorrectedVelocity()) * X_MULTIPLIER * R_OVER_L_MULTIPLIER,
+                encoderTicksToInches(rightEncoder.getCorrectedVelocity()) * X_MULTIPLIER / R_OVER_L_MULTIPLIER,
                 encoderTicksToInches(frontEncoder.getCorrectedVelocity()) * Y_MULTIPLIER
         );
     }

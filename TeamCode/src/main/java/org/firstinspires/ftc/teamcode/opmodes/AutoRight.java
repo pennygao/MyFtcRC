@@ -22,7 +22,7 @@ import android.util.Log;
 @Config
 @Autonomous
 public class AutoRight extends LinearOpMode {
-    public static double HI_POLE_X = 57;
+    public static double HI_POLE_X = 56.5;
     public static double HI_POLE_Y = 4;
     public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5.5;
@@ -81,11 +81,6 @@ public class AutoRight extends LinearOpMode {
 
         // hold preload
         robot.scoringSystem.claw.closeClaw();
-        //robot.runCommand(robot.scoringSystem.rollerIntake(intakePower, 0.8));
-
-        //robot.runCommands(liftUp3);
-        //robot.runCommands(cbLeft);
-
 
         // Move forward two tile
         robot.runCommand(drivetrain.followTrajectory(traj1));
@@ -106,7 +101,7 @@ public class AutoRight extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbDown))
                         //.addTemporalMarker(0.8, ()->robot.runCommands(liftUp1))
-                        .lineTo(new Vector2d(HI_POLE_X-5.5, 0))
+                        .lineTo(new Vector2d(HI_POLE_X-5, 0))
                         .turn(Math.toRadians(-90))
                         //.forward(12)
                         .build()
@@ -116,7 +111,7 @@ public class AutoRight extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .addTemporalMarker(0, ()->robot.runCommands(new AutoLift(robot, 5, 6)))
                         .forward(15)
-                        //.addTemporalMarker(0.1, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.5)))
+                        .addTemporalMarker(0.1, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.5)))
 
                         .build()
         ));
@@ -144,7 +139,7 @@ public class AutoRight extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                        .back(45.5)
+                        .back(44.5)
                         //.strafeLeft(2)
                         .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
@@ -182,7 +177,7 @@ public class AutoRight extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, -23), Math.toRadians(-90))
-                            .forward(43)
+                            .forward(42.5)
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
                             .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
