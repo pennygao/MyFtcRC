@@ -85,7 +85,7 @@ public class AutoLeft extends LinearOpMode {
 
         robot.runCommand(drivetrain.followTrajectory(traj1));
         Log.v("delay","finished splining");
-        robot.runCommand(new AutoLift(robot, 5, 27));
+        robot.runCommand(new AutoLift(robot, 5, 28));
         Log.v("delay","going down");
         robot.runCommand(new KnockerCommand(robot, 0.05, 0.5));
 
@@ -97,8 +97,8 @@ public class AutoLeft extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbDown))
                         //.addTemporalMarker(0.8, ()->robot.runCommands(liftUp1))
-                        .lineTo(new Vector2d(HI_POLE_X-6, 0))
-                        .turn(Math.toRadians(87))
+                        .lineTo(new Vector2d(HI_POLE_X-5, 0))
+                        .turn(Math.toRadians(86.5))
                         //.forward(12)
                         .build()
         ));
@@ -132,7 +132,7 @@ public class AutoLeft extends LinearOpMode {
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
                         .build()
         ));
-        robot.runCommand(new AutoLift(robot, 5, 27));
+        robot.runCommand(new AutoLift(robot, 5, 28));
         // Release cone
         robot.runCommands(clawOpen);
         robot.runCommand(new AutoLift(robot, 5, 32));
@@ -164,7 +164,7 @@ public class AutoLeft extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
 
-                            .forward(43)
+                            .forward(42)
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
                             .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
