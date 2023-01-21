@@ -25,8 +25,8 @@ public class ScoringSystem implements Subsystem {
     public ChainBar chainBar;
     public Claw claw;
     //TODO: tune
-    //public static double CLAW_OPEN_POSITION = 0.38;
-    //public static double CLAW_CLOSE_POSITION = 0.58; //0
+    //public static double CLAW_OPEN_POSITION = 0.38; //for orange claw
+    //public static double CLAW_CLOSE_POSITION = 0.58; //0 //for orange claw
     public static double CLAW_OPEN_POSITION = 0.53;
     public static double CLAW_CLOSE_POSITION = 0.78;
 
@@ -106,7 +106,7 @@ public class ScoringSystem implements Subsystem {
             CBDirection = direction;
         }
         public boolean doneMoving(){
-            return (NanoClock.system().seconds() - lastMovement > 2);
+            return (NanoClock.system().seconds() - lastMovement > 1);
         }
         public void adjust(int direction){
             double toPosition = cbServo.getPosition(); //get target position
@@ -164,9 +164,9 @@ public class ScoringSystem implements Subsystem {
          * 2: height reached, swing chain bar.
          */
         if(swingState==1){
-            Log.v("ChainBar", dualMotorLift.chainBarCanSwing()+"");
+            Log.v("ChainBar", dualMotorLift.chainBarCanSwing()  +"");
             if(!dualMotorLift.chainBarCanSwing()){
-                dualMotorLift.goToLevel(4);
+                dualMotorLift.goToHt(dualMotorLift.inchToTicks(5));
                 Log.v("DualMotorSlide- ChainBar", "gotoLevel(4) get called");
             }
             swingState=2;

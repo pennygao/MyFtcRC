@@ -126,7 +126,7 @@ public class AutoLeft extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                        .back(45.5)
+                        .back(44.5)
                         //.strafeLeft(2)
                         .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 32)))
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
