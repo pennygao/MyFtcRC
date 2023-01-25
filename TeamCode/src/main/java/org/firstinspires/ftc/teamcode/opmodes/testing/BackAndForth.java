@@ -27,8 +27,8 @@ public class BackAndForth extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this,true);
-        Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
-        //Drivetrain drivetrain = new Drivetrain(robot);
+        //Drivetrain3DW drivetrain = new Drivetrain3DW(robot);
+        Drivetrain drivetrain = new Drivetrain(robot);
         robot.registerSubsystem((Subsystem) drivetrain);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
