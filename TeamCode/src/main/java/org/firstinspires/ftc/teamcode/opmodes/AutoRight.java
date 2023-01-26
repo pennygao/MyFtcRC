@@ -60,8 +60,8 @@ public class AutoRight extends LinearOpMode {
 
         AutoCB cbLeft = new AutoCB(robot, -1, 2); // auto left is -1
         AutoCB cbDown = new AutoCB(robot, 0, 2); // down is 0
-        AutoClaw clawClose = new AutoClaw(robot, 0, 1);
-        AutoClaw clawOpen = new AutoClaw(robot, 1, 0.5);
+        AutoClaw clawClose = new AutoClaw(robot, 0, 0.1);
+        AutoClaw clawOpen = new AutoClaw(robot, 1, 0.05);
 
         Trajectory traj1 = drivetrain.trajectoryBuilder(new Pose2d())
                 //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
@@ -77,24 +77,25 @@ public class AutoRight extends LinearOpMode {
 
         waitForStart();
         if (isStopRequested()) return;
+        Log.v("AUTODEBUG", "0: start");
         elementPos = od.ssIndex(20);
-
+        Log.v("AUTODEBUG", "1: OD done");
         // hold preload
         robot.scoringSystem.claw.closeClaw();
+        Log.v("AUTODEBUG", "2: Hold preload done");
+
 
         // Move forward two tile
         robot.runCommand(drivetrain.followTrajectory(traj1));
-        robot.runCommand(new AutoLift(robot, 5, 26));
-        robot.runCommand(new KnockerCommand(robot, 0.05, 0.5));
-        /*
-        robot.runCommand(drivetrain.followTrajectorySequence(
-                drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .strafeLeft(3)
-                        .build()
-        ));
-         */
+        Log.v("AUTODEBUG", "3: trag1 done");
+        //robot.runCommands(new AutoLift(robot, 5, 26),
+        //        new KnockerCommand(robot, 0.05, 0.5));
+        //Log.v("AUTODEBUG", "4: slide lower and knocker done");
+
+
+        //robot.runCommands(clawOpen,new AutoLift(robot, 5, 32));
         robot.runCommands(clawOpen);
-        robot.runCommand(new AutoLift(robot, 5, 32));
+        Log.v("AUTODEBUG", "5: slide raise and claw release done");
 
         // Back, turn, drop chainBar, and forward to line
         robot.runCommand(drivetrain.followTrajectorySequence(
@@ -106,6 +107,7 @@ public class AutoRight extends LinearOpMode {
                         //.forward(12)
                         .build()
         ));
+        Log.v("AUTODEBUG", "6: turn 90 done");
 
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
@@ -115,27 +117,19 @@ public class AutoRight extends LinearOpMode {
 
                         .build()
         ));
+        Log.v("AUTODEBUG", "7: forward done");
 
         // Follow line
         DriveTillIntake flwLine = new DriveTillIntake(robot, drivetrain,
                 new Pose2d(0.1, 0, 0), 9.5, telemetry);
 
         robot.runCommands(flwLine);
+        Log.v("AUTODEBUG", "8: follow the line done");
 
         robot.runCommands(clawClose);
+        Log.v("AUTODEBUG", "9: repick done");
 
         // back to release claw
-        /*
-        robot.runCommand(drivetrain.followTrajectory(
-                drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate(), true)
-                        .splineTo(new Vector2d(HI_POLE_X-6, 15), Math.toRadians(-90))
-                        .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
-                        .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
-                        .build()
-        ));
-
-         */
-
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
@@ -145,10 +139,39 @@ public class AutoRight extends LinearOpMode {
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
                         .build()
         ));
-        robot.runCommand(new AutoLift(robot, 5, 27));
+        Log.v("AUTODEBUG", "10: drive to pole done");
+        //robot.runCommand(new AutoLift(robot, 5, 27));
+        //Log.v("AUTODEBUG", "11: lower the slide done");
         // Release cone
         robot.runCommands(clawOpen);
-        robot.runCommand(new AutoLift(robot, 5, 32));
+        Log.v("AUTODEBUG", "12: release cone done");
+        //robot.runCommand(new AutoLift(robot, 5, 32));
+        //Log.v("AUTODEBUG", "13: raise slide done");
+
+        for (int i=1; i<=2; i++) {
+            AutoLift liftCmd = new AutoLift(robot, 5, 6-i);
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                            .forward(44.5)
+                            //.lineTo(new Vector2d())
+                            .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
+                            .addTemporalMarker(1.0, ()->robot.runCommands(liftCmd))
+                            .build()
+            ));
+            robot.runCommands(clawClose);
+            Log.v("AUTODEBUG", (12 + 2*i - 1) + ": repick done");
+            robot.runCommand(drivetrain.followTrajectorySequence(
+                    drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
+                            //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
+                            .back(44.5)
+                            //.strafeLeft(2)
+                            .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
+                            .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
+                            .build()
+            ));
+            robot.runCommands(clawOpen);
+            Log.v("AUTODEBUG", (12 + 2*i) + ": release cone done");
+        }
 
         // park
         if  (elementPos == 1) {
@@ -184,6 +207,9 @@ public class AutoRight extends LinearOpMode {
             ));
 
         }
+        Log.v("AUTODEBUG", "14: park done");
         robot.runCommands(clawOpen); // ready to pick
+
+
     }
 }
