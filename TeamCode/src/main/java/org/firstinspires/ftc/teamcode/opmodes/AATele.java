@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.subsystems.SmartGamepad;
 import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
+import org.firstinspires.ftc.teamcode.subsystems.RobotDistanceSensor;
 import android.util.Log;
 
 @TeleOp
@@ -125,7 +126,8 @@ public class AATele extends LinearOpMode {
             }
 
             if (smartGamepad2.left_trigger > 0.5) {
-                robot.scoringSystem.claw.closeClaw(); //0.5 + leftTrigger * 0.5);
+                robot.scoringSystem.claw.closeClaw();
+                robot.scoringSystem.dualMotorLift.goToLevel(3);//0.5 + leftTrigger * 0.5);
             } else if (smartGamepad2.right_trigger > 0.5) {
                 robot.scoringSystem.claw.openClaw(); // - rightTrigger * 0.5);
             }
@@ -134,6 +136,12 @@ public class AATele extends LinearOpMode {
                 robot.scoringSystem.dualMotorLift.resetEncoder();
             }
             Log.v("updatetarget", "Opmode loop finished one iteration.");
+            if(gamepad1.dpad_left){
+                telemetry.addData("left distance:", robot.robotdistancesensor.dsL);
+            }
+            if(gamepad1.dpad_right){
+                telemetry.addData("Right distance:", robot.robotdistancesensor.dsR);
+            }
 
         }
     }

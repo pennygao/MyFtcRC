@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import android.database.sqlite.SQLiteDoneException;
 import android.util.Log;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -28,6 +29,7 @@ public class DualMotorLift implements Subsystem {
     private boolean targetReached = true;
     private final double FAST_POWER = 0.6;
     private final double SLOW_POWER = 0.3;
+    private static final double SLIDE_HOLD_POWER = 0.1;
     public enum Mode {
         BOTH_MOTORS_PID,
         RIGHT_FOLLOW_LEFT
@@ -114,8 +116,12 @@ public class DualMotorLift implements Subsystem {
             slideMotorL.setPower(power*direction);
         }
         else{
-            slideMotorL.setPower(power*direction);
-            slideMotorR.setPower(power*direction);
+            double powerFromPIDF = power * direction;
+            if (powerFromPIDF < 0.9){
+                powerFromPIDF += SLIDE_HOLD_POWER;
+            }
+            slideMotorL.setPower(powerFromPIDF);
+            slideMotorR.setPower(powerFromPIDF);
         }
         Log.v("PIDLift: status: ", "adjust lift");
         //for using run-using-encoder mode
@@ -129,8 +135,8 @@ public class DualMotorLift implements Subsystem {
             slideMotorL.setVelocity(0.0);
             slideMotorR.setVelocity(0.0);
         }
-        slideMotorL.setPower(0);
-        slideMotorR.setPower(0);
+        slideMotorL.setPower(SLIDE_HOLD_POWER);
+        slideMotorR.setPower(SLIDE_HOLD_POWER);
     }
 
     private void updateTargetReached() {
@@ -207,6 +213,9 @@ public class DualMotorLift implements Subsystem {
             if (!isLevelReached()) {
                 double measuredPosition = (double) ticksToInches(slideMotorL.getCurrentPosition());
                 double powerFromPIDF = pidfController.update(measuredPosition);
+                if (powerFromPIDF < 0.9){
+                    powerFromPIDF += SLIDE_HOLD_POWER;
+                }
                 Log.v("PIDLift: Debug: ", String.format("Target pos: %4.2f, current pos: %4.2f, last error: %4.2f, velocity: %4.2f, set power to: %4.2f",
                         pidfController.getTargetPosition(), measuredPosition, pidfController.getLastError(), slideMotorL.getVelocity(), powerFromPIDF));
                 slideMotorL.setPower(powerFromPIDF);

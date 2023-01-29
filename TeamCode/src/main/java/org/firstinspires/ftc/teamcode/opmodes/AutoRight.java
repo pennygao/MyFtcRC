@@ -22,7 +22,7 @@ import android.util.Log;
 @Config
 @Autonomous
 public class AutoRight extends LinearOpMode {
-    public static double HI_POLE_X = 58;
+    public static double HI_POLE_X = 57;
     public static double HI_POLE_Y = 4;
     public static double HI_POLE_SIDE = 14.5;
     public static double HI_POLE_FWD = 5.5;
@@ -152,7 +152,7 @@ public class AutoRight extends LinearOpMode {
             AutoLift liftCmd = new AutoLift(robot, 5, 6-i);
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(44.5)
+                            .forward(47)
                             //.lineTo(new Vector2d())
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
                             .addTemporalMarker(1.0, ()->robot.runCommands(liftCmd))
@@ -163,7 +163,7 @@ public class AutoRight extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                            .back(44.5)
+                            .back(43)
                             //.strafeLeft(2)
                             .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
                             .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
