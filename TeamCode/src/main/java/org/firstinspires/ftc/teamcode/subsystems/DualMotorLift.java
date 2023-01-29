@@ -11,6 +11,7 @@ import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Robot;
@@ -30,6 +31,8 @@ public class DualMotorLift implements Subsystem {
     private final double FAST_POWER = 0.6;
     private final double SLOW_POWER = 0.3;
     private static final double SLIDE_HOLD_POWER = 0.1;
+    private VoltageSensor batteryVoltageSensor;
+
     public enum Mode {
         BOTH_MOTORS_PID,
         RIGHT_FOLLOW_LEFT
@@ -37,23 +40,27 @@ public class DualMotorLift implements Subsystem {
     public Mode mode;
     // Public just to allow tuning through Dashboard
     public static double  UP_VELOCITY = 500;
-    public static double[] LEVEL_HT = {0, 7, 17.0, 31.0, 4}; // in inches, please fine-tune
+    public static double[] LEVEL_HT = {0, 7, 17.0, 29.0, 4}; // in inches, please fine-tune
     //4 levels: 0 ground, 1 low, 2 middle, 3 high, 4 (minimum height for free chain bar movement)
                             //0:5.0
 
     private PIDFController pidfController;
-    public static double kP = 0.2;
-    public static double kI = 0; //0.0000000001;
+    public static double kP = 0.15;
+    public static double kI = 0.0; //0.0000000001;
     public static double kD = 0.0;
     public static double kA = 0.0;
     public static double kV = 0.0;
-    public static double kS = 0.0;
+    public static double kS = 0.002;
+    public static double PID_RANGE = 0.85;
+    public static double DOWN_FACTOR = 0.6;
+    public static double MIN_UP_PWR = 0.05;
 
 
 //TODO: fine-tune LEVEL-HT values.
     public DualMotorLift (Robot robot, Telemetry telemetry, Mode mode){
         this.mode = mode;
         this.telemetry = telemetry;
+        batteryVoltageSensor = robot.getVoltageSensor();
         slideMotorL = robot.getMotor("slideMotorL");
         slideMotorR = robot.getMotor("slideMotorR");
         slideMotorL.setTargetPositionTolerance(inchToTicks(0.3)); //HEIGHT_DIFF_TOLERANCE);
@@ -75,7 +82,8 @@ public class DualMotorLift implements Subsystem {
             coefficients.kI = kI;
             coefficients.kD = kD;
             pidfController = new PIDFController(coefficients, kV, kA, kS);
-            pidfController.setOutputBounds(-1.0, 1.0);
+            pidfController.setOutputBounds(-1.0*PID_RANGE, 1.0*PID_RANGE);
+            pidfController.reset();
         }
         Log.v("PIDLift: status: ", "init");
     }
@@ -103,6 +111,18 @@ public class DualMotorLift implements Subsystem {
             pidfController.setTargetPosition(ticksToInches(ticks));
         }
         Log.v("Lift: status", String.format("Lift moving to height %f", ticksToInches(slideMotorL.getTargetPosition())));
+    }
+
+    public void applyStaticOffset(int direction, double power) {
+        if(mode == Mode.RIGHT_FOLLOW_LEFT) {
+            slideMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            slideMotorL.setPower(power*direction);
+        }
+        else{
+            slideMotorL.setPower(power*direction);
+            slideMotorR.setPower(power*direction);
+        }
+        Log.v("PIDLift: status: ", "applyStaticOffset");
     }
 
     public void adjustLift(int direction, boolean slow){
@@ -218,6 +238,9 @@ public class DualMotorLift implements Subsystem {
                 }
                 Log.v("PIDLift: Debug: ", String.format("Target pos: %4.2f, current pos: %4.2f, last error: %4.2f, velocity: %4.2f, set power to: %4.2f",
                         pidfController.getTargetPosition(), measuredPosition, pidfController.getLastError(), slideMotorL.getVelocity(), powerFromPIDF));
+                telemetry.addData("Target pos", pidfController.getTargetPosition());
+                telemetry.addData("Measur pos", measuredPosition);
+                telemetry.addData("slidePower", powerFromPIDF);
                 slideMotorL.setPower(powerFromPIDF);
                 slideMotorR.setPower(powerFromPIDF);
             }

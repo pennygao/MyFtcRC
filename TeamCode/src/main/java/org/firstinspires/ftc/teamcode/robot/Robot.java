@@ -99,6 +99,9 @@ public class Robot {
         while (!opMode.isStopRequested() && !target.reached() && !stopped) {
             update();
         }
+        if (opMode.isStopRequested()) {
+            stop();
+        }
     }
 
     public void runUntilStop() {

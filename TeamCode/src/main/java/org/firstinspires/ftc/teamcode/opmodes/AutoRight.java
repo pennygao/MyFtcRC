@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -74,8 +75,11 @@ public class AutoRight extends LinearOpMode {
                 //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
                 //.strafeLeft(2)
                 .build();
+        NanoClock clock = NanoClock.system();
+        double startTime, currentTime;
 
         waitForStart();
+        startTime = clock.seconds();
         if (isStopRequested()) return;
         Log.v("AUTODEBUG", "0: start");
         elementPos = od.ssIndex(20);
@@ -133,7 +137,7 @@ public class AutoRight extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                        .back(47)
+                        .back(44.5)
                         //.strafeLeft(2)
                         .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
@@ -149,13 +153,14 @@ public class AutoRight extends LinearOpMode {
         //Log.v("AUTODEBUG", "13: raise slide done");
 
         for (int i=1; i<=2; i++) {
-            AutoLift liftCmd = new AutoLift(robot, 5, 6-i);
+            AutoLift liftUpCmd = new AutoLift(robot, 5, 30);
+            AutoLift liftDnCmd = new AutoLift(robot, 5, 6-i);
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(47)
+                            .forward(44.5)
                             //.lineTo(new Vector2d())
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
-                            .addTemporalMarker(1.0, ()->robot.runCommands(liftCmd))
+                            .addTemporalMarker(1.0, ()->robot.runCommands(liftDnCmd))
                             .build()
             ));
             robot.runCommands(clawClose);
@@ -165,12 +170,16 @@ public class AutoRight extends LinearOpMode {
                             //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
                             .back(43)
                             //.strafeLeft(2)
-                            .addTemporalMarker(0.0, ()->robot.runCommands(new AutoLift(robot, 5, 30)))
+                            .addTemporalMarker(0.0, ()->robot.runCommands(liftUpCmd))
                             .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
                             .build()
             ));
             robot.runCommands(clawOpen);
             Log.v("AUTODEBUG", (12 + 2*i) + ": release cone done");
+            currentTime = clock.seconds();
+            if (30 - (currentTime-startTime) <= 6.5){
+                break;
+            }
         }
 
         // park

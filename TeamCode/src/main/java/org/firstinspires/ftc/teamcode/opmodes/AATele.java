@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.commands.DriveRaiseDumpFold;
 import org.firstinspires.ftc.teamcode.subsystems.SmartGamepad;
 import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
@@ -18,6 +19,11 @@ public class AATele extends LinearOpMode {
         robot.addGamepads(gamepad1,gamepad2);
         SmartGamepad smartGamepad1 = robot.smartGamepad1;
         SmartGamepad smartGamepad2 = robot.smartGamepad2;
+
+        DriveRaiseDumpFold autoLfCmd = new DriveRaiseDumpFold(robot, robot.mecanumDrive,
+                0.15, true, telemetry);
+        DriveRaiseDumpFold autoRtCmd = new DriveRaiseDumpFold(robot, robot.mecanumDrive,
+                0.15, false, telemetry);
 //RESETS
         //robot.scoringSystem.goAllDown();
 
@@ -135,13 +141,26 @@ public class AATele extends LinearOpMode {
             if(smartGamepad2.leftJoystickButton()){
                 robot.scoringSystem.dualMotorLift.resetEncoder();
             }
+
+            if(gamepad1.dpad_left) {
+                robot.scoringSystem.swingChainBar(1); // left for tele
+                robot.runCommand(autoLfCmd);
+            }
+            else if (gamepad1.dpad_right){
+                robot.scoringSystem.swingChainBar(-1);
+                robot.runCommand(autoRtCmd);
+            }
             Log.v("updatetarget", "Opmode loop finished one iteration.");
+
+            /* Sensor test
             if(gamepad1.dpad_left){
                 telemetry.addData("left distance:", robot.robotdistancesensor.dsL);
             }
             if(gamepad1.dpad_right){
                 telemetry.addData("Right distance:", robot.robotdistancesensor.dsR);
             }
+
+             */
 
         }
     }
