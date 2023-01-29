@@ -113,6 +113,17 @@ public class DualMotorLift implements Subsystem {
         Log.v("Lift: status", String.format("Lift moving to height %f", ticksToInches(slideMotorL.getTargetPosition())));
     }
 
+    public void goToRelativeOffset(double inches) {
+        targetReached=false;
+        int currPosTicks = slideMotorL.getCurrentPosition();
+        int targetPosTicks = currPosTicks + inchToTicks(inches);
+
+        Log.v("AUTOCMD DEBUG", "currPosTicks: " + currPosTicks);
+        Log.v("AUTOCMD DEBUG", "offset Inches: " + inches);
+        Log.v("AUTOCMD DEBUG", "targetPosTicks: " + targetPosTicks);
+        this.goToHt(targetPosTicks);
+    }
+
     public void applyStaticOffset(int direction, double power) {
         if(mode == Mode.RIGHT_FOLLOW_LEFT) {
             slideMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

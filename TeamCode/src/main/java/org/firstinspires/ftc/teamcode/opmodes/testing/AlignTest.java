@@ -30,8 +30,8 @@ public class AlignTest extends LinearOpMode {
 
         while (!isStopRequested()) {
 
-            boolean slowMode = gamepad1.left_bumper;
-            boolean normieMode = gamepad1.right_bumper;
+            boolean slowMode = (gamepad1.left_trigger > 0.5);
+            boolean normieMode = (gamepad1.right_trigger > 0.5);
 
 
             robot.update();
@@ -49,7 +49,7 @@ public class AlignTest extends LinearOpMode {
             }
 
 
-
+            // Chain bar and auto-align
             if(smartGamepad1.dpad_left) {
                 robot.scoringSystem.swingChainBar(1); // left for tele
                 robot.runCommand(autoLfCmd);
@@ -59,6 +59,7 @@ public class AlignTest extends LinearOpMode {
                 robot.runCommand(autoRtCmd);
             }
 
+            // Claw
             if (smartGamepad1.left_bumper) {
                 robot.scoringSystem.claw.closeClaw();
                 robot.scoringSystem.dualMotorLift.goToLevel(2);//0.5 + leftTrigger * 0.5);
@@ -66,15 +67,40 @@ public class AlignTest extends LinearOpMode {
                 robot.scoringSystem.claw.openClaw(); // - rightTrigger * 0.5);
             }
 
-/*
-            if(gamepad1.dpad_left){
-                telemetry.addData("left distance:", robot.robotdistancesensor.dsL);
-            }
-            if(gamepad1.dpad_right){
-                telemetry.addData("Right distance:", robot.robotdistancesensor.dsR);
+            // Lift levels
+            if (smartGamepad1.a_pressed()) {
+                //robot.scoringSystem.goToHt(18.69);
+                robot.scoringSystem.dualMotorLift.goToLevel(1);
+                telemetry.addLine("going up to level 1");
+                Log.v("PIDLift: gamepad", "a");
+            } else if (smartGamepad1.x_pressed()) {
+                //robot.scoringSystem.goToHt(31.5);
+                robot.scoringSystem.dualMotorLift.goToLevel(2);
+                telemetry.addLine("going up to level 2");
+                Log.v("PIDLift: gamepad", "x");
+            } else if (smartGamepad1.y_pressed()) {
+                //robot.scoringSystem.goToHt(44.69);
+                robot.scoringSystem.dualMotorLift.goToLevel(3);
+                telemetry.addLine("going up to level 3");
+                Log.v("PIDLift: gamepad", "y");
+            } else if (smartGamepad1.b_pressed()) {
+                //robot.scoringSystem.goToHt(4.42);
+                robot.scoringSystem.goAllDown();
+                telemetry.addLine("going all the way down");
+                Log.v("PIDLift: gamepad", "b");
+            } else if (robot.scoringSystem.isLiftLevelReached()){
+                robot.scoringSystem.dualMotorLift.stopMotor(); //set to adjust lift mode, but don't turn motor
+                Log.v("updatetarget","idling mode");
+                //or set its mode to Move with encoder?
             }
 
- */
+
+            if(gamepad1.dpad_up){
+                telemetry.addData("left distance:", robot.robotdistancesensor.dsR);
+                telemetry.addData("Right distance:", robot.robotdistancesensor.dsL);
+            }
+
+
             Log.v("updatetarget", "Opmode loop finished one iteration.");
 
         }

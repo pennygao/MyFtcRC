@@ -13,16 +13,12 @@ import android.util.Log;
 public class DriveRaiseDumpFold implements Command {
     double DIST_THRESHOLD = 20.0; // cm
     double CLAW_OPEN_TIME = 0.1; //second
-    double POLE_OFFSET = 10.0; // cm
-    double CONE_OFFSET = 3.5; // cm
-    double NO_CONE_THRESHOLD = 10.0; //cm
+    double POLE_OFFSET = 8.0; // cm
     CrabRobot robot;
     SimpleMecanumDrive mecanumDrive;
     Telemetry telemetry;
     NanoClock clock;
     double xPwr;
-    double distL, distR;
-    double sideAlignDist;
     boolean alignLeft;
     double timeMarker;
     int state = 0; // 0: drive forward, till found pole 1: drop cone,
@@ -46,30 +42,15 @@ public class DriveRaiseDumpFold implements Command {
 
     @Override
     public void update() {
-        distL = robot.robotdistancesensor.dsR;
-        distR = robot.robotdistancesensor.dsL;
         Log.v("AUTOCMD DEBUG"," Beginning State: " + state);
         if (state == 0) { // Move forward till in pole range
             Log.v("AUTOCMD DEBUG", "Left dist: " + robot.robotdistancesensor.dsR);
             Log.v("AUTOCMD DEBUG", "Right dist: " + robot.robotdistancesensor.dsL);
-            if (       distL < DIST_THRESHOLD
-                    && distR < DIST_THRESHOLD) {
+            if (       robot.robotdistancesensor.dsL < DIST_THRESHOLD
+                    && robot.robotdistancesensor.dsR < DIST_THRESHOLD) {
                 mecanumDrive.setDrivePower(new Pose2d(0, 0, 0));
                 state = 1;
                 timeMarker = clock.seconds();
-                if (this.alignLeft) {
-                    if (distL < NO_CONE_THRESHOLD) { // There is cone on left
-                        sideAlignDist = POLE_OFFSET - CONE_OFFSET;
-                    } else {
-                        sideAlignDist = POLE_OFFSET;
-                    }
-                } else {// alignRight
-                    if (distR < NO_CONE_THRESHOLD) { // There is cone on right
-                        sideAlignDist = POLE_OFFSET - CONE_OFFSET;
-                    } else {
-                        sideAlignDist = POLE_OFFSET;
-                    }
-                }
             } else {
                 mecanumDrive.setDrivePower(new Pose2d(xPwr, 0, 0));
             }
@@ -78,39 +59,55 @@ public class DriveRaiseDumpFold implements Command {
             Log.v("AUTOCMD DEBUG", "Right dist: " + robot.robotdistancesensor.dsL);
             if (this.alignLeft) {
                 mecanumDrive.setDrivePower(new Pose2d(0,xPwr,0));
-                if (robot.robotdistancesensor.dsR < sideAlignDist) {
+                if (robot.robotdistancesensor.dsR < POLE_OFFSET) {
                     mecanumDrive.setDrivePower(new Pose2d(0, 0,0));
                     timeMarker = clock.seconds();
                     state = 2;
                 }
             } else {
                 mecanumDrive.setDrivePower(new Pose2d(0,-xPwr,0));
-                if (robot.robotdistancesensor.dsL < sideAlignDist) {
+                if (robot.robotdistancesensor.dsL < POLE_OFFSET) {
                     mecanumDrive.setDrivePower(new Pose2d(0, 0,0));
                     timeMarker = clock.seconds();
                     state = 2;
                 }
             }
-        } else if (state == 2) {// open claw
+        } else if (state == 2) { // drop 2 inches
+            robot.scoringSystem.dualMotorLift.goToRelativeOffset(-4.0);
+            Log.v("AUTOCMD DEBUG", "drop 2 inches reaches: " + robot.scoringSystem.dualMotorLift.isLevelReached());
+            if (robot.scoringSystem.dualMotorLift.isLevelReached()
+                    && clock.seconds() - timeMarker >= 0.5) {
+                state = 3;
+                timeMarker = clock.seconds();
+            }
+        } else if (state == 3) {// open claw
             robot.scoringSystem.claw.openClaw();
             if (clock.seconds() - timeMarker > CLAW_OPEN_TIME) {
-                state = 3;
+                state = 4;
                 timeMarker = clock.seconds();
                 mecanumDrive.setDrivePower(new Pose2d(-0.7, 0,0));
             }
-        } else if (state == 3) { // Move backward for 1s
+        }  else if (state == 4) { // riase 5 inches
+            robot.scoringSystem.dualMotorLift.goToRelativeOffset(5.0);
+            Log.v("AUTOCMD DEBUG", "drop 2 inches reaches: " + robot.scoringSystem.dualMotorLift.isLevelReached());
+            if (robot.scoringSystem.dualMotorLift.isLevelReached()
+                    && clock.seconds() - timeMarker >= 0.5) {
+                state = 5;
+                timeMarker = clock.seconds();
+            }
+        } else if (state == 5) { // Move backward for 1s
             mecanumDrive.setDrivePower(new Pose2d(-0.7, 0,0));
             if (clock.seconds() - timeMarker >= 1.0) {
                 mecanumDrive.setDrivePower(new Pose2d(0, 0,0));
-                state = 4;
+                state = 5;
                 timeMarker = clock.seconds();
             }
-        } else if (state == 4) { //Lower chain bar, lift go to 0
+        } else if (state == 6) { //Lower chain bar, lift go to 0
             robot.scoringSystem.chainBar.lower();
             robot.scoringSystem.dualMotorLift.goToHt(0);
             timeMarker = clock.seconds();
-            state = 5;
-        } if (state == 5) { // wait for end
+            state = 7;
+        } if (state == 7) { // wait for end
             Log.v("AUTOCMD DEBUG"," time " + (clock.seconds() - timeMarker));
             Log.v("AUTOCMD DEBUG"," Lift reached " + this.robot.scoringSystem.dualMotorLift.isLevelReached());
         }
@@ -129,7 +126,7 @@ public class DriveRaiseDumpFold implements Command {
 
     @Override
     public boolean isCompleted() {
-        return (   (state == 5
+        return (   (state == 7
                 && this.robot.scoringSystem.dualMotorLift.isLevelReached()
                 && (clock.seconds() - timeMarker >= 0.5))
         || robot.smartGamepad1.dpad_down ); // emergency stop
