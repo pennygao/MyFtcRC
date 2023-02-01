@@ -5,10 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.SmartGamepad;
-import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
-import org.firstinspires.ftc.teamcode.commands.DriveRaiseDumpFold;
+import org.firstinspires.ftc.teamcode.commands.AutoAlign;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
-import org.firstinspires.ftc.teamcode.subsystems.RobotDistanceSensor;
+
 import android.util.Log;
 
 @TeleOp
@@ -22,8 +21,8 @@ public class AlignTest extends LinearOpMode {
         SmartGamepad smartGamepad1 = robot.smartGamepad1;
         SmartGamepad smartGamepad2 = robot.smartGamepad2;
 
-        DriveRaiseDumpFold autoLfCmd = new DriveRaiseDumpFold(robot, robot.mecanumDrive, ALIGN_PWR, true, telemetry);
-        DriveRaiseDumpFold autoRtCmd = new DriveRaiseDumpFold(robot, robot.mecanumDrive, ALIGN_PWR, false, telemetry);
+        AutoAlign autoLfCmd = new AutoAlign(robot, robot.mecanumDrive, ALIGN_PWR, true, telemetry);
+        AutoAlign autoRtCmd = new AutoAlign(robot, robot.mecanumDrive, ALIGN_PWR, false, telemetry);
 
 
         waitForStart();
