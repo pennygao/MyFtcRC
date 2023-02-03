@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.AutoAlign;
 import org.firstinspires.ftc.teamcode.commands.DumpFold;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.SmartGamepad;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
@@ -16,6 +18,8 @@ public class AATele extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this, true);
+        robot.registerSubsystem((Subsystem) robot.mecanumDrive);
+        robot.registerSubsystem((Subsystem) robot.robotdistancesensor);
         robot.addGamepads(gamepad1,gamepad2);
         SmartGamepad smartGamepad1 = robot.smartGamepad1;
         SmartGamepad smartGamepad2 = robot.smartGamepad2;

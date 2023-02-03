@@ -18,16 +18,10 @@ public class CrabRobot extends Robot {
     public CrabRobot(LinearOpMode opMode, boolean autoMode) {
         super(opMode);
         mecanumDrive = new SimpleMecanumDrive(this);
-        Log.v("update", "registering mecanumDrive: " + mecanumDrive.getClass().getSimpleName());
-        registerSubsystem(mecanumDrive);
         scoringSystem = new ScoringSystem(this, autoMode, opMode.telemetry);
-        Log.v("update", "registering scoringSystem: " + scoringSystem.getClass().getSimpleName());
         registerSubsystem(scoringSystem);
         robotcolorsensor = new RobotColorSensor(this, opMode.telemetry);
-        Log.v("update", "registering robotcolorsensor: " + robotcolorsensor.getClass().getSimpleName());
-        registerSubsystem(robotcolorsensor);
         robotdistancesensor = new RobotDistanceSensor(this, opMode.telemetry);
-        registerSubsystem(robotdistancesensor);
     }
 
     public void addGamepads(Gamepad g1, Gamepad g2){

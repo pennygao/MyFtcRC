@@ -39,6 +39,7 @@ public class AutoRight extends LinearOpMode {
         objectDetector od = new objectDetector(robot, telemetry);
         robot.registerSubsystem((Subsystem)od);
 
+
         // Update following parameters
         double intakePower = 0.6;
         double outtakePower = 0.1;
@@ -68,10 +69,10 @@ public class AutoRight extends LinearOpMode {
                 //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
                 .lineTo(new Vector2d(HI_POLE_X, 1)) // move forward
                 .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
-                .addTemporalMarker(0.1, ()->robot.runCommands(new AutoLift(robot, 5, 31))) // raise lift
+                .addTemporalMarker(0.1, ()->robot.runCommands(new AutoLift(robot, 5, 29))) // raise lift
                 .addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
                 .addTemporalMarker(0.8, ()->robot.runCommand(cbLeft))
-                //.addTemporalMarker(1.5, ()->robot.runCommand(knock))
+                .addTemporalMarker(1.5, ()->robot.runCommand(knock))
                 //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
                 //.strafeLeft(2)
                 .build();
@@ -83,6 +84,7 @@ public class AutoRight extends LinearOpMode {
         if (isStopRequested()) return;
         Log.v("AUTODEBUG", "0: start");
         elementPos = od.ssIndex(20);
+        robot.removeSubsystem((Subsystem) od);
         Log.v("AUTODEBUG", "1: OD done");
         // hold preload
         robot.scoringSystem.claw.closeClaw();
@@ -90,9 +92,11 @@ public class AutoRight extends LinearOpMode {
 
 
         // Move forward two tile
+        //robot.runCommands(new AutoLift(robot, 5, 29), clawClose);
         robot.runCommand(drivetrain.followTrajectory(traj1));
         Log.v("AUTODEBUG", "3: trag1 done");
-        //robot.runCommands(new AutoLift(robot, 5, 26),
+
+
         //        new KnockerCommand(robot, 0.05, 0.5));
         //Log.v("AUTODEBUG", "4: slide lower and knocker done");
 
@@ -218,7 +222,6 @@ public class AutoRight extends LinearOpMode {
         }
         Log.v("AUTODEBUG", "14: park done");
         robot.runCommands(clawOpen); // ready to pick
-
 
     }
 }

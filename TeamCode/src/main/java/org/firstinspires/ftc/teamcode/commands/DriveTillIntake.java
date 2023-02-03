@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 //import org.firstinspires.ftc.teamcode.Configuration;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Command;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
@@ -37,6 +38,7 @@ public class DriveTillIntake implements Command {
     @Override
     public void start() {
         mecanumDrive.setDrivePower(drivePower);
+        robot.registerSubsystem((Subsystem) robot.robotcolorsensor);
         initialTimeStamp=clock.seconds();
         startX = mecanumDrive.getPoseEstimate().getX();
         startY = mecanumDrive.getPoseEstimate().getY();
@@ -59,6 +61,7 @@ public class DriveTillIntake implements Command {
     @Override
     public void stop() {
         mecanumDrive.setDrivePower(new Pose2d(0,0,0));
+        robot.removeSubsystem((Subsystem) robot.robotcolorsensor);
     }
 
     @Override

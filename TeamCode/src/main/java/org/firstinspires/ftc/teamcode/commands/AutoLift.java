@@ -37,7 +37,9 @@ public class AutoLift implements Command {
 
     @Override
     public void stop() {
-        robot.scoringSystem.dualMotorLift.adjustLift(0, true);
+
+        //robot.scoringSystem.dualMotorLift.adjustLift(0, true);
+        robot.scoringSystem.dualMotorLift.stopMotor();
     }
 
     @Override

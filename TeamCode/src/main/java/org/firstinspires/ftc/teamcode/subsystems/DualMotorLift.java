@@ -30,7 +30,6 @@ public class DualMotorLift implements Subsystem {
     private boolean targetReached = true;
     private final double FAST_POWER = 0.6;
     private final double SLOW_POWER = 0.3;
-    private static final double SLIDE_HOLD_POWER = 0.1;
     private VoltageSensor batteryVoltageSensor;
 
     public enum Mode {
@@ -51,9 +50,8 @@ public class DualMotorLift implements Subsystem {
     public static double kA = 0.0;
     public static double kV = 0.0;
     public static double kS = 0.002;
-    public static double PID_RANGE = 0.85;
-    public static double DOWN_FACTOR = 0.6;
-    public static double MIN_UP_PWR = 0.05;
+    public static double PID_RANGE = 0.9;
+    public static double SLIDE_HOLD_POWER = 0.1;
 
 
 //TODO: fine-tune LEVEL-HT values.
@@ -148,8 +146,10 @@ public class DualMotorLift implements Subsystem {
         }
         else{
             double powerFromPIDF = power * direction;
-            if (powerFromPIDF < 0.9){
+            if (powerFromPIDF < PID_RANGE-SLIDE_HOLD_POWER) {
                 powerFromPIDF += SLIDE_HOLD_POWER;
+            } else if (powerFromPIDF < PID_RANGE) {
+                powerFromPIDF = PID_RANGE;
             }
             slideMotorL.setPower(powerFromPIDF);
             slideMotorR.setPower(powerFromPIDF);
@@ -244,8 +244,10 @@ public class DualMotorLift implements Subsystem {
             if (!isLevelReached()) {
                 double measuredPosition = (double) ticksToInches(slideMotorL.getCurrentPosition());
                 double powerFromPIDF = pidfController.update(measuredPosition);
-                if (powerFromPIDF < 0.9){
+                if (powerFromPIDF < PID_RANGE-SLIDE_HOLD_POWER) {
                     powerFromPIDF += SLIDE_HOLD_POWER;
+                } else if (powerFromPIDF < PID_RANGE) {
+                    powerFromPIDF = PID_RANGE;
                 }
                 Log.v("PIDLift: Debug: ", String.format("Target pos: %4.2f, current pos: %4.2f, last error: %4.2f, velocity: %4.2f, set power to: %4.2f",
                         pidfController.getTargetPosition(), measuredPosition, pidfController.getLastError(), slideMotorL.getVelocity(), powerFromPIDF));

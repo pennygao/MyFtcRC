@@ -166,6 +166,10 @@ public class Robot {
         if (!subsystems.contains(subsystem)) subsystems.add(subsystem);
     }
 
+    public void removeSubsystem(Subsystem subsystem) {
+        if (subsystems.contains(subsystem)) subsystems.remove(subsystem);
+    }
+
     public void addListener(Listener listener) {
         if (!listeners.contains(listener)) listeners.add(listener);
     }
