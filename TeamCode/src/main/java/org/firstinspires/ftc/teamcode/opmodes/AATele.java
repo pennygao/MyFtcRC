@@ -31,7 +31,7 @@ public class AATele extends LinearOpMode {
         TeleAlign autoRtCmd = new TeleAlign(robot, robot.mecanumDrive,
                 0.15, false, telemetry);
         DumpFold dumpFold = new DumpFold(robot, robot.mecanumDrive,
-                0.7, telemetry);
+                0.4, telemetry);
 //RESETS
         //robot.scoringSystem.goAllDown();
 
@@ -58,12 +58,12 @@ public class AATele extends LinearOpMode {
             Log.v("JoystickMap", "jsY = " + gamepad1.left_stick_y);;
             Log.v("JoystickMap", "mapX = " + gamepad1.left_stick_x*factor);
             Log.v("JoystickMap", "mapY = " + gamepad1.left_stick_y*factor);
-*/
+
             telemetry.addData("jsX",  gamepad1.left_stick_x);
             telemetry.addData("jsY",  gamepad1.left_stick_y);
             telemetry.addData("factor", factor);
             telemetry.addData("mapX",  jsX);
-            telemetry.addData("mapY",  jsY);
+            telemetry.addData("mapY",  jsY);*/
             robot.mecanumDrive.setDrivePower(new Pose2d(-jsY, -jsX, -(0.5)*gamepad1.right_stick_x));
             robot.mecanumDrive.setPowerFactor(0.7); //remove with actual robot.
 

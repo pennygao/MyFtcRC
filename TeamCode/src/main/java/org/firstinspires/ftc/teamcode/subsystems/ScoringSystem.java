@@ -33,7 +33,7 @@ public class ScoringSystem implements Subsystem {
 
     public static double CHAIN_BAR_DOWN = 0.44;
     public static double CHAIN_BAR_UP = 0.14; //How much you move the chain bar up from down position
-    public static double CHAIN_BAR_ADJ = 0.0;
+    public static double CHAIN_BAR_ADJ = 0.003;
 
     public class Claw {
         public Servo clawServo;

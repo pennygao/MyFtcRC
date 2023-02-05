@@ -47,7 +47,7 @@ public class DumpFold implements Command {
             }
         } else if (state == 1) { // Move backward for 1s
             mecanumDrive.setDrivePower(new Pose2d(-xPwr, 0,0));
-            if (clock.seconds() - timeMarker >= 1.0) {
+            if (clock.seconds() - timeMarker >= 1) {
                 mecanumDrive.setDrivePower(new Pose2d(0, 0,0));
                 state = 2;
                 timeMarker = clock.seconds();
