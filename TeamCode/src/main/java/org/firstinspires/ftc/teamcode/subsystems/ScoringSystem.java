@@ -133,7 +133,7 @@ public class ScoringSystem implements Subsystem {
         lowerState = 1;
         dualMotorLift.goToLevel(4);   //go to level that's safe for lowering chain bar
 
-        Log.v("DualMotorSlide-updatetaret", "gotoLevel(4) get called in goAllDown()");
+        //Log.v("DualMotorSlide-updatetaret", "gotoLevel(4) get called in goAllDown()");
     }
 
     public boolean isLiftLevelReached(){
@@ -211,7 +211,7 @@ public class ScoringSystem implements Subsystem {
         // debug only,  remove it on release
         // packet.put("Current Position", slideMotor.getCurrentPosition());
         //  packet.put("target position", slideMotor.getTargetPosition());
-        Log.v("DualMotorSlide-updatetarget", "ScoringSystem update returning.");
+        //Log.v("DualMotorSlide-updatetarget", "ScoringSystem update returning.");
     }
 }
 

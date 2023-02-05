@@ -1,5 +1,7 @@
  package org.firstinspires.ftc.teamcode.subsystems;
 
+ import android.util.Log;
+
  import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
  import com.acmerobotics.roadrunner.control.PIDCoefficients;
  import com.acmerobotics.roadrunner.control.PIDFController;
@@ -71,7 +73,6 @@
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-
         hubPID = new PIDFController(HUB_PID_COEFFICIENTS);
         hubPID.setOutputBounds(-0.5, 0.5);
 
@@ -90,9 +91,9 @@
         this.powerFactor=factor;
     }
 
-    public double MMtoticks(double distance){
-        return 0.0;
-    }
+     private double ticksToInches(int ticks){
+         return ((double) ticks) / (8192 / (60 * Math.PI));
+     }
     public void driveForDistance(int leftFrontDistance, int rightFrontDistance, int leftBackDistance, int rightBackDistance, double power){
         for (int i = 0; i<4 ; i++){
             motors[i].setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -134,6 +135,43 @@
          return ((Math.abs(getTurnPIDError())) <= TURN_ACCEPTABLE_ERROR_MARGIN);
      }
 
+     public double mapJsRadiusVal(double jsVal, boolean slow){
+         //https://www.desmos.com/calculator/ekyhsv03yo
+         double startPos = 0.1; //a
+         double startVal = 0.4; //b
+         double endSlowPos = 0.95;//c
+         double endSlowVal = 0.6; //d
+         double maxVal = 1; //f
+         double startSlope = startVal/startPos;
+         double defSlope = (endSlowVal-startVal)/(endSlowPos-startPos);
+         double endSlope = (maxVal-endSlowVal)/(1-endSlowPos);
+         if(Math.abs(jsVal)<=startPos){
+             return jsVal*startSlope;
+         }
+         else if(jsVal>startPos){
+             double toReturn = (jsVal-startPos)*defSlope + startVal;
+             if(!slow && jsVal>endSlowPos){
+                 toReturn = (jsVal-endSlowPos)*endSlope + endSlowVal;
+             }
+             return toReturn;
+         }
+         else{
+             double toReturn = (jsVal+startPos)*defSlope - startVal;
+             if(!slow && jsVal<-1*endSlowPos){
+                 toReturn = (jsVal+endSlowPos)*endSlope - endSlowVal;
+             }
+             return toReturn;
+         }
+     }
+
+     public double mapJsComponents(double val, double radius, boolean slow){
+         double factor = mapJsRadiusVal(radius,slow);
+         if(radius<0.01){
+             return 0;
+         }
+         return factor*val/radius;
+     }
+
      public double getDistPIDError() { return hubPID.getLastError(); }
      public double getTurnPIDError() { return turnPID.getLastError(); }
 
@@ -143,11 +181,12 @@
             moveToHub();
         }
 
+
         for (int i = 0; i < 4; i++){
             motors[i].setPower(powers[i] * this.powerFactor);
+            Log.v("JoystickMap", i+" motor power = " + powers[i]);
+            packet.put("Motor Power " + (i+1), powers[i]);
         }
-
-
 
         //packet.put("Scale N", scale_n.readRawVoltage());
         //packet.put("Scale P", scale_p.readRawVoltage());

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import android.util.Log;
 
 @TeleOp
+@Config
 public class AATele extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,25 +39,33 @@ public class AATele extends LinearOpMode {
 
         while (!isStopRequested()) {
 
-            boolean slowMode = gamepad1.left_bumper;
-            boolean normieMode = gamepad1.right_bumper;
 
             //telemetry.addData("mode:", robot.scoringSystem.slideMotor.getMode());
             //telemetry.addData("slide motor power: ", robot.scoringSystem.slideMotor.getPower());
 
             robot.update();
-            Log.v("DualMotorSlide-updatetarget", "robot.update() is done");
 
             //check the bottom of the code (A) for the deleted bit i commented out
 
 //DRIVE
-            robot.mecanumDrive.setDrivePower(new Pose2d(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x));
-            if (slowMode) {
-                robot.mecanumDrive.setPowerFactor(0.3);
-            }
-            if (normieMode) {
-                robot.mecanumDrive.setPowerFactor(0.6);
-            }
+            boolean slowMode = gamepad1.left_bumper;
+            double joystickRadius = Math.min(1,Math.sqrt(Math.pow(gamepad1.left_stick_y,2) + Math.pow(gamepad1.left_stick_x,2)));
+            double factor = robot.mecanumDrive.mapJsRadiusVal(joystickRadius,slowMode);
+            double jsX = robot.mecanumDrive.mapJsComponents(gamepad1.left_stick_x, joystickRadius, slowMode);
+            double jsY = robot.mecanumDrive.mapJsComponents(gamepad1.left_stick_y, joystickRadius, slowMode);
+            /*
+            Log.v("JoystickMap", "jsX = " + gamepad1.left_stick_x);
+            Log.v("JoystickMap", "jsY = " + gamepad1.left_stick_y);;
+            Log.v("JoystickMap", "mapX = " + gamepad1.left_stick_x*factor);
+            Log.v("JoystickMap", "mapY = " + gamepad1.left_stick_y*factor);
+*/
+            telemetry.addData("jsX",  gamepad1.left_stick_x);
+            telemetry.addData("jsY",  gamepad1.left_stick_y);
+            telemetry.addData("factor", factor);
+            telemetry.addData("mapX",  jsX);
+            telemetry.addData("mapY",  jsY);
+            robot.mecanumDrive.setDrivePower(new Pose2d(-jsY, -jsX, -(0.5)*gamepad1.right_stick_x));
+            robot.mecanumDrive.setPowerFactor(0.7); //remove with actual robot.
 
 //Color sensor
             if (gamepad1.a) {
@@ -85,43 +95,39 @@ public class AATele extends LinearOpMode {
             if (smartGamepad2.dpad_up) {
                 robot.scoringSystem.adjustLift(1, true);
                 telemetry.addLine("dpad up pressed");
-                Log.v("PIDLift: gamepad", "dpad up");
+                //Log.v("PIDLift: gamepad", "dpad up");
             } else if (smartGamepad2.dpad_down) {
                 robot.scoringSystem.adjustLift(-1, true);
                 telemetry.addLine("dpad down pressed");
-                Log.v("PIDLift: gamepad", "dpad down");
+                //Log.v("PIDLift: gamepad", "dpad down");
             } else if (smartGamepad2.dpad_right) {
                 robot.scoringSystem.adjustLift(1, false);
                 telemetry.addLine("dpad right pressed");
-                Log.v("PIDLift: gamepad", "dpad right");
+                //Log.v("PIDLift: gamepad", "dpad right");
             } else if (smartGamepad2.dpad_left) {
                 robot.scoringSystem.adjustLift(-1, false);
                 telemetry.addLine("dpad left pressed");
-                Log.v("PIDLift: gamepad", "dpad left");
+                //Log.v("PIDLift: gamepad", "dpad left");
             }
             else if (smartGamepad2.a_pressed()) {
-                //robot.scoringSystem.goToHt(18.69);
                 robot.scoringSystem.dualMotorLift.goToLevel(1);
                 telemetry.addLine("going up to level 1");
-                Log.v("PIDLift: gamepad", "a");
+                //Log.v("PIDLift: gamepad", "a");
             } else if (smartGamepad2.x_pressed()) {
-                //robot.scoringSystem.goToHt(31.5);
                 robot.scoringSystem.dualMotorLift.goToLevel(2);
                 telemetry.addLine("going up to level 2");
-                Log.v("PIDLift: gamepad", "x");
+                //Log.v("PIDLift: gamepad", "x");
             } else if (smartGamepad2.y_pressed()) {
-                //robot.scoringSystem.goToHt(44.69);
                 robot.scoringSystem.dualMotorLift.goToLevel(3);
                 telemetry.addLine("going up to level 3");
-                Log.v("PIDLift: gamepad", "y");
+                //Log.v("PIDLift: gamepad", "y");
             } else if (smartGamepad2.b_pressed()) {
-                //robot.scoringSystem.goToHt(4.42);
                 robot.scoringSystem.goAllDown();
-                telemetry.addLine("going all the way down");
-                Log.v("PIDLift: gamepad", "b");
+                //telemetry.addLine("going all the way down");
+                //Log.v("PIDLift: gamepad", "b");
             } else if (robot.scoringSystem.isLiftLevelReached()){
                 robot.scoringSystem.dualMotorLift.stopMotor(); //set to adjust lift mode, but don't turn motor
-                Log.v("updatetarget","idling mode");
+                //Log.v("updatetarget","idling mode");
                 //or set its mode to Move with encoder?
             }
             if(smartGamepad1.left_trigger_pressed()) {
@@ -160,7 +166,6 @@ public class AATele extends LinearOpMode {
                 robot.runCommand(dumpFold);
             }
             Log.v("updatetarget", "Opmode loop finished one iteration.");
-
             /* Sensor test
             if(gamepad1.dpad_left){
                 telemetry.addData("left distance:", robot.robotdistancesensor.dsL);
