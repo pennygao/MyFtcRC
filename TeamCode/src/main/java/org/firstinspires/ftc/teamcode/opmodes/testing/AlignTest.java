@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.SmartGamepad;
-import org.firstinspires.ftc.teamcode.commands.AutoAlign;
+import org.firstinspires.ftc.teamcode.commands.TeleAlign;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
 import android.util.Log;
@@ -21,8 +21,8 @@ public class AlignTest extends LinearOpMode {
         SmartGamepad smartGamepad1 = robot.smartGamepad1;
         SmartGamepad smartGamepad2 = robot.smartGamepad2;
 
-        AutoAlign autoLfCmd = new AutoAlign(robot, robot.mecanumDrive, ALIGN_PWR, true, telemetry);
-        AutoAlign autoRtCmd = new AutoAlign(robot, robot.mecanumDrive, ALIGN_PWR, false, telemetry);
+        TeleAlign autoLfCmd = new TeleAlign(robot, robot.mecanumDrive, ALIGN_PWR, true, telemetry);
+        TeleAlign autoRtCmd = new TeleAlign(robot, robot.mecanumDrive, ALIGN_PWR, false, telemetry);
 
 
         waitForStart();

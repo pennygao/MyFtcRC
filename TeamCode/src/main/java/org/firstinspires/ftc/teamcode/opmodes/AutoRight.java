@@ -11,9 +11,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.commands.DriveTillIntake;
 import org.firstinspires.ftc.teamcode.commands.KnockerCommand;
 import org.firstinspires.ftc.teamcode.commands.AutoLift;
-import org.firstinspires.ftc.teamcode.commands.AutoLiftCBClaw;
 import org.firstinspires.ftc.teamcode.commands.AutoCB;
 import org.firstinspires.ftc.teamcode.commands.AutoClaw;
+import org.firstinspires.ftc.teamcode.commands.AutoAlign;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
@@ -23,12 +23,7 @@ import android.util.Log;
 @Config
 @Autonomous
 public class AutoRight extends LinearOpMode {
-    public static double HI_POLE_X = 57;
-    public static double HI_POLE_Y = 4;
-    public static double HI_POLE_SIDE = 14.5;
-    public static double HI_POLE_FWD = 5.5;
-    public static double HI_POLE_HEADING = Math.toRadians(40); // degree
-    public static double POLE_HT = 43.69;
+    public static double HI_POLE_X = 56;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -39,19 +34,10 @@ public class AutoRight extends LinearOpMode {
         objectDetector od = new objectDetector(robot, telemetry);
         robot.registerSubsystem((Subsystem)od);
 
-
-        // Update following parameters
-        double intakePower = 0.6;
-        double outtakePower = 0.1;
-
         // general variable
-        double driveTime;
         int elementPos = 4;
 
         // Commands
-
-
-
         //Servo init code here
         robot.scoringSystem.SSKnockerSetPosition(0.6);
         robot.scoringSystem.chainBar.lower();
@@ -64,12 +50,14 @@ public class AutoRight extends LinearOpMode {
         AutoCB cbDown = new AutoCB(robot, 0, 2); // down is 0
         AutoClaw clawClose = new AutoClaw(robot, 0, 0.1);
         AutoClaw clawOpen = new AutoClaw(robot, 1, 0.05);
+        AutoAlign autoRtCmd = new AutoAlign(robot, drivetrain,
+                0.15, false, telemetry);
 
         Trajectory traj1 = drivetrain.trajectoryBuilder(new Pose2d())
                 //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
                 .lineTo(new Vector2d(HI_POLE_X, 1)) // move forward
                 .addTemporalMarker(0.0, ()->robot.runCommands(clawClose))
-                .addTemporalMarker(0.1, ()->robot.runCommands(new AutoLift(robot, 5, 29))) // raise lift
+                .addTemporalMarker(0.1, ()->robot.runCommands(new AutoLift(robot, 5, 30))) // raise lift
                 .addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
                 .addTemporalMarker(0.8, ()->robot.runCommand(cbLeft))
                 .addTemporalMarker(1.5, ()->robot.runCommand(knock))
@@ -121,7 +109,7 @@ public class AutoRight extends LinearOpMode {
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .addTemporalMarker(0, ()->robot.runCommands(new AutoLift(robot, 5, 6)))
                         .forward(15)
-                        .addTemporalMarker(0.1, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.5)))
+                        .addTemporalMarker(0.3, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.5)))
 
                         .build()
         ));
@@ -148,20 +136,17 @@ public class AutoRight extends LinearOpMode {
                         .build()
         ));
         Log.v("AUTODEBUG", "10: drive to pole done");
-        //robot.runCommand(new AutoLift(robot, 5, 27));
-        //Log.v("AUTODEBUG", "11: lower the slide done");
+
         // Release cone
         robot.runCommands(clawOpen);
         Log.v("AUTODEBUG", "12: release cone done");
-        //robot.runCommand(new AutoLift(robot, 5, 32));
-        //Log.v("AUTODEBUG", "13: raise slide done");
 
         for (int i=1; i<=2; i++) {
-            AutoLift liftUpCmd = new AutoLift(robot, 5, 30);
+            AutoLift liftUpCmd = new AutoLift(robot, 5, 29);
             AutoLift liftDnCmd = new AutoLift(robot, 5, 6-i);
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(44.5)
+                            .forward(44.5-i*0.5)
                             //.lineTo(new Vector2d())
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
                             .addTemporalMarker(1.0, ()->robot.runCommands(liftDnCmd))
@@ -172,7 +157,7 @@ public class AutoRight extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                            .back(43)
+                            .back(43+i*0.5)
                             //.strafeLeft(2)
                             .addTemporalMarker(0.0, ()->robot.runCommands(liftUpCmd))
                             .addTemporalMarker(0.5, ()->robot.runCommands(cbLeft))
@@ -201,13 +186,12 @@ public class AutoRight extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 0), Math.toRadians(-90))
-                            .forward(20)
+                            .forward(18)
                             .addTemporalMarker(1.0, ()->robot.runCommands(cbDown))
                             .addTemporalMarker(1.0, ()->robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
             ));
-            //robot.runCommands(cbDown);
-            //robot.runCommands(new AutoLift(robot, 0, 0));
+
         }
         if (elementPos == 3 || elementPos == 4) {
             robot.runCommand(drivetrain.followTrajectory(

@@ -4,7 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commands.AutoAlign;
+import org.firstinspires.ftc.teamcode.commands.TeleAlign;
 import org.firstinspires.ftc.teamcode.commands.DumpFold;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SimpleMecanumDrive;
@@ -24,9 +24,9 @@ public class AATele extends LinearOpMode {
         SmartGamepad smartGamepad1 = robot.smartGamepad1;
         SmartGamepad smartGamepad2 = robot.smartGamepad2;
 
-        AutoAlign autoLfCmd = new AutoAlign(robot, robot.mecanumDrive,
+        TeleAlign autoLfCmd = new TeleAlign(robot, robot.mecanumDrive,
                 0.15, true, telemetry);
-        AutoAlign autoRtCmd = new AutoAlign(robot, robot.mecanumDrive,
+        TeleAlign autoRtCmd = new TeleAlign(robot, robot.mecanumDrive,
                 0.15, false, telemetry);
         DumpFold dumpFold = new DumpFold(robot, robot.mecanumDrive,
                 0.7, telemetry);

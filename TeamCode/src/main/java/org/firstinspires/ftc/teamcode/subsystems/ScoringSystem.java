@@ -25,10 +25,10 @@ public class ScoringSystem implements Subsystem {
     public ChainBar chainBar;
     public Claw claw;
     //TODO: tune
-    //public static double CLAW_OPEN_POSITION = 0.38; //for orange claw
-    //public static double CLAW_CLOSE_POSITION = 0.58; //0 //for orange claw
-    public static double CLAW_OPEN_POSITION = 0.53;
-    public static double CLAW_CLOSE_POSITION = 0.78;
+    public static double CLAW_OPEN_POSITION = 0.4; //for new thicker claw
+    public static double CLAW_CLOSE_POSITION = 0.6; //for new thicker claw
+    //public static double CLAW_OPEN_POSITION = 0.53; // for old claw
+    //public static double CLAW_CLOSE_POSITION = 0.78; // for old claw
 
 
     public static double CHAIN_BAR_DOWN = 0.44;
