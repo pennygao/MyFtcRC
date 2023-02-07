@@ -164,21 +164,21 @@ public class ScoringSystem implements Subsystem {
          * 2: height reached, swing chain bar.
          */
         if(swingState==1){
-            Log.v("ChainBar", dualMotorLift.chainBarCanSwing()  +"");
+            //Log.v("ChainBar", dualMotorLift.chainBarCanSwing()  +"");
             if(!dualMotorLift.chainBarCanSwing()){
                 dualMotorLift.goToHt(dualMotorLift.inchToTicks(5));
-                Log.v("DualMotorSlide- ChainBar", "gotoLevel(4) get called");
+                //Log.v("DualMotorSlide- ChainBar", "gotoLevel(4) get called");
             }
             swingState=2;
             telemetry.addLine("CB: waiting to raise slide...");
-            Log.v("ChainBar:", "waiting to raise slide...");
+            //Log.v("ChainBar:", "waiting to raise slide...");
         }
         else if(swingState==2){
             if(dualMotorLift.chainBarCanSwing()) {
                 chainBar.swing();
                 swingState = 0;
                 telemetry.addLine("CB: slide is able to swing");
-                Log.v("ChainBar:", "slide is able to swing");
+                //Log.v("ChainBar:", "slide is able to swing");
             }
         }
 
@@ -186,16 +186,16 @@ public class ScoringSystem implements Subsystem {
             chainBar.lower();
             lowerState++;
             telemetry.addLine("CB: waiting for chain bar to lower...");
-            Log.v("ChainBar:", "waiting for chain bar to lower...");
+            //Log.v("ChainBar:", "waiting for chain bar to lower...");
         }
         else if(lowerState==2){
             if(chainBar.doneMoving()){
                 dualMotorLift.goToLevel(0);
-                Log.v("DualMotorSlide- ChainBar", "gotoLevel(0) got called");
+                //Log.v("DualMotorSlide- ChainBar", "gotoLevel(0) got called");
                 lowerState=0;
             }
             telemetry.addLine("CB: chain bar is down, lowering slide");
-            Log.v("ChainBar:", "chain bar is down, lowering slide");
+            //Log.v("ChainBar:", "chain bar is down, lowering slide");
         }
         SSKnocker.setPosition(ssKnockerPos);
         //telemetry.addData("clawPos: ", claw.clawServo.getPosition());

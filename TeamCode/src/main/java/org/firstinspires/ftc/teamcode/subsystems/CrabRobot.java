@@ -27,12 +27,12 @@ public class CrabRobot extends Robot {
     public void addGamepads(Gamepad g1, Gamepad g2){
         smartGamepad1 = new SmartGamepad(g1);
         if (smartGamepad1 != null ) {
-            Log.v("update", "registering smartGamepad1: " + smartGamepad1.getClass().getSimpleName());
+            //Log.v("update", "registering smartGamepad1: " + smartGamepad1.getClass().getSimpleName());
             registerSubsystem(smartGamepad1);
         }
         smartGamepad2 = new SmartGamepad(g2);
         if (smartGamepad2 != null) {
-            Log.v("update", "registering smartGamepad2: " + smartGamepad2.getClass().getSimpleName());
+            //Log.v("update", "registering smartGamepad2: " + smartGamepad2.getClass().getSimpleName());
             registerSubsystem(smartGamepad2);
         }
     }

@@ -184,7 +184,7 @@
 
         for (int i = 0; i < 4; i++){
             motors[i].setPower(powers[i] * this.powerFactor);
-            Log.v("JoystickMap", i+" motor power = " + powers[i]);
+            //Log.v("JoystickMap", i+" motor power = " + powers[i]);
             packet.put("Motor Power " + (i+1), powers[i]);
         }
 

@@ -47,10 +47,10 @@ public class TeleAlign implements Command {
     public void update() {
         distL = robot.robotdistancesensor.dsR;
         distR = robot.robotdistancesensor.dsL;
-        Log.v("AUTOCMD DEBUG"," Beginning State: " + state);
+        //Log.v("AUTOCMD DEBUG"," Beginning State: " + state);
         if (state == 0) { // Move forward till in pole range
-            Log.v("AUTOCMD DEBUG", "Left dist: " + robot.robotdistancesensor.dsR);
-            Log.v("AUTOCMD DEBUG", "Right dist: " + robot.robotdistancesensor.dsL);
+            //Log.v("AUTOCMD DEBUG", "Left dist: " + robot.robotdistancesensor.dsR);
+            //Log.v("AUTOCMD DEBUG", "Right dist: " + robot.robotdistancesensor.dsL);
             if (       distL < DIST_THRESHOLD
                     && distR < DIST_THRESHOLD) {
                 mecanumDrive.setDrivePower(new Pose2d(0, 0, 0));
@@ -73,8 +73,8 @@ public class TeleAlign implements Command {
                 mecanumDrive.setDrivePower(new Pose2d(xPwr, 0, 0));
             }
         } else if (state == 1) { // Align to the correct side
-            Log.v("AUTOCMD DEBUG", "Left dist: " + robot.robotdistancesensor.dsR);
-            Log.v("AUTOCMD DEBUG", "Right dist: " + robot.robotdistancesensor.dsL);
+            //Log.v("AUTOCMD DEBUG", "Left dist: " + robot.robotdistancesensor.dsR);
+            //Log.v("AUTOCMD DEBUG", "Right dist: " + robot.robotdistancesensor.dsL);
             if (this.alignLeft) {
                 mecanumDrive.setDrivePower(new Pose2d(0,xPwr,0));
                 if (robot.robotdistancesensor.dsR < sideAlignDist) {

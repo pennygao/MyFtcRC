@@ -16,7 +16,7 @@ public class SmartGamepad extends Gamepad implements Subsystem {
     public SmartGamepad(Gamepad gamepad) {
         original = gamepad;
         previous = new Gamepad();
-        Log.v("gamepad", "Smart gamepad check in.");
+        //Log.v("gamepad", "Smart gamepad check in.");
     }
 
     @Override
@@ -64,13 +64,13 @@ public class SmartGamepad extends Gamepad implements Subsystem {
         return y && !previous.y;
     }
     public boolean dpad_changed() {
-        Log.v("gamepad", String.format("Dpad (up/down/left/right): %b,%b,%b,%b, previous: %b,%b,%b,%b", dpad_up, dpad_down, dpad_left, dpad_right,
-                previous.dpad_up, previous.dpad_down, previous.dpad_left, previous.dpad_right));
+        //Log.v("gamepad", String.format("Dpad (up/down/left/right): %b,%b,%b,%b, previous: %b,%b,%b,%b", dpad_up, dpad_down, dpad_left, dpad_right,
+        //        previous.dpad_up, previous.dpad_down, previous.dpad_left, previous.dpad_right));
 
         boolean result =  (dpad_up ^ previous.dpad_up)     || (dpad_down ^ previous.dpad_down) ||
                 (dpad_left ^ previous.dpad_left) || (dpad_right ^ previous.dpad_right);
         if (result) {
-            Log.v("gamepad/transition", "dpad changed: True");
+            //Log.v("gamepad/transition", "dpad changed: True");
         }
         return result;
     }
@@ -79,7 +79,7 @@ public class SmartGamepad extends Gamepad implements Subsystem {
         boolean result =  (Math.abs(right_stick_x) + Math.abs(right_stick_y) < 0.001) &&
                 (Math.abs(previous.right_stick_x) + Math.abs(previous.right_stick_y) > 0.001);
         if (result) {
-            Log.v("gamepad/transition", "right stick released: True");
+            //Log.v("gamepad/transition", "right stick released: True");
         }
         return result;
     }

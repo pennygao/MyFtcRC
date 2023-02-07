@@ -72,7 +72,7 @@ public class Robot {
         TelemetryPacket packet = new TelemetryPacket();
 
         for (Subsystem subsystem : subsystems) {
-            Log.v("update", "Invoking update for class " + subsystem.getClass().getSimpleName());
+            //Log.v("update", "Invoking update for class " + subsystem.getClass().getSimpleName());
             subsystem.update(packet);
         }
 

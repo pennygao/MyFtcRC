@@ -37,7 +37,7 @@ public class DumpFold implements Command {
 
     @Override
     public void update() {
-        Log.v("AUTOCMD DEBUG"," Beginning State: " + state);
+        //Log.v("AUTOCMD DEBUG"," Beginning State: " + state);
         if (state == 0) {// open claw
             robot.scoringSystem.claw.openClaw();
             if (clock.seconds() - timeMarker > CLAW_OPEN_TIME) {

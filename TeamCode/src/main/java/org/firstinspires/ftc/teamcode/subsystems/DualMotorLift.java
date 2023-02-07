@@ -83,14 +83,14 @@ public class DualMotorLift implements Subsystem {
             pidfController.setOutputBounds(-1.0*PID_RANGE, 1.0*PID_RANGE);
             pidfController.reset();
         }
-        Log.v("PIDLift: status: ", "init");
+        //Log.v("PIDLift: status: ", "init");
     }
 
     public void goToLevel(int level){
         //4 levels: 0 ground, 1 low, 2 middle, 3 high, 4 (minimum height for free chain bar movement)
         int targetPosition = inchToTicks(LEVEL_HT[level]);
         goToHt(targetPosition);
-        Log.v("ChainBar", "going to level" + level);
+        //Log.v("ChainBar", "going to level" + level);
 
     }
     //for going to non-junction heights
@@ -108,7 +108,7 @@ public class DualMotorLift implements Subsystem {
             pidfController.reset();
             pidfController.setTargetPosition(ticksToInches(ticks));
         }
-        Log.v("Lift: status", String.format("Lift moving to height %f", ticksToInches(slideMotorL.getTargetPosition())));
+        //Log.v("Lift: status", String.format("Lift moving to height %f", ticksToInches(slideMotorL.getTargetPosition())));
     }
 
     public void goToRelativeOffset(double inches) {
@@ -116,9 +116,9 @@ public class DualMotorLift implements Subsystem {
         int currPosTicks = slideMotorL.getCurrentPosition();
         int targetPosTicks = currPosTicks + inchToTicks(inches);
 
-        Log.v("AUTOCMD DEBUG", "currPosTicks: " + currPosTicks);
-        Log.v("AUTOCMD DEBUG", "offset Inches: " + inches);
-        Log.v("AUTOCMD DEBUG", "targetPosTicks: " + targetPosTicks);
+        //Log.v("AUTOCMD DEBUG", "currPosTicks: " + currPosTicks);
+        //Log.v("AUTOCMD DEBUG", "offset Inches: " + inches);
+        //Log.v("AUTOCMD DEBUG", "targetPosTicks: " + targetPosTicks);
         this.goToHt(targetPosTicks);
     }
 
@@ -131,7 +131,7 @@ public class DualMotorLift implements Subsystem {
             slideMotorL.setPower(power*direction);
             slideMotorR.setPower(power*direction);
         }
-        Log.v("PIDLift: status: ", "applyStaticOffset");
+        //Log.v("PIDLift: status: ", "applyStaticOffset");
     }
 
     public void adjustLift(int direction, boolean slow){
@@ -154,7 +154,7 @@ public class DualMotorLift implements Subsystem {
             slideMotorL.setPower(powerFromPIDF);
             slideMotorR.setPower(powerFromPIDF);
         }
-        Log.v("PIDLift: status: ", "adjust lift");
+        //Log.v("PIDLift: status: ", "adjust lift");
         //for using run-using-encoder mode
         //int current = slideMotorL.getCurrentPosition();
         // int targetPosition = current + inchToTicks(1)*direction;
@@ -219,7 +219,7 @@ public class DualMotorLift implements Subsystem {
         return slideMotorL.getCurrentPosition() / (TICKS_PER_REV/(PULLEY_DIAMETER * Math.PI));
     }
     public boolean chainBarCanSwing(){
-        Log.v("ChainBar: can swing?", ticksToInches(slideMotorL.getCurrentPosition())+"");
+        //Log.v("ChainBar: can swing?", ticksToInches(slideMotorL.getCurrentPosition())+"");
         return slideMotorL.getCurrentPosition()>=inchToTicks(LEVEL_HT[4]);
     }
 
@@ -249,8 +249,8 @@ public class DualMotorLift implements Subsystem {
                 } else if (powerFromPIDF < PID_RANGE) {
                     powerFromPIDF = PID_RANGE;
                 }
-                Log.v("PIDLift: Debug: ", String.format("Target pos: %4.2f, current pos: %4.2f, last error: %4.2f, velocity: %4.2f, set power to: %4.2f",
-                        pidfController.getTargetPosition(), measuredPosition, pidfController.getLastError(), slideMotorL.getVelocity(), powerFromPIDF));
+                //Log.v("PIDLift: Debug: ", String.format("Target pos: %4.2f, current pos: %4.2f, last error: %4.2f, velocity: %4.2f, set power to: %4.2f",
+                //        pidfController.getTargetPosition(), measuredPosition, pidfController.getLastError(), slideMotorL.getVelocity(), powerFromPIDF));
                 telemetry.addData("Target pos", pidfController.getTargetPosition());
                 telemetry.addData("Measur pos", measuredPosition);
                 telemetry.addData("slidePower", powerFromPIDF);

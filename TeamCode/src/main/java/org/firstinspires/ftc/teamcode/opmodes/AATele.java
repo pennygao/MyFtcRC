@@ -165,7 +165,7 @@ public class AATele extends LinearOpMode {
             if(smartGamepad1.x_pressed()){
                 robot.runCommand(dumpFold);
             }
-            Log.v("updatetarget", "Opmode loop finished one iteration.");
+            //Log.v("updatetarget", "Opmode loop finished one iteration.");
             /* Sensor test
             if(gamepad1.dpad_left){
                 telemetry.addData("left distance:", robot.robotdistancesensor.dsL);
