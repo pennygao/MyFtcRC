@@ -154,6 +154,8 @@ public class ScoringSystem implements Subsystem {
     }
 
 
+
+
     @Override
     public void update(TelemetryPacket packet) {
         dualMotorLift.update(packet);
@@ -164,11 +166,15 @@ public class ScoringSystem implements Subsystem {
          * 2: height reached, swing chain bar.
          */
         if(swingState==1){
-            //Log.v("ChainBar", dualMotorLift.chainBarCanSwing()  +"");
-            if(!dualMotorLift.chainBarCanSwing()){
-                dualMotorLift.goToHt(dualMotorLift.inchToTicks(5));
-                //Log.v("DualMotorSlide- ChainBar", "gotoLevel(4) get called");
+           // Log.v("ChainBar", dualMotorLift.chainBarCanSwing()  +"");
+            if(!dualMotorLift.chainBarCanSwing()) {
+                if(dualMotorLift.getTargetPos()< dualMotorLift.inchToTicks(5)){
+                    dualMotorLift.goToHt(dualMotorLift.inchToTicks(5));
+                }
+                dualMotorLift.goToLevel(4);
+            //    Log.v("DualMotorSlide- ChainBar", "gotoLevel(4) get called");
             }
+
             swingState=2;
             telemetry.addLine("CB: waiting to raise slide...");
             //Log.v("ChainBar:", "waiting to raise slide...");

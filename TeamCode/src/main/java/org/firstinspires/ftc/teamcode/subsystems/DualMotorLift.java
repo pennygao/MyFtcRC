@@ -231,6 +231,9 @@ public class DualMotorLift implements Subsystem {
         slideMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slideMotorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+    public double getTargetPos(){
+        return slideMotorL.getTargetPosition();
+    }
 
     @Override
     public void update(TelemetryPacket packet) {
