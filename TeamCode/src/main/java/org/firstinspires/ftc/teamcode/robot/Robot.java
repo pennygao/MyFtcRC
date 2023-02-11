@@ -71,15 +71,18 @@ public class Robot {
 
         TelemetryPacket packet = new TelemetryPacket();
 
+        //Log.v("update", "subsystems updating start");
         for (Subsystem subsystem : subsystems) {
             //Log.v("update", "Invoking update for class " + subsystem.getClass().getSimpleName());
             subsystem.update(packet);
         }
 
+        //Log.v("update", "listener updating start");
         for (Listener listener : listeners) {
             listener.update();
         }
 
+        //Log.v("update", "commands updating start");
         ArrayList<Command> commandsToRemove = new ArrayList<>();
         for (Command command : commands) {
             command.update();
@@ -90,6 +93,7 @@ public class Robot {
         }
         commands.removeAll(commandsToRemove);
 
+        Log.v("update", "robot done updating");
         //TODO: when tuning, comment following out, as opmode sends telemetry directly.
         // After tuning, in BackAndForth step, un-comment this for robot to send telementry instead
         dashboard.sendTelemetryPacket(packet);

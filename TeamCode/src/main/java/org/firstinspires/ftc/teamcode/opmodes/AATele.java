@@ -68,6 +68,7 @@ public class AATele extends LinearOpMode {
             robot.mecanumDrive.setPowerFactor(0.7); //remove with actual robot.
 
 //Color sensor
+            /*
             if (gamepad1.a) {
                 telemetry.addData("RRed: ", robot.robotcolorsensor.csR[0]);
                 telemetry.addData("RGreen: ", robot.robotcolorsensor.csR[1]);
@@ -82,7 +83,7 @@ public class AATele extends LinearOpMode {
                 telemetry.addData("LonLine:", robot.robotcolorsensor.csLonLine());
                 telemetry.addLine("Gamepad1 B pressed");
                 telemetry.update();
-            }
+            }*/
 
 //SS knocker
             if (gamepad2.right_bumper){
@@ -94,32 +95,32 @@ public class AATele extends LinearOpMode {
 //RAISE SLIDE
             if (smartGamepad2.dpad_up) {
                 robot.scoringSystem.adjustLift(1, true);
-                telemetry.addLine("dpad up pressed");
+                //telemetry.addLine("dpad up pressed");
                 //Log.v("PIDLift: gamepad", "dpad up");
             } else if (smartGamepad2.dpad_down) {
                 robot.scoringSystem.adjustLift(-1, true);
-                telemetry.addLine("dpad down pressed");
+                //telemetry.addLine("dpad down pressed");
                 //Log.v("PIDLift: gamepad", "dpad down");
             } else if (smartGamepad2.dpad_right) {
                 robot.scoringSystem.adjustLift(1, false);
-                telemetry.addLine("dpad right pressed");
+                //telemetry.addLine("dpad right pressed");
                 //Log.v("PIDLift: gamepad", "dpad right");
             } else if (smartGamepad2.dpad_left) {
                 robot.scoringSystem.adjustLift(-1, false);
-                telemetry.addLine("dpad left pressed");
+                //telemetry.addLine("dpad left pressed");
                 //Log.v("PIDLift: gamepad", "dpad left");
             }
             else if (smartGamepad2.a_pressed()) {
                 robot.scoringSystem.dualMotorLift.goToLevel(1);
-                telemetry.addLine("going up to level 1");
+                //telemetry.addLine("going up to level 1");
                 //Log.v("PIDLift: gamepad", "a");
             } else if (smartGamepad2.x_pressed()) {
                 robot.scoringSystem.dualMotorLift.goToLevel(2);
-                telemetry.addLine("going up to level 2");
+                //telemetry.addLine("going up to level 2");
                 //Log.v("PIDLift: gamepad", "x");
             } else if (smartGamepad2.y_pressed()) {
                 robot.scoringSystem.dualMotorLift.goToLevel(3);
-                telemetry.addLine("going up to level 3");
+                //telemetry.addLine("going up to level 3");
                 //Log.v("PIDLift: gamepad", "y");
             } else if (smartGamepad2.b_pressed()) {
                 robot.scoringSystem.goAllDown();
@@ -165,7 +166,7 @@ public class AATele extends LinearOpMode {
             if(smartGamepad1.x_pressed()){
                 robot.runCommand(dumpFold);
             }
-            //Log.v("updatetarget", "Opmode loop finished one iteration.");
+            Log.v("update", "Opmode loop finished one iteration.");
             /* Sensor test
             if(gamepad1.dpad_left){
                 telemetry.addData("left distance:", robot.robotdistancesensor.dsL);

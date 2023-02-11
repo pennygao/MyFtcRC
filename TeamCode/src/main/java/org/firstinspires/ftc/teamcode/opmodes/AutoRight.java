@@ -57,9 +57,9 @@ public class AutoRight extends LinearOpMode {
 
         Trajectory traj1 = drivetrain.trajectoryBuilder(new Pose2d())
                 //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
-                .lineTo(new Vector2d(HI_POLE_X, -1)) // move forward
+                .lineTo(new Vector2d(HI_POLE_X, 1)) // move forward
                 .addTemporalMarker(0.0, () -> robot.runCommands(clawClose))
-                .addTemporalMarker(0.1, () -> robot.runCommands(new AutoLift(robot, 5, 30))) // raise lift
+                .addTemporalMarker(0.1, () -> robot.runCommands(new AutoLift(robot, 5, 29.5))) // raise lift
                 //.addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
                 .addTemporalMarker(1.0, () -> robot.runCommand(new KnockerCommand(robot, 0.05, 1.0)))
                 .addTemporalMarker(0.8, () -> robot.runCommand(cbLeft))
@@ -89,6 +89,7 @@ public class AutoRight extends LinearOpMode {
         // Move forward two tile
         //robot.runCommands(new AutoLift(robot, 5, 29), clawClose);
         robot.runCommand(drivetrain.followTrajectory(traj1));
+
         Log.v("AUTODEBUG", "3: trag1 done");
 
         robot.runCommands(clawOpen);
@@ -129,7 +130,7 @@ public class AutoRight extends LinearOpMode {
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
                         .back(45)
                         //.strafeLeft(2)
-                        .addTemporalMarker(0.0, () -> robot.runCommands(new AutoLift(robot, 5, 30)))
+                        .addTemporalMarker(0.0, () -> robot.runCommands(new AutoLift(robot, 5, 29)))
                         .addTemporalMarker(0.5, () -> robot.runCommands(cbLeft))
                         .build()
         ));
@@ -146,7 +147,7 @@ public class AutoRight extends LinearOpMode {
             cycles = 1;
         }
         for (int i = 1; i <= cycles; i++) {
-            AutoLift liftUpCmd = new AutoLift(robot, 5, 30);
+            AutoLift liftUpCmd = new AutoLift(robot, 5, 29);
             AutoLift liftDnCmd = new AutoLift(robot, 5, 6 - i);
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
