@@ -109,7 +109,7 @@ public class AutoRight extends LinearOpMode {
 
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .addTemporalMarker(0, () -> robot.runCommands(new AutoLift(robot, 5, 6)))
+                        .addTemporalMarker(0, () -> robot.runCommands(new AutoLift(robot, 5, 5)))
                         .forward(15)
                         .addTemporalMarker(0.3, () -> robot.runCommand(new KnockerCommand(robot, 0.05, 0.5)))
 
@@ -147,8 +147,8 @@ public class AutoRight extends LinearOpMode {
             cycles = 1;
         }
         for (int i = 1; i <= cycles; i++) {
-            AutoLift liftUpCmd = new AutoLift(robot, 5, 29);
-            AutoLift liftDnCmd = new AutoLift(robot, 5, 6 - i);
+            AutoLift liftUpCmd = new AutoLift(robot, 5, 30);
+            AutoLift liftDnCmd = new AutoLift(robot, 5, 5 - i);
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                             .forward(38)//-i*0.5)
@@ -184,7 +184,7 @@ public class AutoRight extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 17), Math.toRadians(-90))
-                            .back(3)
+                            .back(2)
                             .addTemporalMarker(0.5, () -> robot.runCommands(cbDown))
                             .addTemporalMarker(0.5, () -> robot.runCommands(new AutoLift(robot, 5, 0)))
                             .build()
