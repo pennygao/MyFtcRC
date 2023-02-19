@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.DumpFold;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
+import org.firstinspires.ftc.teamcode.Utilities;
+import org.firstinspires.ftc.teamcode.subsystems.RobotVision;
 import org.firstinspires.ftc.teamcode.subsystems.SmartGamepad;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
@@ -17,6 +19,8 @@ import android.util.Log;
 public class AATele extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        Utilities.getSharedUtility().initialize(this);
+        RobotVision rvis = new RobotVision();
         CrabRobot robot = new CrabRobot(this, true);
         robot.registerSubsystem((Subsystem) robot.mecanumDrive);
         //robot.registerSubsystem((Subsystem) robot.robotdistancesensor);
@@ -172,6 +176,10 @@ public class AATele extends LinearOpMode {
             if(smartGamepad1.x_pressed()){
                 robot.runCommand(dumpFold);
             }
+
+
+            //testing opencv detection remove this later
+            telemetry.addLine("Sleeve: " + rvis.getConeOrientation());
             Log.v("update", "Opmode loop finished one iteration.");
             /* Sensor test
             if(gamepad1.dpad_left){
