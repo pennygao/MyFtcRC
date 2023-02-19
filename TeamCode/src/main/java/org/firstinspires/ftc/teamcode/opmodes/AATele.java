@@ -5,10 +5,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.commands.TeleAlign;
 import org.firstinspires.ftc.teamcode.commands.DumpFold;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
-import org.firstinspires.ftc.teamcode.subsystems.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.SmartGamepad;
 import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 
@@ -21,17 +19,21 @@ public class AATele extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this, true);
         robot.registerSubsystem((Subsystem) robot.mecanumDrive);
-        robot.registerSubsystem((Subsystem) robot.robotdistancesensor);
+        //robot.registerSubsystem((Subsystem) robot.robotdistancesensor);
         robot.addGamepads(gamepad1,gamepad2);
         SmartGamepad smartGamepad1 = robot.smartGamepad1;
         SmartGamepad smartGamepad2 = robot.smartGamepad2;
 
-        TeleAlign autoLfCmd = new TeleAlign(robot, robot.mecanumDrive,
+        /*TeleAlign autoLfCmd = new TeleAlign(robot, robot.mecanumDrive,
                 0.15, true, telemetry);
         TeleAlign autoRtCmd = new TeleAlign(robot, robot.mecanumDrive,
                 0.15, false, telemetry);
+
+         */
         DumpFold dumpFold = new DumpFold(robot, robot.mecanumDrive,
                 0.4, telemetry);
+
+
 //RESETS
         //robot.scoringSystem.goAllDown();
 
@@ -155,14 +157,18 @@ public class AATele extends LinearOpMode {
                 robot.scoringSystem.dualMotorLift.resetEncoder();
             }
 
-            if(gamepad1.dpad_left) {
+            /*if(gamepad1.dpad_left) {
                 robot.scoringSystem.swingChainBar(1); // left for tele
                 robot.runCommand(autoLfCmd);
             }
             else if (gamepad1.dpad_right){
                 robot.scoringSystem.swingChainBar(-1);
                 robot.runCommand(autoRtCmd);
+
+
             }
+            */
+
             if(smartGamepad1.x_pressed()){
                 robot.runCommand(dumpFold);
             }

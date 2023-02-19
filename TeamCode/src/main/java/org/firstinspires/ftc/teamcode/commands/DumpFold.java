@@ -60,8 +60,8 @@ public class DumpFold implements Command {
         }
 
         telemetry.addData("End State: ", state);
-        telemetry.addData("Left dist: ", robot.robotdistancesensor.dsR);
-        telemetry.addData("Rigt dist: ", robot.robotdistancesensor.dsL);
+       // telemetry.addData("Left dist: ", robot.robotdistancesensor.dsR);
+        //telemetry.addData("Rigt dist: ", robot.robotdistancesensor.dsL);
         telemetry.update();
 
     }

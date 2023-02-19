@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.commands.AutoAlign;
 import org.firstinspires.ftc.teamcode.commands.AutoCB;
 import org.firstinspires.ftc.teamcode.commands.AutoClaw;
 import org.firstinspires.ftc.teamcode.commands.AutoLift;
@@ -23,8 +22,8 @@ import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Config
 @Autonomous
-public class AutoLeft extends LinearOpMode {
-    public static double HI_POLE_X = 54.5;
+public class AutoLeftRepick extends LinearOpMode {
+    public static double HI_POLE_X = 54;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -52,8 +51,8 @@ public class AutoLeft extends LinearOpMode {
         AutoCB cbDown = new AutoCB(robot, 0, 2); // down is 0
         AutoClaw clawClose = new AutoClaw(robot, 0, 0.1);
         AutoClaw clawOpen = new AutoClaw(robot, 1, 0.05);
-        AutoAlign autoRtCmd = new AutoAlign(robot, drivetrain,
-                0.15, false, telemetry);
+        //AutoAlign autoRtCmd = new AutoAlign(robot, drivetrain,
+                //0.15, false, telemetry);
 
         Trajectory traj1 = drivetrain.trajectoryBuilder(new Pose2d())
                 //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
@@ -100,7 +99,7 @@ public class AutoLeft extends LinearOpMode {
                         .addTemporalMarker(0.5, ()->robot.runCommands(cbDown))
                         //.addTemporalMarker(0.8, ()->robot.runCommands(liftUp1))
                         .lineTo(new Vector2d(HI_POLE_X-4, 0))
-                        .turn(Math.toRadians(88.5))
+                        .turn(Math.toRadians(88))
                         //.forward(12)
                         .build()
         ));
@@ -176,7 +175,7 @@ public class AutoLeft extends LinearOpMode {
         }
 
         // park
-        if  (elementPos == 3 || elementPos == 4) {
+        if  (elementPos == 3 ) {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 17), Math.toRadians(-90))
@@ -197,7 +196,7 @@ public class AutoLeft extends LinearOpMode {
             ));
 
         }
-        if (elementPos == 1) {
+        if (elementPos == 1 || elementPos == 4) {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, -23), Math.toRadians(-90))

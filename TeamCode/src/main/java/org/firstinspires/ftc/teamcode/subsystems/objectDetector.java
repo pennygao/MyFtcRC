@@ -59,7 +59,7 @@ public class objectDetector implements Subsystem {
         // in the Camera Stream preview window on the Driver Station.
         tfodPowerPlay.activate();
         // Enable following block to zoom in on target.
-        tfodPowerPlay.setZoom(2.0, 16 / 9);
+        tfodPowerPlay.setZoom(2.2, 16 / 9);
     }
 
     public void close() {

@@ -10,7 +10,6 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.commands.AutoAlign;
 import org.firstinspires.ftc.teamcode.commands.AutoCB;
 import org.firstinspires.ftc.teamcode.commands.AutoClaw;
 import org.firstinspires.ftc.teamcode.commands.AutoLift;
@@ -23,7 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 
 @Config
 @Autonomous
-public class AutoRight extends LinearOpMode {
+public class AutoRightS extends LinearOpMode {
     public static double HI_POLE_X = 54.5;
 
     @Override
@@ -51,18 +50,18 @@ public class AutoRight extends LinearOpMode {
         AutoCB cbLeft = new AutoCB(robot, -1, 2); // auto left is -1
         AutoCB cbDown = new AutoCB(robot, 0, 2); // down is 0
         AutoClaw clawClose = new AutoClaw(robot, 0, 0.1);
-        AutoClaw clawOpen = new AutoClaw(robot, 1, 0.05);
-        AutoAlign autoRtCmd = new AutoAlign(robot, drivetrain,
-                0.15, false, telemetry);
+        AutoClaw clawOpen = new AutoClaw(robot, 1, 0.1);
+        //AutoAlign autoRtCmd = new AutoAlign(robot, drivetrain,
+        //0.15, false, telemetry);
 
         Trajectory traj1 = drivetrain.trajectoryBuilder(new Pose2d())
                 //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
                 .lineTo(new Vector2d(HI_POLE_X, 1)) // move forward
                 .addTemporalMarker(0.0, () -> robot.runCommands(clawClose))
-                .addTemporalMarker(0.1, () -> robot.runCommands(new AutoLift(robot, 5, 29.5))) // raise lift
+                .addTemporalMarker(1.0, () -> robot.runCommands(new AutoLift(robot, 5, 29.5))) // raise lift
                 //.addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
-                .addTemporalMarker(1.0, () -> robot.runCommand(new KnockerCommand(robot, 0.05, 1.0)))
-                .addTemporalMarker(0.8, () -> robot.runCommand(cbLeft))
+                .addTemporalMarker(0.95, () -> robot.runCommand(new KnockerCommand(robot, 0.05, 1.0)))
+                .addTemporalMarker(1.1, () -> robot.runCommand(cbLeft))
                 .addTemporalMarker(1.5, () -> robot.runCommand(knock))
                 //.addTemporalMarker(0.5,()->robot.runCommand(cbLeft))
                 //.strafeLeft(2)
@@ -128,7 +127,7 @@ public class AutoRight extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                        .back(45)
+                        .back(44.5)
                         //.strafeLeft(2)
                         .addTemporalMarker(0.0, () -> robot.runCommands(new AutoLift(robot, 5, 29)))
                         .addTemporalMarker(0.5, () -> robot.runCommands(cbLeft))
@@ -141,17 +140,18 @@ public class AutoRight extends LinearOpMode {
         Log.v("AUTODEBUG", "12: release cone done");
 
         if (elementPos == 1) {
-            cycles = 2;
+            cycles = 1;
         }
         else{
             cycles = 1;
         }
+
         for (int i = 1; i <= cycles; i++) {
             AutoLift liftUpCmd = new AutoLift(robot, 5, 30);
             AutoLift liftDnCmd = new AutoLift(robot, 5, 5 - i);
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .forward(38)//-i*0.5)
+                            .forward(37.5)//-i*0.5)
                             //.forward(44.5-i*0.5)
                             .addTemporalMarker(1.0, () -> robot.runCommands(cbDown))
                             .addTemporalMarker(1.0, () -> robot.runCommands(liftDnCmd))
@@ -165,7 +165,7 @@ public class AutoRight extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                            .back(46)//+i*0.5)
+                            .back(45.5)//+i*0.5)
                             //.strafeLeft(2)
                             .addTemporalMarker(0.0, () -> robot.runCommands(liftUpCmd))
                             .addTemporalMarker(0.5, () -> robot.runCommands(cbLeft))
@@ -180,7 +180,7 @@ public class AutoRight extends LinearOpMode {
         }
 
         // park
-        if (elementPos == 1) {
+        if (elementPos == 1 || elementPos == 4 ) {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 17), Math.toRadians(-90))
@@ -201,7 +201,7 @@ public class AutoRight extends LinearOpMode {
             ));
 
         }
-        if (elementPos == 3 || elementPos == 4) {
+        if (elementPos == 3) {
             robot.runCommand(drivetrain.followTrajectory(
                     drivetrain.trajectoryBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, -23), Math.toRadians(-90))
