@@ -20,8 +20,10 @@ import com.acmerobotics.dashboard.config.Config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
+@Config
 public class ColorDetectionPipeline extends OpenCvPipeline {
+    public static double X_OFFSET = 130;
+    public static double Y_OFFSET  = 58;
 
     static final int STREAM_WIDTH = 1280; // resolution of camera
     static final int STREAM_HEIGHT = 960; // resolution of camera
@@ -36,10 +38,10 @@ public class ColorDetectionPipeline extends OpenCvPipeline {
     static final int WidthRectA = 180;
     static final int HeightRectA = 100;
 
-    static final Point RectATopLeftAnchor = new Point((STREAM_WIDTH/2 - WidthRectA) / 2, (STREAM_HEIGHT/2 - HeightRectA) / 2);
+    static final Point RectATopLeftAnchor = new Point(((STREAM_WIDTH/2 - WidthRectA) / 2), ((STREAM_HEIGHT/2 - HeightRectA) / 2));
 
-    Point RectATLCorner = new Point(RectATopLeftAnchor.x, RectATopLeftAnchor.y);
-    Point RectABRCorner = new Point(RectATopLeftAnchor.x + WidthRectA, RectATopLeftAnchor.y + HeightRectA);
+    Point RectATLCorner = new Point(RectATopLeftAnchor.x - X_OFFSET, RectATopLeftAnchor.y - Y_OFFSET);
+    Point RectABRCorner = new Point(RectATopLeftAnchor.x + WidthRectA -X_OFFSET, RectATopLeftAnchor.y + HeightRectA - Y_OFFSET);
 
     boolean stopped = false;
 

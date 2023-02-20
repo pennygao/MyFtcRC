@@ -77,7 +77,8 @@ public class DriveTillIntake implements Command {
         telemetry.addData("startY: ", startY);
         telemetry.addData("disp: ", disp);
         telemetry.update();
-        return (disp >= driveDisp);
+        //return (disp >= driveDisp);
+        return robot.scoringSystem.distC.coneReached();
 
 
     }

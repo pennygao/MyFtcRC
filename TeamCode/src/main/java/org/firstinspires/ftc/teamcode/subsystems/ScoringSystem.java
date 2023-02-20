@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import com.acmerobotics.roadrunner.util.NanoClock;
@@ -18,12 +20,14 @@ public class ScoringSystem implements Subsystem {
 
     public int swingState = 0;
     private int lowerState = 0;
+    private int autoClawState = 0;
 
     private Servo SSKnocker;
     private double ssKnockerPos = 0;
 
     public ChainBar chainBar;
     public Claw claw;
+    public DistClaw distC;
     //TODO: tune
     public static double CLAW_OPEN_POSITION = 0.4; //for new thicker claw
     public static double CLAW_CLOSE_POSITION = 0.6; //for new thicker claw
@@ -35,11 +39,26 @@ public class ScoringSystem implements Subsystem {
     public static double CHAIN_BAR_UP = 0.14; //How much you move the chain bar up from down position
     public static double CHAIN_BAR_ADJ = 0.003;
 
+    public class DistClaw{
+        private DistanceSensor DistClaw;
+        public boolean enable = false;
+        private double distThreshold = 4.0; //cm
+
+        public DistClaw(Robot robot) {
+            DistClaw = robot.getHardwareMap().get(DistanceSensor.class, "DistClaw");
+        }
+
+        public double getDist(){
+            return DistClaw.getDistance(DistanceUnit.CM);
+        }
+        public boolean coneReached() {return this.getDist() <= this.distThreshold;}
+    }
+
     public class Claw {
         public Servo clawServo;
         NanoClock clock;
         double initialTimestamp;
-        double movementTime;
+        double movementTime = 0.5;
         double toPos;
 
         private double openPos;
@@ -49,6 +68,7 @@ public class ScoringSystem implements Subsystem {
             clawServo = robot.getServo("claw");
             this.openPos=openPos;
             this.closePos=closePos;
+            clock=NanoClock.system();
         }
         public void setClawPos(double pos) {
             toPos = pos;
@@ -63,10 +83,12 @@ public class ScoringSystem implements Subsystem {
 
         public void openClaw(){
             claw.setClawPos(CLAW_OPEN_POSITION);
+            initialTimestamp = clock.seconds();
         }
 
         public void closeClaw(){
             claw.setClawPos(CLAW_CLOSE_POSITION);
+            initialTimestamp = clock.seconds();
         }
     }
 
@@ -116,13 +138,22 @@ public class ScoringSystem implements Subsystem {
 
     public ScoringSystem(Robot robot, boolean autoMode, Telemetry telemetry) {
         this.telemetry = telemetry;
+
         claw = new Claw(robot, CLAW_OPEN_POSITION, CLAW_CLOSE_POSITION);
+        distC = new DistClaw(robot);
         chainBar = new ChainBar(robot);
         SSKnocker = robot.getServo("SSKnocker");
         dualMotorLift = new DualMotorLift(robot, telemetry, DualMotorLift.Mode.BOTH_MOTORS_PID);
         //dualMotorLift = new DualMotorLift(robot, telemetry, DualMotorLift.Mode.RIGHT_FOLLOW_LEFT);
         telemetry.update();
 
+    }
+
+    public void autoCloseClaw(){
+        if(distC.getDist() <= distC.distThreshold && autoClawState == 0){
+            autoClawState = 1;
+            claw.closeClaw();
+        }
     }
 
     public void adjustLift(int direction, boolean slow){
@@ -218,6 +249,20 @@ public class ScoringSystem implements Subsystem {
         // packet.put("Current Position", slideMotor.getCurrentPosition());
         //  packet.put("target position", slideMotor.getTargetPosition());
         //Log.v("DualMotorSlide-updatetarget", "ScoringSystem update returning.");
+
+
+        // autoClawState :)
+        if(autoClawState == 1){
+            if(claw.isCompleted()){
+                dualMotorLift.goToLevel(1);
+                autoClawState = 2;
+            }
+        }
+        else if(autoClawState == 2) {
+            if (dualMotorLift.isLevelReached()) {
+                autoClawState = 0;
+            }
+        }
     }
 }
 

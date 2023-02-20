@@ -30,7 +30,7 @@ public class RobotColorSensor implements Subsystem {
         return ((csL[0]+csL[2])/(csL[0]+csL[1]+csL[2]) > this.threashold);
     }
     public boolean csRonLine() {
-        return ((csR[0]+csR[2])/(csR[0]+csR[1]+csR[2]) > this.threashold);
+        return ((csR[0] + csR[2]) / (csR[0] + csR[1] + csR[2]) > this.threashold);
     }
     @Override
     public void update(TelemetryPacket packet) {

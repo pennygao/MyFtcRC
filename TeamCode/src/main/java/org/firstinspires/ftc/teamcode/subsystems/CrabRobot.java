@@ -11,7 +11,6 @@ public class CrabRobot extends Robot {
     public final SimpleMecanumDrive mecanumDrive;
     public final ScoringSystem scoringSystem;
     public final RobotColorSensor robotcolorsensor;
-    //public final RobotDistanceSensor robotdistancesensor;
     public  SmartGamepad smartGamepad1;
     public  SmartGamepad smartGamepad2;
 
@@ -21,7 +20,7 @@ public class CrabRobot extends Robot {
         scoringSystem = new ScoringSystem(this, autoMode, opMode.telemetry);
         registerSubsystem(scoringSystem);
         robotcolorsensor = new RobotColorSensor(this, opMode.telemetry);
-        //robotdistancesensor = new RobotDistanceSensor(this, opMode.telemetry);
+
     }
 
     public void addGamepads(Gamepad g1, Gamepad g2){

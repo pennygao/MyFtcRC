@@ -17,16 +17,17 @@ import android.util.Log;
 @TeleOp
 @Config
 public class AATele extends LinearOpMode {
+    public static double disThreshold = 4.0;
     @Override
     public void runOpMode() throws InterruptedException {
         Utilities.getSharedUtility().initialize(this);
         RobotVision rvis = new RobotVision();
         CrabRobot robot = new CrabRobot(this, true);
         robot.registerSubsystem((Subsystem) robot.mecanumDrive);
-        //robot.registerSubsystem((Subsystem) robot.robotdistancesensor);
         robot.addGamepads(gamepad1,gamepad2);
         SmartGamepad smartGamepad1 = robot.smartGamepad1;
         SmartGamepad smartGamepad2 = robot.smartGamepad2;
+
 
         /*TeleAlign autoLfCmd = new TeleAlign(robot, robot.mecanumDrive,
                 0.15, true, telemetry);
@@ -150,12 +151,14 @@ public class AATele extends LinearOpMode {
                 robot.scoringSystem.adjustChainBar(1);
             }
 
-            if (smartGamepad2.left_trigger > 0.5) {
+            if (smartGamepad2.left_trigger > 0.5 ) {
                 robot.scoringSystem.claw.closeClaw();
                 robot.scoringSystem.dualMotorLift.goToLevel(3);//0.5 + leftTrigger * 0.5);
             } else if (smartGamepad2.right_trigger > 0.5) {
                 robot.scoringSystem.claw.openClaw(); // - rightTrigger * 0.5);
             }
+
+
 
             if(smartGamepad2.leftJoystickButton()){
                 robot.scoringSystem.dualMotorLift.resetEncoder();
@@ -181,15 +184,14 @@ public class AATele extends LinearOpMode {
             //testing opencv detection remove this later
             telemetry.addLine("Sleeve: " + rvis.getConeOrientation());
             Log.v("update", "Opmode loop finished one iteration.");
-            /* Sensor test
+            //Sensor test
             if(gamepad1.dpad_left){
-                telemetry.addData("left distance:", robot.robotdistancesensor.dsL);
+                telemetry.addData("claw distance:", robot.scoringSystem.distC.getDist());
             }
-            if(gamepad1.dpad_right){
-                telemetry.addData("Right distance:", robot.robotdistancesensor.dsR);
+            if(gamepad1.a){
+                robot.scoringSystem.autoCloseClaw();
             }
 
-             */
 
         }
     }
