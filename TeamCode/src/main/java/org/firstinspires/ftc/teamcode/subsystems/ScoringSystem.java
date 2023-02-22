@@ -35,7 +35,7 @@ public class ScoringSystem implements Subsystem {
     //public static double CLAW_CLOSE_POSITION = 0.78; // for old claw
 
 
-    public static double CHAIN_BAR_DOWN = 0.44;
+    public static double CHAIN_BAR_DOWN = 0.5135;
     public static double CHAIN_BAR_UP = 0.14; //How much you move the chain bar up from down position
     public static double CHAIN_BAR_ADJ = 0.003;
 
@@ -242,7 +242,7 @@ public class ScoringSystem implements Subsystem {
         //telemetry.addData("is chainbar done?", chainBar.doneMoving());
         packet.put("is chain bar done?", chainBar.doneMoving());
         //telemetry.addData("slide target reached?", isLiftLevelReached());
-        //telemetry.addData("Chain Bar position: ", chainBar.cbServo.getPosition());
+        telemetry.addData("Chain Bar position: ", chainBar.cbServo.getPosition());
         //telemetry.update();
 
         // debug only,  remove it on release

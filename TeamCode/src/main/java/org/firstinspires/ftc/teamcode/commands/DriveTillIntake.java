@@ -22,6 +22,7 @@ public class DriveTillIntake implements Command {
     double startX, startY;
     double xPwr;
     double coef = 0.5;
+    double hcoef = 0.23;
     double initialTimeStamp, intakeCompleteTime;
     double driveDisp;
 
@@ -49,9 +50,9 @@ public class DriveTillIntake implements Command {
 
         // L online, R not online => turn left
         if (robot.robotcolorsensor.csLonLine() && !robot.robotcolorsensor.csRonLine()) {
-            mecanumDrive.setDrivePower(new Pose2d(xPwr,xPwr*coef ,0));
+            mecanumDrive.setDrivePower(new Pose2d(xPwr,xPwr*coef ,-hcoef*xPwr));
         } else if (!robot.robotcolorsensor.csLonLine() && robot.robotcolorsensor.csRonLine()) {
-            mecanumDrive.setDrivePower(new Pose2d(xPwr, -xPwr*coef, 0));
+            mecanumDrive.setDrivePower(new Pose2d(xPwr, -xPwr*coef, hcoef*xPwr));
         } else {
             mecanumDrive.setDrivePower(drivePower);
         }
