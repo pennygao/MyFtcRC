@@ -55,7 +55,7 @@ public class AATele extends LinearOpMode {
             //check the bottom of the code (A) for the deleted bit i commented out
 
 //DRIVE
-            boolean slowMode = gamepad1.left_bumper;
+            boolean slowMode = !gamepad1.left_stick_button;
             double joystickRadius = Math.min(1,Math.sqrt(Math.pow(gamepad1.left_stick_y,2) + Math.pow(gamepad1.left_stick_x,2)));
             double factor = robot.mecanumDrive.mapJsRadiusVal(joystickRadius,slowMode);
             double jsX = robot.mecanumDrive.mapJsComponents(gamepad1.left_stick_x, joystickRadius, slowMode);
@@ -188,7 +188,7 @@ public class AATele extends LinearOpMode {
             if(gamepad1.dpad_left){
                 telemetry.addData("claw distance:", robot.scoringSystem.distC.getDist());
             }
-            if(gamepad1.a){
+            if(gamepad1.right_bumper){
                 robot.scoringSystem.autoCloseClaw();
             }
 

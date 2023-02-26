@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.NanoClock;
 
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Drivetrain3DW;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.SimpleMecanumDrive;
 
+@Config
 public class DriveTillIntake implements Command {
     CrabRobot robot;
     //SimpleMecanumDrive mecanumDrive;
@@ -21,8 +23,8 @@ public class DriveTillIntake implements Command {
     Pose2d drivePower;
     double startX, startY;
     double xPwr;
-    double coef = 0.5;
-    double hcoef = 0.23;
+    public static double coef = 0.5; //0.5
+    public static double hcoef = 0.08; //0.08
     double initialTimeStamp, intakeCompleteTime;
     double driveDisp;
 

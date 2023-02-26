@@ -254,7 +254,7 @@ public class ScoringSystem implements Subsystem {
         // autoClawState :)
         if(autoClawState == 1){
             if(claw.isCompleted()){
-                dualMotorLift.goToLevel(1);
+                dualMotorLift.goToLevel(3);
                 autoClawState = 2;
             }
         }

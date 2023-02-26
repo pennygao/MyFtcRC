@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
 @Autonomous
 public class AutoLineTester extends LinearOpMode {
 
+
     @Override
     public void runOpMode() throws InterruptedException {
         CrabRobot robot = new CrabRobot(this, true);
