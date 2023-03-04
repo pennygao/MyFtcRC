@@ -124,7 +124,7 @@ public class AutoRightD extends LinearOpMode {
         robot.runCommands(flwLine1);
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                        .strafeLeft(1.7)
+                        .strafeLeft(2.0)
                         .build()
         ));
         Log.v("AUTODEBUG", "8: follow the line done");
@@ -160,11 +160,11 @@ public class AutoRightD extends LinearOpMode {
             AutoLift liftDnCmd = new AutoLift(robot, 5, 5 - (i*1.5));
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            //.strafeRight(2)
-                            .forward(44 + i*0.8)//-i*0.5)
+                            .strafeRight(0.5)
+                            .forward(44 + i*0.75)//-i*0.5)
                             //.forward(44.5-i*0.5)
                             .addTemporalMarker(1.2, () -> robot.runCommands(cbDown))
-                            .addTemporalMarker(1.0, () -> robot.runCommands(liftDnCmd))
+                            .addTemporalMarker(0.8, () -> robot.runCommands(liftDnCmd))
                             .build()
             ));
 
