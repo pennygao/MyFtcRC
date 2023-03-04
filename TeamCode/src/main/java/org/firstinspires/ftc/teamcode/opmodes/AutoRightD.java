@@ -160,8 +160,8 @@ public class AutoRightD extends LinearOpMode {
             AutoLift liftDnCmd = new AutoLift(robot, 5, 5 - (i*1.5));
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .strafeRight(0.5)
-                            .forward(44 + i*0.75)//-i*0.5)
+                            .strafeRight(0.6)
+                            .forward(44 + i*1.0)//-i*0.5)
                             //.forward(44.5-i*0.5)
                             .addTemporalMarker(1.2, () -> robot.runCommands(cbDown))
                             .addTemporalMarker(0.8, () -> robot.runCommands(liftDnCmd))
