@@ -158,7 +158,7 @@ public class AutoLeftD extends LinearOpMode {
             AutoLift liftDnCmd = new AutoLift(robot, 5, 5 - (i*1.5));
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .strafeLeft(0.5)
+                            .strafeLeft(0.1 + (0.5*(2-i)))
                             .forward(44 + i*1.0)//-i*0.5)
                             //.forward(44.5-i*0.5)
                             .addTemporalMarker(1.2, () -> robot.runCommands(cbDown))
