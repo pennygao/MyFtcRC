@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystems.CrabRobot;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.RobotVision;
 import org.firstinspires.ftc.teamcode.subsystems.objectDetector;
+import org.firstinspires.ftc.teamcode.Utilities;
 
 @Config
 @Autonomous
@@ -143,7 +144,7 @@ public class AutoRightS extends LinearOpMode {
         Log.v("AUTODEBUG", "12: release cone done");
 
         if (elementPos == 3) {
-            cycles = 1;
+            cycles = 2;
         }
         else{
             cycles = 2;

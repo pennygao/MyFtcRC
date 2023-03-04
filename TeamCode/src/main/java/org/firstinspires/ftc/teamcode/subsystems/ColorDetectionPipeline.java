@@ -23,7 +23,7 @@ import java.util.Random;
 @Config
 public class ColorDetectionPipeline extends OpenCvPipeline {
     public static double X_OFFSET = 140;
-    public static double Y_OFFSET  = -20;
+    public static double Y_OFFSET  = 25;
 
     static final int STREAM_WIDTH = 1280; // resolution of camera
     static final int STREAM_HEIGHT = 960; // resolution of camera
@@ -60,6 +60,7 @@ public class ColorDetectionPipeline extends OpenCvPipeline {
         Core.split(HLS, HLSChannels);
         return HLSChannels;
     }
+    
 
     @Override
     public void init(Mat firstFrame) {
