@@ -61,7 +61,7 @@ public class AutoRightD extends LinearOpMode {
 
         Trajectory traj1 = drivetrain.trajectoryBuilder(new Pose2d())
                 //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
-                .lineTo(new Vector2d(HI_POLE_X, 0.5)) // move forward
+                .lineTo(new Vector2d(HI_POLE_X, 1.5)) // move forward
                 .addTemporalMarker(0.0, () -> robot.runCommands(clawClose))
                 .addTemporalMarker(0.2,() -> robot.runCommands(new AutoLift(robot,4,1.5)))
                 .addTemporalMarker(1.2, () -> robot.runCommands(new AutoLift(robot, 5, 30))) // raise lift
@@ -136,7 +136,7 @@ public class AutoRightD extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                        .back(44.5)
+                        .back(45.5)
                         //.strafeLeft(2)
                         .addTemporalMarker(0.0, () -> robot.runCommands(new AutoLift(robot, 5, 29.5)))
                         .addTemporalMarker(0.5, () -> robot.runCommands(cbLeft))
@@ -160,10 +160,11 @@ public class AutoRightD extends LinearOpMode {
             AutoLift liftDnCmd = new AutoLift(robot, 5, 5 - (i*1.5));
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
-                            .strafeRight(0.6)
-                            .forward(44 + i*1.0)//-i*0.5)
+                            .strafeRight(0.1 + (0.5*(2-i)))
+                            .forward(45.5 + i*1.0)//-i*0.5)
                             //.forward(44.5-i*0.5)
                             .addTemporalMarker(1.2, () -> robot.runCommands(cbDown))
+                            .addTemporalMarker(1.0,() -> robot.runCommands(knock))
                             .addTemporalMarker(0.8, () -> robot.runCommands(liftDnCmd))
                             .build()
             ));
@@ -173,7 +174,7 @@ public class AutoRightD extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                            .back(45.5)//+i*0.5)
+                            .back(46)//+i*0.5)
                             //.strafeLeft(2)
                             .addTemporalMarker(0.0, () -> robot.runCommands(liftUpCmd))
                             .addTemporalMarker(0.5, () -> robot.runCommands(cbLeft))

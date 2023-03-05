@@ -59,10 +59,10 @@ public class AutoLeftD extends LinearOpMode {
 
         Trajectory traj1 = drivetrain.trajectoryBuilder(new Pose2d())
                 //.splineTo(new Vector2d(HI_POLE_X, 0), 0) // move forward
-                .lineTo(new Vector2d(HI_POLE_X, -1.5)) // move forward
+                .lineTo(new Vector2d(HI_POLE_X, -2)) // move forward
                 .addTemporalMarker(0.0, () -> robot.runCommands(clawClose))
                 .addTemporalMarker(0.2,() -> robot.runCommands(new AutoLift(robot,4,1.5)))
-                .addTemporalMarker(1.2, () -> robot.runCommands(new AutoLift(robot, 5, 31.5))) // raise lift
+                .addTemporalMarker(1.2, () -> robot.runCommands(new AutoLift(robot, 5, 30.5))) // raise lift
                 //.addTemporalMarker(1.0, ()->robot.runCommand(new KnockerCommand(robot, 0.05, 0.6)))
                 //.addTemporalMarker(0.85, () -> robot.runCommand(new KnockerCommand(robot, 0.05, 1.0)))
                 .addTemporalMarker(1.1, () -> robot.runCommand(cbRight))
@@ -104,7 +104,7 @@ public class AutoLeftD extends LinearOpMode {
                         .addTemporalMarker(0.5, () -> robot.runCommands(cbDown))
                         //.addTemporalMarker(0.8, ()->robot.runCommands(liftUp1))
                         .lineTo(new Vector2d(HI_POLE_X - 4, 0))
-                        .turn(Math.toRadians(88))
+                        .turn(Math.toRadians(89))
                         //.forward(12)
                         .build()
         ));
@@ -123,7 +123,7 @@ public class AutoLeftD extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         .addTemporalMarker(0.0, () -> robot.runCommands(clawClose))
-                        .strafeRight(2.0)
+                        .strafeRight(1.8)
                         .build()
         ));
         Log.v("AUTODEBUG", "8: follow the line done");
@@ -133,9 +133,9 @@ public class AutoLeftD extends LinearOpMode {
         robot.runCommand(drivetrain.followTrajectorySequence(
                 drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                         //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                        .back(44.5)
+                        .back(46)
                         //.strafeLeft(2)
-                        .addTemporalMarker(0.0, () -> robot.runCommands(new AutoLift(robot, 5, 31.5)))
+                        .addTemporalMarker(0.0, () -> robot.runCommands(new AutoLift(robot, 5, 30.5)))
                         .addTemporalMarker(0.5, () -> robot.runCommands(cbRight))
                         .build()
         ));
@@ -154,14 +154,15 @@ public class AutoLeftD extends LinearOpMode {
         }
 
         for (int i = 1; i <= cycles; i++) {
-            AutoLift liftUpCmd = new AutoLift(robot, 5, 31.5);
-            AutoLift liftDnCmd = new AutoLift(robot, 5, 5 - (i*1.5));
+            AutoLift liftUpCmd = new AutoLift(robot, 5, 30.5);
+            AutoLift liftDnCmd = new AutoLift(robot, 5, 5 - (i*2));
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                             .strafeLeft(0.1 + (0.5*(2-i)))
-                            .forward(44 + i*1.0)//-i*0.5)
+                            .forward(45.5 + i*1.0)//-i*0.5)
                             //.forward(44.5-i*0.5)
                             .addTemporalMarker(1.2, () -> robot.runCommands(cbDown))
+                            .addTemporalMarker(1.0,() -> robot.runCommands(knock))
                             .addTemporalMarker(0.8, () -> robot.runCommands(liftDnCmd))
                             .build()
             ));
@@ -171,7 +172,7 @@ public class AutoLeftD extends LinearOpMode {
             robot.runCommand(drivetrain.followTrajectorySequence(
                     drivetrain.trajectorySequenceBuilder(drivetrain.getPoseEstimate())
                             //.splineTo(new Vector2d(HI_POLE_X-6, 20), Math.toRadians(-90)) // move forward
-                            .back(45.5)//+i*0.5)
+                            .back(46)//+i*0.5)
                             //.strafeLeft(2)
                             .addTemporalMarker(0.0, () -> robot.runCommands(liftUpCmd))
                             .addTemporalMarker(0.5, () -> robot.runCommands(cbRight))

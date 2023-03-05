@@ -24,7 +24,7 @@ public class DriveTillIntake implements Command {
     double startX, startY;
     double xPwr;
     public static double coef = 0.5; //0.5
-    public static double hcoef = 0.074; //0.08
+    public static double hcoef = 0.0; //0.08
     double initialTimeStamp, intakeCompleteTime;
     double driveDisp;
 

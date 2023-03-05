@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Random;
 @Config
 public class ColorDetectionPipeline extends OpenCvPipeline {
-    public static double X_OFFSET = 140;
-    public static double Y_OFFSET  = 25;
+    public static double X_OFFSET = 60;
+    public static double Y_OFFSET  = 20;
 
     static final int STREAM_WIDTH = 1280; // resolution of camera
     static final int STREAM_HEIGHT = 960; // resolution of camera
